@@ -1,0 +1,20 @@
+{
+  "background_color": "papayawhip",
+  "description": "<AppName> Description",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/img/icon192x192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/icon512x512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "name": "<Application Name>",
+  "scope": "/",
+  "short_name": "<AppName>",
+  "start_url": "/",
+  "theme_color": "#ffffff"
+}

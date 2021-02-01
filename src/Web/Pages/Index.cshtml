@@ -1,0 +1,57 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+
+}
+
+<div class="text-center mb-5">
+    @*<h1 class="display-4">Welcome</h1>*@
+    <h3 class="display-411">@Model.TenantName</h3>
+    <h5 class="display-41">Lead Management System</h5>
+    @*<hr />*@
+
+    <p class="d-none">Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+
+    <div class="row mb-3">
+        @if (User.IsInRole(Data.Constants.ApplicationRoles.AdministratorRoleName))
+        {
+        <div class="col-md">
+            <div class="card shadow-sm card-body text-center mb-3">
+                <a asp-area="Administrator" asp-page="/index" class="text-decoration-none">
+                    <span class="fas fa-fw fa-lg fa-user-shield"></span> Administrator
+                </a>
+            </div>
+        </div>
+        }
+
+        @if (User.IsInRole(Data.Constants.ApplicationRoles.ManagerRoleName))
+        {
+        <div class="col-md">
+            <div class="card shadow-sm card-body text-center mb-3">
+                <a asp-area="Manager" asp-page="/Index" class="text-decoration-none">
+                    <span class="fas fa-fw fa-lg fa-user-cog"></span> Manager
+                </a>
+            </div>
+        </div>
+        }
+
+
+        @if (User.IsInRole(Data.Constants.ApplicationRoles.MemberRoleName))
+        {
+        <div class="col-md">
+            <div class="card shadow-sm card-body text-center mb-3">
+                <a asp-area="Member" asp-page="/Index" class="text-decoration-none">
+                    <span class="fas fa-fw fa-lg fa-user"></span> Member
+                </a>
+            </div>
+        </div>
+        }
+
+    </div>
+
+</div>
+
