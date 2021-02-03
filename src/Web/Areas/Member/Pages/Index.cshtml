@@ -1,7 +1,0 @@
-﻿@page
-@model Web.Areas.Member.Pages.IndexModel
-@{
-    ViewBag.Title = "Member";
-    var urlProfilePicture = User.FindFirst("Profile:UrlProfilePicture").Value;
-}
-<app uid="@Model.UserId" url-profile-picture="@urlProfilePicture"></app>

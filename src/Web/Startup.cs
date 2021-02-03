@@ -64,16 +64,16 @@ namespace Web
                        c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.AdministratorRoleName
                            )));
 
-                options.AddPolicy(ApplicationRoles.ManagerRoleName, policy =>
+                options.AddPolicy(ApplicationRoles.DriverRoleName, policy =>
                    policy.RequireAssertion(context =>
                        context.User.HasClaim(c =>
-                       c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.ManagerRoleName
+                       c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.DriverRoleName
                            )));
 
-                options.AddPolicy(ApplicationRoles.MemberRoleName, policy =>
+                options.AddPolicy(ApplicationRoles.CommuterRoleName, policy =>
                    policy.RequireAssertion(context =>
                        context.User.HasClaim(c =>
-                       c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.MemberRoleName
+                       c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.CommuterRoleName
                            )));
 
 
@@ -96,8 +96,8 @@ namespace Web
             .AddRazorPagesOptions(opt =>
             {
                 opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.AdministratorRoleName, "/", ApplicationRoles.AdministratorRoleName);
-                opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.ManagerRoleName, "/", ApplicationRoles.ManagerRoleName);
-                opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.MemberRoleName, "/", ApplicationRoles.MemberRoleName);
+                opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.CommuterRoleName, "/", ApplicationRoles.CommuterRoleName);
+                opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.DriverRoleName, "/", ApplicationRoles.DriverRoleName);
                 //opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.CustomerRoleName, "/", ApplicationRoles.CustomerRoleName);
                 //opt.Conventions.AuthorizeFolder("/Customer", ApplicationRoles.CustomerRoleName);
             });

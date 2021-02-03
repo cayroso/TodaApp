@@ -23,14 +23,11 @@ namespace Data.Constants
         public const string AdministratorRoleName = "Administrator";
         public static ApplicationRoles Administrator = new ApplicationRoles(AdministratorRoleName.ToLower(), AdministratorRoleName);
 
-        //public const string SalesManagerRoleName = "SalesManager";
-        //public static ApplicationRoles SalesManager = new ApplicationRoles(SalesManagerRoleName.ToLower(), SalesManagerRoleName);
+        public const string CommuterRoleName = "Commuter";
+        public static ApplicationRoles Commuter = new ApplicationRoles(CommuterRoleName.ToLower(), CommuterRoleName);
 
-        public const string ManagerRoleName = "Manager";
-        public static ApplicationRoles Manager = new ApplicationRoles(ManagerRoleName.ToLower(), ManagerRoleName);
-
-        public const string MemberRoleName = "Member";
-        public static ApplicationRoles Member = new ApplicationRoles(MemberRoleName.ToLower(), MemberRoleName);
+        public const string DriverRoleName = "Driver";
+        public static ApplicationRoles Driver = new ApplicationRoles(DriverRoleName.ToLower(), DriverRoleName);
 
         public static List<ApplicationRoles> Items
         {
@@ -40,8 +37,8 @@ namespace Data.Constants
                 {
                     System,
                     Administrator,
-                    Manager,
-                    Member
+                    Commuter,
+                    Driver
                 };
             }
         }

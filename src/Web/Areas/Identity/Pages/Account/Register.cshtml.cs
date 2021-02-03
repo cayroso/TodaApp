@@ -157,11 +157,11 @@ namespace Web.Areas.Identity.Pages.Account
                     },
                     new IdentityUserRole<string> {
                         UserId = userId,
-                        RoleId = ApplicationRoles.Manager.Id
+                        RoleId = ApplicationRoles.Driver.Id
                     },
                     new IdentityUserRole<string> {
                         UserId = userId,
-                        RoleId = ApplicationRoles.Member.Id
+                        RoleId = ApplicationRoles.Commuter.Id
                     },
                 });
 

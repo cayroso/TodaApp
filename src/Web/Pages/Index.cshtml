@@ -28,24 +28,24 @@
         </div>
         }
 
-        @if (User.IsInRole(Data.Constants.ApplicationRoles.ManagerRoleName))
+        @if (User.IsInRole(Data.Constants.ApplicationRoles.CommuterRoleName))
         {
         <div class="col-md">
             <div class="card shadow-sm card-body text-center mb-3">
-                <a asp-area="Manager" asp-page="/Index" class="text-decoration-none">
-                    <span class="fas fa-fw fa-lg fa-user-cog"></span> Manager
+                <a asp-area="Commuter" asp-page="/Index" class="text-decoration-none">
+                    <span class="fas fa-fw fa-lg fa-user-cog"></span> Commuter
                 </a>
             </div>
         </div>
         }
 
 
-        @if (User.IsInRole(Data.Constants.ApplicationRoles.MemberRoleName))
+        @if (User.IsInRole(Data.Constants.ApplicationRoles.DriverRoleName))
         {
         <div class="col-md">
             <div class="card shadow-sm card-body text-center mb-3">
-                <a asp-area="Member" asp-page="/Index" class="text-decoration-none">
-                    <span class="fas fa-fw fa-lg fa-user"></span> Member
+                <a asp-area="Driver" asp-page="/Index" class="text-decoration-none">
+                    <span class="fas fa-fw fa-lg fa-user"></span> Driver
                 </a>
             </div>
         </div>

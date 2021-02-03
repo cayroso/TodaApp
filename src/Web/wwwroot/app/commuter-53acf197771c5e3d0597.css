@@ -1,0 +1,44 @@
+.main {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.main-loaded {
+    opacity: 1;
+}
+
+
+label[data-v-2bef164b] {
+    font-size: small;
+    font-weight: bold;
+}
+
+
+label[data-v-7b3be050] {
+    font-size: small;
+}
+
+
+label[data-v-1a3bb372] {
+    font-size: small;
+}
+
+
+label[data-v-2ab7e703] {
+    font-size: small;
+    font-weight: bold;
+}
+
+
+label {
+    font-size: small;
+    font-weight: bold;
+}
+
+
+label[data-v-7327616f] {
+    font-size: small;
+}
+
