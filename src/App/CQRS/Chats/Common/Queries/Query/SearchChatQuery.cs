@@ -9,7 +9,7 @@ namespace App.CQRS.Chats.Common.Queries.Query
         public SearchChatQuery(string correlationId, string tenantId, string userId, string replaceWith, string criteria, int pageIndex, int pageSize, string sortField, int sortOrder)
             : base(correlationId, tenantId, userId)
         {
-            UserId = userId;
+            //UserId = userId;
             ReplaceWith = replaceWith;
             Criteria = criteria;
             PageIndex = pageIndex;
@@ -18,7 +18,7 @@ namespace App.CQRS.Chats.Common.Queries.Query
             SortOrder = sortOrder;
         }
 
-        public string UserId { get; }
+        //public string UserId { get; }
         public string ReplaceWith { get; }
         public string Criteria { get; }
         public int PageIndex { get; }

@@ -161,7 +161,7 @@ namespace Web.Areas.Identity.Pages.Account
                     },
                     new IdentityUserRole<string> {
                         UserId = userId,
-                        RoleId = ApplicationRoles.Commuter.Id
+                        RoleId = ApplicationRoles.Rider.Id
                     },
                 });
 

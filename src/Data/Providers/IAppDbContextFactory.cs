@@ -38,56 +38,57 @@ namespace Data.Providers
 
         public void Provision(Tenant tenant, List<ProvisionUserRole> provUserRoles, bool isDevelopment)
         {
-            var ctx = new AppDbContext(_options, _configuration, new DummyTenantProvider(tenant));
+            throw new NotImplementedException("Provision should not be called.");
+            //var ctx = new AppDbContext(_options, _configuration, new DummyTenantProvider(tenant));
 
-            if (!ctx.Database.CanConnect())
-                ctx.Database.Migrate();
+            //if (!ctx.Database.CanConnect())
+            //    ctx.Database.Migrate();
 
-            var roles = new List<Role>();
+            //var roles = new List<Role>();
             
-            //  create roles
-            ApplicationRoles.Items.ForEach(r =>
-            {
-                var role = new Role
-                {
-                    RoleId = r.Id,
-                    Name = r.Name
-                };
+            ////  create roles
+            //ApplicationRoles.Items.ForEach(r =>
+            //{
+            //    var role = new Role
+            //    {
+            //        RoleId = r.Id,
+            //        Name = r.Name
+            //    };
 
-                roles.Add(role);
-            });
+            //    roles.Add(role);
+            //});
 
-            ctx.AddRange(roles);
+            //ctx.AddRange(roles);
 
 
-            //  add user then assign roles
-            provUserRoles.ForEach(provUserRole =>
-            {
-                var userRoles = new List<UserRole>();
+            ////  add user then assign roles
+            //provUserRoles.ForEach(provUserRole =>
+            //{
+            //    var userRoles = new List<UserRole>();
 
-                provUserRole.RoleIds.ForEach(roleId =>
-                {
-                    var userRole = new UserRole
-                    {
-                        UserId = provUserRole.User.UserId,
-                        RoleId = roleId
-                    };
+            //    provUserRole.RoleIds.ForEach(roleId =>
+            //    {
+            //        var userRole = new UserRole
+            //        {
+            //            UserId = provUserRole.User.UserId,
+            //            RoleId = roleId
+            //        };
 
-                    userRoles.Add(userRole);
-                });
+            //        userRoles.Add(userRole);
+            //    });
 
-                ctx.Add(provUserRole.User);
-                ctx.AddRange(userRoles);
-            });
+            //    ctx.Add(provUserRole.User);
+            //    ctx.AddRange(userRoles);
+            //});
 
-            //  add default data
-            if (!ctx.Calendars.Any() && isDevelopment)
-            {
-                GenerateCalendar(ctx, tenant);
-                AppDbContextInitializer.Initialize(ctx, provUserRoles);
-            }
+            ////  add default data
+            //if (!ctx.Calendars.Any() && isDevelopment)
+            //{
+            //    GenerateCalendar(ctx, tenant);
+            //    AppDbContextInitializer.Initialize(ctx, provUserRoles);
+            //}
 
-            ctx.SaveChanges();
+            //ctx.SaveChanges();
         }
 
         public AppDbContext Get()

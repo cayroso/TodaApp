@@ -40,7 +40,7 @@ namespace Data.Identity.DbContext
 
             _useSQLite = _configuration.GetValue<bool>("AppSettings:UseSQLite");
 
-            _connString = _useSQLite ? _configuration.GetConnectionString("AppDbContextConnectionSQLite") : _configuration.GetConnectionString("AppDbContextConnectionSQLServer");
+            _connString = _useSQLite ? _configuration.GetConnectionString("IdentityDbContextConnectionSQLite") : _configuration.GetConnectionString("IdentityDbContextConnectionSQLServer");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

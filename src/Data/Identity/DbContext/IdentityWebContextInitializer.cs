@@ -52,7 +52,7 @@ namespace Data.Identity.DbContext
 
             var email1 = "caydev2010@gmail.com";
             var token1 = Guid.NewGuid().ToString();
-            var customer1 = new IdentityWebUser
+            var admin1 = new IdentityWebUser
             {
                 Id = "administrator1",
                 UserName = email1,
@@ -81,14 +81,17 @@ namespace Data.Identity.DbContext
                 }
             };
 
-            var customerRole1 = new IdentityUserRole<string>
+            var admin1Roles = ApplicationRoles.Items.Select(e => new IdentityUserRole<string>
             {
-                UserId = customer1.Id,
-                RoleId = ApplicationRoles.System.Id
-            };
+                UserId = admin1.Id,
+                RoleId = e.Id
+            }).ToList();
+
+            ctx.AddRange(admin1);
+            ctx.AddRange(admin1Roles);
 
             var email2 = "cayroso2014@gmail.com";
-            var customer2 = new IdentityWebUser
+            var admin2 = new IdentityWebUser
             {
                 Id = "administrator2",
                 UserName = email2,
@@ -116,13 +119,14 @@ namespace Data.Identity.DbContext
                     Theme = "https://bootswatch.com/4/spacelab/bootstrap.min.css"
                 }
             };
-            var customerRole2 = new IdentityUserRole<string>
+            var admin2Roles = ApplicationRoles.Items.Select(e => new IdentityUserRole<string>
             {
-                UserId = customer2.Id,
-                RoleId = ApplicationRoles.System.Id
-            };
+                UserId = admin2.Id,
+                RoleId = e.Id
+            }).ToList();
 
-            ctx.AddRange(customer1, customerRole1, customer2, customerRole2);
+            ctx.AddRange(admin2);
+            ctx.AddRange(admin2Roles);
         }
 
     }

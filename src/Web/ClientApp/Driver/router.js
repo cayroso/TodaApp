@@ -47,7 +47,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-    base:'/member',
+    base:'/driver',
     mode: "history",
     routes: routes,
 });

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Data.App.Models.Chats;
-using Data.App.Models.Contacts;
-using Data.App.Models.Teams;
+using Data.App.Models.Users;
+using Data.Constants;
+using Data.Identity.DbContext;
 using Data.Identity.Models.Users;
 using Data.Providers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.App.DbContext
 {
@@ -14,72 +16,124 @@ namespace Data.App.DbContext
     {
         static Random _rnd = new Random((int)DateTime.UtcNow.Ticks);
 
-        public static void Initialize(AppDbContext ctx, IEnumerable<ProvisionUserRole> provisionUserRoles)
+        public static void Initialize(IdentityWebContext identityWebContext, AppDbContext ctx, IEnumerable<ProvisionUserRole> provisionUserRoles)
         {
+            if (ctx.Users.Any())
+                return;
+
+            CreateRoles(ctx);
+
+            CopyIdentityUserToApp(identityWebContext, ctx);
+
             ctx.SaveChanges();
 
-            GenerateUsersAndTeams(ctx, provisionUserRoles);
-            GenerateContacts(ctx);
+            //GenerateUsersAndTeams(ctx, provisionUserRoles);
+            //GenerateContacts(ctx);
         }
 
-        static void GenerateUsersAndTeams(AppDbContext ctx, IEnumerable<ProvisionUserRole> provisionUserRoles)
+        static void CreateRoles(AppDbContext ctx)
         {
-            var teamId = NewId();
-
-            var team = new Team
-            {
-                TeamId = teamId,
-                Name = "Default",
-                Description = "Default Team",
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
-                Members = provisionUserRoles.Select(e => new TeamMember
+            var roles = ApplicationRoles.Items//.Where(e => e.Id != ApplicationRoles.System.Id)
+                .Select(e => new Role
                 {
-                    MemberId = e.User.UserId,
-                }).ToList(),
-                Chat = new Chat
-                {
-                    ChatId = teamId,
-                    Title = "Chat: Default",
-                    Receivers = provisionUserRoles.Select(e => new ChatReceiver
-                    {
-                        ReceiverId = e.User.UserId
-                    }).ToList()
-                }
-            };
+                    RoleId = e.Id,
+                    Name = e.Name,
+                    //NormalizedName = e.Name.ToUpper()
+                });
 
-            ctx.Add(team);
+            ctx.AddRange(roles);
         }
 
-        static void GenerateContacts(AppDbContext ctx)
+        static void CopyIdentityUserToApp(IdentityWebContext identityWebContext, AppDbContext appDbContext)
         {
-            var foo = GetNames().Select(e => new Contact
-            {
-                ContactId = NewId(),
-                FirstName = e.Item1,
-                MiddleName = "Middle",
-                Email = $"{e.Item1}@{e.Item2}.com",
-                ReferralSource = "facebook",
-                Title = "Mr/Ms",
-                Website = $"www.{e.Item1}.com",
-                LastName = e.Item2,
-                HomePhone = e.Item3,
-                MobilePhone = "",
-                BusinessPhone = "",
-                Fax = "12345",
-                Industry = "IT",
-                Rating = 3,
+            var users = identityWebContext.Users.Include(e => e.UserInformation).ToList();
 
-                DateOfInitialContact = DateTime.UtcNow,
-                Address = "102 Main Street",
-                AnnualRevenue = 1.2M,
-                DateCreated = DateTime.UtcNow,
-                DateUpdated = DateTime.UtcNow,
-                Status = Enums.EnumContactStatus.Lead,
+            var appUsers = new List<User>();
+
+            users.ForEach(u =>
+            {
+                var appUser = new User
+                {
+                    UserId = u.Id,
+                    FirstName = u.UserInformation.FirstName,
+                    MiddleName = u.UserInformation.MiddleName,
+                    LastName = u.UserInformation.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                };
+
+                var userRoles = identityWebContext.UserRoles.Where(e => e.UserId == u.Id).ToList();
+
+                appUser.UserRoles = userRoles.Select(e => new UserRole
+                {
+                    UserId = e.UserId,
+                    RoleId = e.RoleId
+                }).ToList();
+
+                appUsers.Add(appUser);
             });
 
-            ctx.AddRange(foo);
+            appDbContext.AddRange(appUsers);
         }
+
+        //static void GenerateUsersAndTeams(AppDbContext ctx, IEnumerable<ProvisionUserRole> provisionUserRoles)
+        //{
+        //    var teamId = NewId();
+
+        //    var team = new Team
+        //    {
+        //        TeamId = teamId,
+        //        Name = "Default",
+        //        Description = "Default Team",
+        //        DateCreated = DateTime.UtcNow,
+        //        DateUpdated = DateTime.UtcNow,
+        //        Members = provisionUserRoles.Select(e => new TeamMember
+        //        {
+        //            MemberId = e.User.UserId,
+        //        }).ToList(),
+        //        Chat = new Chat
+        //        {
+        //            ChatId = teamId,
+        //            Title = "Chat: Default",
+        //            Receivers = provisionUserRoles.Select(e => new ChatReceiver
+        //            {
+        //                ReceiverId = e.User.UserId
+        //            }).ToList()
+        //        }
+        //    };
+
+        //    ctx.Add(team);
+        //}
+
+        //static void GenerateContacts(AppDbContext ctx)
+        //{
+        //    var foo = GetNames().Select(e => new Contact
+        //    {
+        //        ContactId = NewId(),
+        //        FirstName = e.Item1,
+        //        MiddleName = "Middle",
+        //        Email = $"{e.Item1}@{e.Item2}.com",
+        //        ReferralSource = "facebook",
+        //        Title = "Mr/Ms",
+        //        Website = $"www.{e.Item1}.com",
+        //        LastName = e.Item2,
+        //        HomePhone = e.Item3,
+        //        MobilePhone = "",
+        //        BusinessPhone = "",
+        //        Fax = "12345",
+        //        Industry = "IT",
+        //        Rating = 3,
+
+        //        DateOfInitialContact = DateTime.UtcNow,
+        //        Address = "102 Main Street",
+        //        AnnualRevenue = 1.2M,
+        //        DateCreated = DateTime.UtcNow,
+        //        DateUpdated = DateTime.UtcNow,
+        //        Status = Enums.EnumContactStatus.Lead,
+        //    });
+
+        //    ctx.AddRange(foo);
+        //}
 
         static List<Tuple<string, string, string, string>> GetNames()
         {

@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Commuter\Models\" />
+    <Folder Include="Areas\Rider\Models\" />
   </ItemGroup>
 
 </Project>

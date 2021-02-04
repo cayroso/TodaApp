@@ -1,3 +1,4 @@
+using Data.App.DbContext;
 using Data.Identity.DbContext;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -28,15 +29,12 @@ namespace Web
                 try
                 {
                     var ctx1 = services.GetRequiredService<IdentityWebContext>();
-
-                    //ctx1.Database.EnsureCreated();
-                    //ctx1.Database.EnsureDeleted();
                     ctx1.Database.Migrate();
-
                     IdentityWebContextInitializer.Initialize(ctx1);
 
-
-                    //PoultryProWebContextInitializer.Initialize(ctx1);
+                    var ctx2 = services.GetRequiredService<AppDbContext>();
+                    ctx2.Database.Migrate();
+                    AppDbContextInitializer.Initialize(ctx1, ctx2, null);
                 }
                 catch (Exception ex)
                 {

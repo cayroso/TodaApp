@@ -8,12 +8,12 @@ namespace App.CQRS.Chats.Common.Queries.Query
             : base(correlationId, tenantId, userId)
         {
             ChatId = chatId;
-            UserId = userId;
+            //UserId = userId;
             ReplaceWith = replaceWith;
         }
 
         public string ChatId { get; }
-        public string UserId { get; }
+        //public string UserId { get; }
         public string ReplaceWith { get; }
 
         public class ChatHeader

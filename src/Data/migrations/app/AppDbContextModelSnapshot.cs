@@ -16,50 +16,6 @@ namespace Data.migrations.app
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("Data.App.Models.Accounts.Account", b =>
-                {
-                    b.Property<string>("AccountId")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConcurrencyToken")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedById")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Fax")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Industry")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AccountId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("Account");
-                });
-
             modelBuilder.Entity("Data.App.Models.Calendars.Calendar", b =>
                 {
                     b.Property<DateTime>("Date")
@@ -201,30 +157,10 @@ namespace Data.migrations.app
                     b.ToTable("ChatReceiver");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Contacts.Contact", b =>
+            modelBuilder.Entity("Data.App.Models.Drivers.Driver", b =>
                 {
-                    b.Property<string>("ContactId")
+                    b.Property<string>("DriverId")
                         .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AccountId")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("AnnualRevenue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AssignedToId")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("BusinessPhone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Company")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyToken")
@@ -232,182 +168,32 @@ namespace Data.migrations.app
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedById")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
+                    b.HasKey("DriverId");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateOfInitialContact")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Fax")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("GeoX")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("GeoY")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("HomePhone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Industry")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MobilePhone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ReferralSource")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Salutation")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("TeamId")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Website")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ContactId");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("AssignedToId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Contact");
+                    b.ToTable("Driver");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Contacts.ContactAttachment", b =>
+            modelBuilder.Entity("Data.App.Models.Drivers.Vehicle", b =>
                 {
-                    b.Property<string>("ContactAttachmentId")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("AttachmentType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ConcurrencyToken")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ContactId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Content")
-                        .HasMaxLength(4096)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileUploadId")
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(2048)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ContactAttachmentId");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("FileUploadId");
-
-                    b.ToTable("ContactAttachment");
-                });
-
-            modelBuilder.Entity("Data.App.Models.Documents.Document", b =>
-                {
-                    b.Property<string>("DocumentId")
+                    b.Property<string>("VehicleId")
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyToken")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UploadedById")
                         .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("DocumentId");
-
-                    b.HasIndex("UploadedById");
-
-                    b.ToTable("Document");
-                });
-
-            modelBuilder.Entity("Data.App.Models.Documents.DocumentAccessHistory", b =>
-                {
-                    b.Property<string>("DocumentAccessHistoryId")
+                    b.Property<string>("DriverId")
+                        .IsRequired()
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("AccessedById")
-                        .HasColumnType("TEXT");
+                    b.HasKey("VehicleId");
 
-                    b.Property<DateTime>("DateAccessed")
-                        .HasColumnType("TEXT");
+                    b.HasIndex("DriverId");
 
-                    b.Property<string>("DocumentId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DocumentAccessHistoryId");
-
-                    b.HasIndex("AccessedById");
-
-                    b.HasIndex("DocumentId");
-
-                    b.ToTable("DocumentAccessHistory");
+                    b.ToTable("Vehicle");
                 });
 
             modelBuilder.Entity("Data.App.Models.FileUploads.FileUpload", b =>
@@ -446,10 +232,44 @@ namespace Data.migrations.app
                     b.ToTable("FileUpload");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Teams.Team", b =>
+            modelBuilder.Entity("Data.App.Models.Riders.Rider", b =>
                 {
-                    b.Property<string>("TeamId")
+                    b.Property<string>("RiderId")
                         .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConcurrencyToken")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("RiderId");
+
+                    b.ToTable("Rider");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Riders.RiderBookmark", b =>
+                {
+                    b.Property<string>("RiderBookmarkId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RiderId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("RiderBookmarkId");
+
+                    b.HasIndex("RiderId");
+
+                    b.ToTable("RiderBookmark");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Trips.Trip", b =>
+                {
+                    b.Property<string>("TripId")
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CancelReason")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyToken")
@@ -460,37 +280,138 @@ namespace Data.migrations.app
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateUpdated")
+                    b.Property<DateTime>("DateEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
+                    b.Property<DateTime>("DateStart")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DriverComment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DriverId")
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DriverRating")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EndAddress")
+                        .IsRequired()
                         .HasMaxLength(2048)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
+                    b.Property<string>("EndAddressDescription")
+                        .IsRequired()
+                        .HasMaxLength(2048)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("TeamId");
+                    b.Property<double>("EndX")
+                        .HasColumnType("REAL");
 
-                    b.ToTable("Team");
+                    b.Property<double>("EndY")
+                        .HasColumnType("REAL");
+
+                    b.Property<decimal>("Fare")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RiderComment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RiderId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RiderRating")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StartAddress")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StartAddressDescription")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("StartX")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("StartY")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VehicleId")
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TripId");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("RiderId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("Trip");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Teams.TeamMember", b =>
+            modelBuilder.Entity("Data.App.Models.Trips.TripLocation", b =>
                 {
-                    b.Property<string>("TeamId")
+                    b.Property<string>("TripLocationId")
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MemberId")
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("GeoX")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("GeoY")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("TripId")
+                        .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("TeamId", "MemberId");
+                    b.Property<int>("TripLocationType")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("MemberId");
+                    b.HasKey("TripLocationId");
 
-                    b.ToTable("TeamMember");
+                    b.HasIndex("TripId");
+
+                    b.ToTable("TripLocation");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Trips.TripTimeline", b =>
+                {
+                    b.Property<string>("TripTimelineId")
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateTimeline")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TripId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TripTimelineId");
+
+                    b.HasIndex("TripId");
+
+                    b.ToTable("TripTimeline");
                 });
 
             modelBuilder.Entity("Data.App.Models.Users.Role", b =>
@@ -581,11 +502,6 @@ namespace Data.migrations.app
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ContactId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("DateActualCompleted")
                         .HasColumnType("TEXT");
 
@@ -623,8 +539,6 @@ namespace Data.migrations.app
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserTaskId");
-
-                    b.HasIndex("ContactId");
 
                     b.HasIndex("RoleId");
 
@@ -670,71 +584,6 @@ namespace Data.migrations.app
                     b.ToTable("UserTaskItem");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Accounts.Account", b =>
-                {
-                    b.HasOne("Data.App.Models.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("Data.Common.Address", "Address", b1 =>
-                        {
-                            b1.Property<string>("AccountId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Barangay")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("BuildingName")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("City")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Country")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("FloorNumber")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("HouseNumber")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Municipality")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Province")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Purok")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("StreetName")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("StreetNumber")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("SubdivisionName")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("ZipCode")
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("AccountId");
-
-                            b1.ToTable("Account_Address");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AccountId");
-                        });
-
-                    b.Navigation("Address");
-
-                    b.Navigation("CreatedBy");
-                });
-
             modelBuilder.Entity("Data.App.Models.Chats.ChatMessage", b =>
                 {
                     b.HasOne("Data.App.Models.Chats.Chat", "Chat")
@@ -771,112 +620,91 @@ namespace Data.migrations.app
                     b.Navigation("Receiver");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Contacts.Contact", b =>
+            modelBuilder.Entity("Data.App.Models.Drivers.Driver", b =>
                 {
-                    b.HasOne("Data.App.Models.Accounts.Account", "Account")
-                        .WithMany("Contacts")
-                        .HasForeignKey("AccountId");
-
-                    b.HasOne("Data.App.Models.Users.User", "AssignedTo")
-                        .WithMany()
-                        .HasForeignKey("AssignedToId");
-
-                    b.HasOne("Data.App.Models.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("Data.App.Models.Teams.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId");
-
-                    b.Navigation("Account");
-
-                    b.Navigation("AssignedTo");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("Data.App.Models.Contacts.ContactAttachment", b =>
-                {
-                    b.HasOne("Data.App.Models.Contacts.Contact", "Contact")
-                        .WithMany("Attachments")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.App.Models.FileUploads.FileUpload", "FileUpload")
-                        .WithMany()
-                        .HasForeignKey("FileUploadId");
-
-                    b.Navigation("Contact");
-
-                    b.Navigation("FileUpload");
-                });
-
-            modelBuilder.Entity("Data.App.Models.Documents.Document", b =>
-                {
-                    b.HasOne("Data.App.Models.FileUploads.FileUpload", "FileUpload")
+                    b.HasOne("Data.App.Models.Users.User", "User")
                         .WithOne()
-                        .HasForeignKey("Data.App.Models.Documents.Document", "DocumentId")
+                        .HasForeignKey("Data.App.Models.Drivers.Driver", "DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.App.Models.Users.User", "UploadedBy")
-                        .WithMany()
-                        .HasForeignKey("UploadedById")
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Drivers.Vehicle", b =>
+                {
+                    b.HasOne("Data.App.Models.Drivers.Driver", "Driver")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FileUpload");
-
-                    b.Navigation("UploadedBy");
+                    b.Navigation("Driver");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Documents.DocumentAccessHistory", b =>
+            modelBuilder.Entity("Data.App.Models.Riders.Rider", b =>
                 {
-                    b.HasOne("Data.App.Models.Users.User", "AccessedBy")
-                        .WithMany()
-                        .HasForeignKey("AccessedById");
-
-                    b.HasOne("Data.App.Models.Documents.Document", "Document")
-                        .WithMany("DocumentAccessHistories")
-                        .HasForeignKey("DocumentId");
-
-                    b.Navigation("AccessedBy");
-
-                    b.Navigation("Document");
-                });
-
-            modelBuilder.Entity("Data.App.Models.Teams.Team", b =>
-                {
-                    b.HasOne("Data.App.Models.Chats.Chat", "Chat")
+                    b.HasOne("Data.App.Models.Users.User", "User")
                         .WithOne()
-                        .HasForeignKey("Data.App.Models.Teams.Team", "TeamId")
+                        .HasForeignKey("Data.App.Models.Riders.Rider", "RiderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Chat");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Teams.TeamMember", b =>
+            modelBuilder.Entity("Data.App.Models.Riders.RiderBookmark", b =>
                 {
-                    b.HasOne("Data.App.Models.Users.User", "Member")
-                        .WithMany("TeamMembers")
-                        .HasForeignKey("MemberId")
+                    b.HasOne("Data.App.Models.Riders.Rider", "Rider")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("RiderId");
+
+                    b.Navigation("Rider");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Trips.Trip", b =>
+                {
+                    b.HasOne("Data.App.Models.Drivers.Driver", "Driver")
+                        .WithMany("Trips")
+                        .HasForeignKey("DriverId");
+
+                    b.HasOne("Data.App.Models.Riders.Rider", "Rider")
+                        .WithMany("Trips")
+                        .HasForeignKey("RiderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.App.Models.Teams.Team", "Team")
-                        .WithMany("Members")
-                        .HasForeignKey("TeamId")
+                    b.HasOne("Data.App.Models.Drivers.Vehicle", "Vehicle")
+                        .WithMany("Trips")
+                        .HasForeignKey("VehicleId");
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Rider");
+
+                    b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Trips.TripLocation", b =>
+                {
+                    b.HasOne("Data.App.Models.Trips.Trip", "Trip")
+                        .WithMany("Locations")
+                        .HasForeignKey("TripId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Member");
+                    b.Navigation("Trip");
+                });
 
-                    b.Navigation("Team");
+            modelBuilder.Entity("Data.App.Models.Trips.TripTimeline", b =>
+                {
+                    b.HasOne("Data.App.Models.Trips.Trip", "Trip")
+                        .WithMany("Timelines")
+                        .HasForeignKey("TripId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Trip");
                 });
 
             modelBuilder.Entity("Data.App.Models.Users.User", b =>
@@ -909,12 +737,6 @@ namespace Data.migrations.app
 
             modelBuilder.Entity("Data.App.Models.Users.UserTask", b =>
                 {
-                    b.HasOne("Data.App.Models.Contacts.Contact", "Contact")
-                        .WithMany("Tasks")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Data.App.Models.Users.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -924,8 +746,6 @@ namespace Data.migrations.app
                     b.HasOne("Data.App.Models.Users.User", "User")
                         .WithMany("UserTasks")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Contact");
 
                     b.Navigation("Role");
 
@@ -943,11 +763,6 @@ namespace Data.migrations.app
                     b.Navigation("UserTask");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Accounts.Account", b =>
-                {
-                    b.Navigation("Contacts");
-                });
-
             modelBuilder.Entity("Data.App.Models.Chats.Chat", b =>
                 {
                     b.Navigation("Messages");
@@ -955,27 +770,34 @@ namespace Data.migrations.app
                     b.Navigation("Receivers");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Contacts.Contact", b =>
+            modelBuilder.Entity("Data.App.Models.Drivers.Driver", b =>
                 {
-                    b.Navigation("Attachments");
+                    b.Navigation("Trips");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("Vehicles");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Documents.Document", b =>
+            modelBuilder.Entity("Data.App.Models.Drivers.Vehicle", b =>
                 {
-                    b.Navigation("DocumentAccessHistories");
+                    b.Navigation("Trips");
                 });
 
-            modelBuilder.Entity("Data.App.Models.Teams.Team", b =>
+            modelBuilder.Entity("Data.App.Models.Riders.Rider", b =>
                 {
-                    b.Navigation("Members");
+                    b.Navigation("Bookmarks");
+
+                    b.Navigation("Trips");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Trips.Trip", b =>
+                {
+                    b.Navigation("Locations");
+
+                    b.Navigation("Timelines");
                 });
 
             modelBuilder.Entity("Data.App.Models.Users.User", b =>
                 {
-                    b.Navigation("TeamMembers");
-
                     b.Navigation("UserRoles");
 
                     b.Navigation("UserTasks");

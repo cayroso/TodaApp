@@ -1,10 +1,10 @@
-﻿using Data.App.Models.Accounts;
+﻿
 using Data.App.Models.Calendars;
 using Data.App.Models.Chats;
-using Data.App.Models.Contacts;
-using Data.App.Models.Documents;
+using Data.App.Models.Drivers;
 using Data.App.Models.FileUploads;
-using Data.App.Models.Teams;
+using Data.App.Models.Riders;
+using Data.App.Models.Trips;
 using Data.App.Models.Users;
 using Data.Identity.Models;
 using Data.Identity.Models.Users;
@@ -65,7 +65,6 @@ namespace Data.App.DbContext
 
         private readonly IConfiguration _configuration;
 
-        public DbSet<Account> Accounts { get; set; }
 
         public DbSet<Calendar> Calendars { get; set; }
 
@@ -73,17 +72,13 @@ namespace Data.App.DbContext
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<ChatReceiver> ChatReceivers { get; set; }
 
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<ContactAttachment> ContactAttachments { get; set; }
-
-        public DbSet<Document> Documents { get; set; }
+        public DbSet<Driver> Drivers { get; set; }
 
         public DbSet<FileUpload> FileUploads { get; set; }
 
+        public DbSet<Rider> Riders { get; set; }
 
-        public DbSet<Team> Teams { get; set; }
-        public DbSet<TeamMember> TeamMembers { get; set; }
-
+        public DbSet<Trip> Trips { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -128,46 +123,19 @@ namespace Data.App.DbContext
         {
             base.OnModelCreating(builder);
 
-            CreateAccounts(builder);
-
             CreateCalendar(builder);
 
             CreateChats(builder);
 
-            CreateContacts(builder);
-
-            CreateDocuments(builder);
+            CreateDrivers(builder);
 
             CreateFileUploads(builder);
 
-            CreateTeams(builder);
+            CreateRiders(builder);
+
+            CreateTrips(builder);
 
             CreateUser(builder);
-        }
-
-        void CreateAccounts(ModelBuilder builder)
-        {
-            builder.Entity<Account>(b =>
-            {
-                b.ToTable("Account");
-                b.HasKey(e => e.AccountId);
-
-                b.Property(e => e.AccountId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.CreatedById).HasMaxLength(KeyMaxLength).IsRequired();
-
-                b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
-
-                b.OwnsOne(e => e.Address, adrss =>
-                {
-                    adrss.ToTable("Account_Address");
-
-                    adrss.WithOwner();
-                });
-
-                b.HasMany(e => e.Contacts)
-                    .WithOne(d => d.Account)
-                    .HasForeignKey(d => d.AccountId);
-            });
         }
 
         void CreateCalendar(ModelBuilder builder)
@@ -235,81 +203,42 @@ namespace Data.App.DbContext
 
 
         }
-        void CreateContacts(ModelBuilder builder)
+
+        void CreateDrivers(ModelBuilder builder)
         {
-            builder.Entity<Contact>(b =>
+            builder.Entity<Driver>(b =>
             {
-                b.ToTable("Contact");
-                b.HasKey(e => e.ContactId);
+                b.ToTable("Driver");
+                b.HasKey(e => e.DriverId);
 
-                b.Property(e => e.ContactId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.AccountId).HasMaxLength(KeyMaxLength);
-                b.Property(e => e.CreatedById).HasMaxLength(KeyMaxLength);
-                b.Property(e => e.TeamId).HasMaxLength(KeyMaxLength);
-                b.Property(e => e.AssignedToId).HasMaxLength(KeyMaxLength);
-
+                b.Property(e => e.DriverId).HasMaxLength(KeyMaxLength).IsRequired();
                 b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
 
-                //b.HasMany(e => e.Notes)
-                //    .WithOne(d => d.Contact)
-                //    .HasForeignKey(d => d.ContactId);
+                b.HasOne(e => e.User).WithOne().HasForeignKey<Driver>(e => e.DriverId);
 
-                b.HasMany(e => e.Attachments)
-                    .WithOne(d => d.Contact)
-                    .HasForeignKey(d => d.ContactId);
+                b.HasMany(e => e.Trips)
+                    .WithOne(d => d.Driver)
+                    .HasForeignKey(f => f.DriverId);
 
-                b.HasMany(e => e.Tasks)
-                    .WithOne(d => d.Contact)
-                    .HasForeignKey(d => d.ContactId);
+                b.HasMany(e => e.Vehicles)
+                    .WithOne(d => d.Driver)
+                    .HasForeignKey(f => f.DriverId);
             });
 
-            //builder.Entity<ContactNote>(b =>
-            //{
-            //    b.ToTable("ContactNote");
-            //    b.HasKey(e => e.ContactNoteId);
-
-            //    b.Property(e => e.ContactNoteId).HasMaxLength(KeyMaxLength).IsRequired();
-            //    b.Property(e => e.ContactId).HasMaxLength(KeyMaxLength).IsRequired();
-            //    b.Property(e => e.Title).HasMaxLength(DescMaxLength).IsRequired();
-            //    b.Property(e => e.Content).HasMaxLength(NoteMaxLength).IsRequired();
-
-            //    b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
-            //});
-
-            builder.Entity<ContactAttachment>(b =>
+            builder.Entity<Vehicle>(b =>
             {
-                b.ToTable("ContactAttachment");
-                b.HasKey(e => e.ContactAttachmentId);
+                b.ToTable("Vehicle");
+                b.HasKey(e => e.VehicleId);
 
-                b.Property(e => e.ContactAttachmentId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.ContactId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.VehicleId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.DriverId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
 
-                b.Property(e => e.FileUploadId).HasMaxLength(KeyMaxLength);
-                b.Property(e => e.Title).HasMaxLength(DescMaxLength);
-                b.Property(e => e.Content).HasMaxLength(NoteMaxLength);
+                b.HasMany(e => e.Trips)
+                    .WithOne(d => d.Vehicle)
+                    .HasForeignKey(f => f.VehicleId);
             });
         }
-
-        void CreateDocuments(ModelBuilder builder)
-        {
-            builder.Entity<Document>(b =>
-            {
-                b.ToTable("Document");
-                b.HasKey(e => e.DocumentId);
-
-                b.Property(e => e.DocumentId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.UploadedById).HasMaxLength(KeyMaxLength).IsRequired();
-
-                b.HasOne(e => e.FileUpload).WithOne().HasForeignKey<Document>(e => e.DocumentId);
-
-                b.HasMany(p => p.DocumentAccessHistories)
-                    .WithOne(d => d.Document)
-                    .HasForeignKey(d => d.DocumentId)
-                    //.OnDelete(DeleteBehavior.Restrict)
-                    ;
-            });
-        }
-
         void CreateFileUploads(ModelBuilder builder)
         {
             builder.Entity<FileUpload>(b =>
@@ -327,35 +256,103 @@ namespace Data.App.DbContext
             });
         }
 
-        void CreateTeams(ModelBuilder builder)
+        void CreateRiders(ModelBuilder builder)
         {
-            builder.Entity<Team>(b =>
+            builder.Entity<Rider>(b =>
             {
-                b.ToTable("Team");
-                b.HasKey(e => e.TeamId);
+                b.ToTable("Rider");
+                b.HasKey(e => e.RiderId);
 
-                b.Property(e => e.TeamId).HasMaxLength(KeyMaxLength).IsRequired();                
-                b.Property(e => e.Name).HasMaxLength(NameMaxLength);
-                b.Property(e => e.Description).HasMaxLength(DescMaxLength);
+                b.Property(e => e.RiderId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
+
+                b.HasOne(e => e.User).WithOne().HasForeignKey<Rider>(e => e.RiderId);
+
+                b.HasMany(e => e.Bookmarks)
+                    .WithOne(d => d.Rider)
+                    .HasForeignKey(f => f.RiderId);
+
+                b.HasMany(e => e.Trips)
+                    .WithOne(d => d.Rider)
+                    .HasForeignKey(f => f.RiderId);
+            });
+        }
+
+        void CreateTrips(ModelBuilder builder)
+        {
+            builder.Entity<Trip>(b =>
+            {
+                b.ToTable("Trip");
+                b.HasKey(e => e.TripId);
+
+                b.Property(e => e.TripId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.RiderId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.DriverId).HasMaxLength(KeyMaxLength);
+                b.Property(e => e.VehicleId).HasMaxLength(KeyMaxLength);
+
+                b.Property(e => e.StartAddress).HasMaxLength(DescMaxLength).IsRequired();
+                b.Property(e => e.StartAddressDescription).HasMaxLength(DescMaxLength).IsRequired();
+                b.Property(e => e.EndAddress).HasMaxLength(DescMaxLength).IsRequired();
+                b.Property(e => e.EndAddressDescription).HasMaxLength(DescMaxLength).IsRequired();
 
                 b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
 
-                b.HasOne(e => e.Chat).WithOne().HasForeignKey<Team>(e => e.TeamId);
+                b.HasMany(e => e.Locations)
+                    .WithOne(d => d.Trip)
+                    .HasForeignKey(f => f.TripId);
 
-                b.HasMany(e => e.Members)
-                    .WithOne(d => d.Team)
-                    .HasForeignKey(d => d.TeamId);
+                b.HasMany(e => e.Timelines)
+                    .WithOne(d => d.Trip)
+                    .HasForeignKey(f => f.TripId);
             });
 
-            builder.Entity<TeamMember>(b =>
+            builder.Entity<TripLocation>(b =>
             {
-                b.ToTable("TeamMember");
-                b.HasKey(e => new { e.TeamId, e.MemberId });
+                b.ToTable("TripLocation");
+                b.HasKey(e => e.TripLocationId);
 
-                b.Property(e => e.TeamId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.MemberId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.TripLocationId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.TripId).HasMaxLength(KeyMaxLength).IsRequired();
+            });
+
+            builder.Entity<TripTimeline>(b =>
+            {
+                b.ToTable("TripTimeline");
+                b.HasKey(e => e.TripTimelineId);
+
+                b.Property(e => e.TripTimelineId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.TripId).HasMaxLength(KeyMaxLength).IsRequired();
             });
         }
+        //void CreateTeams(ModelBuilder builder)
+        //{
+        //    builder.Entity<Team>(b =>
+        //    {
+        //        b.ToTable("Team");
+        //        b.HasKey(e => e.TeamId);
+
+        //        b.Property(e => e.TeamId).HasMaxLength(KeyMaxLength).IsRequired();                
+        //        b.Property(e => e.Name).HasMaxLength(NameMaxLength);
+        //        b.Property(e => e.Description).HasMaxLength(DescMaxLength);
+
+        //        b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
+
+        //        b.HasOne(e => e.Chat).WithOne().HasForeignKey<Team>(e => e.TeamId);
+
+        //        b.HasMany(e => e.Members)
+        //            .WithOne(d => d.Team)
+        //            .HasForeignKey(d => d.TeamId);
+        //    });
+
+        //    builder.Entity<TeamMember>(b =>
+        //    {
+        //        b.ToTable("TeamMember");
+        //        b.HasKey(e => new { e.TeamId, e.MemberId });
+
+        //        b.Property(e => e.TeamId).HasMaxLength(KeyMaxLength).IsRequired();
+        //        b.Property(e => e.MemberId).HasMaxLength(KeyMaxLength).IsRequired();
+        //    });
+        //}
 
 
         static void CreateUser(ModelBuilder builder)
@@ -419,7 +416,6 @@ namespace Data.App.DbContext
 
                 b.Property(e => e.UserTaskId).HasMaxLength(KeyMaxLength).IsRequired();
                 b.Property(e => e.RoleId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.ContactId).HasMaxLength(KeyMaxLength).IsRequired();
                 b.Property(e => e.UserId).HasMaxLength(KeyMaxLength);
                 b.Property(e => e.Title).HasMaxLength(NameMaxLength).IsRequired();
                 b.Property(e => e.Description).HasMaxLength(DescMaxLength);

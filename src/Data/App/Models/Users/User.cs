@@ -1,7 +1,7 @@
 ﻿
-using Data.App.Models.Documents;
+
 using Data.App.Models.FileUploads;
-using Data.App.Models.Teams;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,8 +29,7 @@ namespace Data.App.Models.Users
         public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
 
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
-        public virtual ICollection<UserTask> UserTasks { get; set; } = new List<UserTask>();
-        public virtual ICollection<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
+        public virtual ICollection<UserTask> UserTasks { get; set; } = new List<UserTask>();        
 
         //public virtual ICollection<DocumentAccessHistory> DocumentAccessHistories { get; set; } = new List<DocumentAccessHistory>();
     }

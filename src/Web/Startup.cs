@@ -70,10 +70,10 @@ namespace Web
                        c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.DriverRoleName
                            )));
 
-                options.AddPolicy(ApplicationRoles.CommuterRoleName, policy =>
+                options.AddPolicy(ApplicationRoles.RiderRoleName, policy =>
                    policy.RequireAssertion(context =>
                        context.User.HasClaim(c =>
-                       c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.CommuterRoleName
+                       c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == ApplicationRoles.RiderRoleName
                            )));
 
 
@@ -96,10 +96,8 @@ namespace Web
             .AddRazorPagesOptions(opt =>
             {
                 opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.AdministratorRoleName, "/", ApplicationRoles.AdministratorRoleName);
-                opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.CommuterRoleName, "/", ApplicationRoles.CommuterRoleName);
                 opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.DriverRoleName, "/", ApplicationRoles.DriverRoleName);
-                //opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.CustomerRoleName, "/", ApplicationRoles.CustomerRoleName);
-                //opt.Conventions.AuthorizeFolder("/Customer", ApplicationRoles.CustomerRoleName);
+                opt.Conventions.AuthorizeAreaFolder(ApplicationRoles.RiderRoleName, "/", ApplicationRoles.RiderRoleName);
             });
 
 
@@ -148,13 +146,13 @@ namespace Web
                 {
                     context.Request.Path = "/administrator/";
                 }
-                else if (context.Request.Path.Value.StartsWith("/manager/"))
+                else if (context.Request.Path.Value.StartsWith("/driver/"))
                 {
-                    context.Request.Path = "/manager/";
+                    context.Request.Path = "/driver/";
                 }
-                else if (context.Request.Path.Value.StartsWith("/member/"))
+                else if (context.Request.Path.Value.StartsWith("/rider/"))
                 {
-                    context.Request.Path = "/member/";
+                    context.Request.Path = "/rider/";
                 }
 
 

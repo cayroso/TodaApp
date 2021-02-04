@@ -1,5 +1,4 @@
 ﻿using Common.Extensions;
-using Data.App.Models.Contacts;
 using Data.Enums;
 using Data.Identity.Models.Users;
 using System;
@@ -24,9 +23,6 @@ namespace Data.App.Models.Users
 
         public string UserId { get; set; }
         public virtual User User { get; set; }
-
-        public string ContactId { get; set; }
-        public virtual Contact Contact { get; set; }
 
         public string Title { get; set; }
         public string Description { get; set; }

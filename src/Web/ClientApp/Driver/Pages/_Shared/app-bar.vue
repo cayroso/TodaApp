@@ -25,11 +25,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item px-2 px-sm-0">
+                <!--<li class="nav-item px-2 px-sm-0">
                     <a v-b-toggle.teamsDrawer class="nav-link" @click.prevent href="#">
                         <i class="fas fa-users fa-fw"></i>
                     </a>
-                </li>
+                </li>-->
 
                 <!-- Nav Item - User Information -->
                 <li class="nav-item px-2 px-sm-0 dropdown">
@@ -65,7 +65,7 @@
         <!--<nav-drawer :appName="appName"></nav-drawer>-->
         <notifications-drawer :notifications="notifications"></notifications-drawer>
         <messages-drawer :messages="messages"></messages-drawer>
-        <teams-drawer :uid="uid"></teams-drawer>
+        <!--<teams-drawer :uid="uid"></teams-drawer>-->
     </b-navbar>
 </template>
 <script>

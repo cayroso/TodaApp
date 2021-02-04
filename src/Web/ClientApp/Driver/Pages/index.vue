@@ -292,7 +292,7 @@
             if (toggles)
                 vm.toggles = toggles;
 
-            await vm.get();
+            //await vm.get();
         },
 
         async mounted() {

@@ -11,6 +11,12 @@
             showLocation: Boolean,
             cx: Number,
             cy: Number,
+
+            fromX: Number,
+            fromY: Number,
+            toX: Number,
+            toY: Number,
+
             markerClickAction: Function,
             //items: Array,
         },
@@ -47,6 +53,9 @@
                 geocode: {},
                 items: [],
                 markers: [],
+
+                markerA: {},
+                markerB: {},
             };
         },
         created() {
@@ -64,9 +73,9 @@
             vm.navigator = navigator;
             vm.navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
-            var timerId = setInterval( _ => {
+            var timerId = setInterval(_ => {
                 if (google && google.maps) {
-                    
+
                     clearInterval(timerId);
 
                     vm.initMap();
@@ -92,7 +101,7 @@
                 mapTypeIds.push("OSM");
 
                 const lastZoom = Number.parseInt(localStorage.getItem('zoom')) || 15;
-                
+
                 vm.map = new google.maps.Map(document.getElementById(vm.mapName), {
                     center: vm.centerPosition,//{ lat: 13.948779, lng: 120.733035 }, //13.948779,120.733035
                     zoom: lastZoom,
@@ -103,7 +112,7 @@
                         mapTypeIds: mapTypeIds
                     }
                 });
-                
+
                 vm.map.mapTypes.set("OSM", new google.maps.ImageMapType({
                     getTileUrl: function (coord, zoom) {
                         // "Wrap" x (longitude) at 180th meridian properly
@@ -126,13 +135,13 @@
                 vm.geocoder = new google.maps.Geocoder;
 
                 if (vm.navigator.geolocation) {
-                    
+
                     if (vm.cx === 0 && vm.cy === 0) {
                         await vm.getCurrentLocation();
                     }
 
                     google.maps.event.addListener(vm.map, 'zoom_changed', function (arg) {
-                        
+
                         localStorage.setItem('zoom', this.zoom);
                     });
 
@@ -159,7 +168,7 @@
                 vm.geocoder.geocode({ 'location': vm.centerPosition }, function (results, status) {
 
                     if (status === 'OK') {
-                        
+
                         vm.$emit('onAddress', results[0], { lat: vm.centerPosition.lat(), lng: vm.centerPosition.lng() });
                         //vm.$emit('onGeolocation', { lat: vm.centerPosition.lat(), lng: vm.centerPosition.lng() });
 
@@ -171,21 +180,21 @@
 
             async getCurrentLocation() {
                 const vm = this;
-                
+
                 await vm.navigator.geolocation.getCurrentPosition(function (position) {
-                    
+
                     //if (!vm.fixed) {
-                        vm.centerPosition = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
+                    vm.centerPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
                     };
-                    
+
                     //}
 
                     vm.map.setCenter(vm.centerPosition);
 
                     if (vm.showLocation) {
-                        
+
                         vm.setMarker();
                         //vm.marker = new google.maps.Marker({
                         //    draggable: vm.draggable,
@@ -210,7 +219,7 @@
                     }
 
                 });
-                
+
             },
 
             setMarker() {
@@ -218,7 +227,7 @@
 
                 if (vm.marker && vm.marker.setMap)
                     vm.marker.setMap(null);
-                
+
                 vm.marker = new google.maps.Marker({
                     draggable: vm.draggable,
                     //animation: google.maps.Animation.BOUNCE,
@@ -237,11 +246,56 @@
 
                 google.maps.event.addListener(vm.marker, 'dragend', function (event) {
                     vm.centerPosition = this.getPosition();
-                    vm.geocodeLatLng();
+                //    vm.geocodeLatLng();
+                });
+
+                //  MARKER A
+                vm.markerA = new google.maps.Marker({
+                    draggable: vm.draggable,
+                    //animation: google.maps.Animation.BOUNCE,
+
+                    position: vm.centerPosition,
+                    map: vm.map,
+                    //title: "Your Current Location",
+                    label: {
+                        text: 'Pick up',
+                    //    //fontFamily: 'Fontawesome',
+                    },
+                });
+
+                //var latlng = new google.maps.LatLng(40.748774, -73.985763);
+                vm.markerA.setPosition(vm.centerPosition);
+
+                google.maps.event.addListener(vm.markerA, 'dragend', function (event) {
+                    //vm.centerPosition = this.getPosition();
+                    //vm.geocodeLatLng();
+                });
+
+                //  MARKER B
+                vm.markerB = new google.maps.Marker({
+                    draggable: vm.draggable,
+                    //animation: google.maps.Animation.BOUNCE,
+
+                    position: vm.centerPosition,
+                    map: vm.map,
+                    //title: "Your Current Location",
+                    label: {
+                        text: 'Destination',
+                        //    //fontFamily: 'Fontawesome',
+                    },
+                });
+
+                //var latlng = new google.maps.LatLng(40.748774, -73.985763);
+                vm.markerB.setPosition(vm.centerPosition);
+
+                google.maps.event.addListener(vm.markerB, 'dragend', function (event) {
+                    //vm.centerPosition = this.getPosition();
+                    //vm.geocodeLatLng();
                 });
             },
 
             placeMarkers(items, recenter) {
+                debugger;
                 const vm = this;
                 let markers = vm.markers;
 

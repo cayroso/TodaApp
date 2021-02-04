@@ -1,6 +1,5 @@
 ﻿using App.CQRS;
 using Data.App.DbContext;
-using Data.App.Models.Teams;
 using Data.Common;
 using Data.Identity.DbContext;
 using Data.Providers;

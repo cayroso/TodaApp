@@ -19,8 +19,9 @@ module.exports = {
     },
     entry: {
         'administrator': './ClientApp/Administrator/main.js',
-        'commuter': './ClientApp/Commuter/main.js',
         'driver': './ClientApp/Driver/main.js',
+        'rider': './ClientApp/Rider/main.js',
+        
     },
     output: {
         filename: '[name]-[contenthash].js',
@@ -98,20 +99,20 @@ module.exports = {
             chunks: ['administrator'],
             filename: path.resolve(__dirname, "Areas/Administrator/Pages/_Shared/_Layout.cshtml"),
             template: path.resolve(__dirname, "Areas/Administrator/Pages/_Shared/_Layout_Template.cshtml")
-        }),
-        new HtmlWebpackPlugin({
-            inject: false,
-            scriptLoading: 'defer',
-            chunks: ['commuter'],
-            filename: path.resolve(__dirname, "Areas/Commuter/Pages/_Shared/_Layout.cshtml"),
-            template: path.resolve(__dirname, "Areas/Commuter/Pages/_Shared/_Layout_Template.cshtml")
-        }),
+        }),        
         new HtmlWebpackPlugin({
             inject: false,
             scriptLoading: 'defer',
             chunks: ['driver'],
             filename: path.resolve(__dirname, "Areas/Driver/Pages/_Shared/_Layout.cshtml"),
             template: path.resolve(__dirname, "Areas/Driver/Pages/_Shared/_Layout_Template.cshtml")
+        }),
+        new HtmlWebpackPlugin({
+            inject: false,
+            scriptLoading: 'defer',
+            chunks: ['rider'],
+            filename: path.resolve(__dirname, "Areas/Rider/Pages/_Shared/_Layout.cshtml"),
+            template: path.resolve(__dirname, "Areas/Rider/Pages/_Shared/_Layout_Template.cshtml")
         }),
     ],
 

@@ -2,7 +2,6 @@
 using App.Services;
 using Data.App.DbContext;
 using Data.App.Models.Chats;
-using Data.App.Models.Teams;
 using Data.Common;
 using Data.Identity.DbContext;
 using Data.Providers;
@@ -30,7 +29,12 @@ namespace Web.Controllers
             _queryHandlerDispatcher = queryHandlerDispatcher ?? throw new ArgumentNullException(nameof(queryHandlerDispatcher));
         }
 
-        public class AddRideInfo
+        public async Task<IActionResult> Post([FromServices]AppDbContext dbContext, [FromBody] BookTripInfo info)
+        {
+            return Ok();
+        }
+
+        public class BookTripInfo
         {
             public string StartAddress { get; set; }
             public string EndAddress { get; set; }

@@ -19,37 +19,39 @@
     <div class="row mb-3">
         @if (User.IsInRole(Data.Constants.ApplicationRoles.AdministratorRoleName))
         {
-        <div class="col-md">
-            <div class="card shadow-sm card-body text-center mb-3">
-                <a asp-area="Administrator" asp-page="/index" class="text-decoration-none">
-                    <span class="fas fa-fw fa-lg fa-user-shield"></span> Administrator
-                </a>
+            <div class="col-md">
+                <div class="card shadow-sm card-body text-center mb-3">
+                    <a asp-area="Administrator" asp-page="/index" class="text-decoration-none">
+                        <span class="fas fa-fw fa-lg fa-user-shield"></span> Administrator
+                    </a>
+                </div>
             </div>
-        </div>
         }
-
-        @if (User.IsInRole(Data.Constants.ApplicationRoles.CommuterRoleName))
-        {
-        <div class="col-md">
-            <div class="card shadow-sm card-body text-center mb-3">
-                <a asp-area="Commuter" asp-page="/Index" class="text-decoration-none">
-                    <span class="fas fa-fw fa-lg fa-user-cog"></span> Commuter
-                </a>
-            </div>
-        </div>
-        }
-
-
+        
         @if (User.IsInRole(Data.Constants.ApplicationRoles.DriverRoleName))
         {
-        <div class="col-md">
-            <div class="card shadow-sm card-body text-center mb-3">
-                <a asp-area="Driver" asp-page="/Index" class="text-decoration-none">
-                    <span class="fas fa-fw fa-lg fa-user"></span> Driver
-                </a>
+            <div class="col-md">
+                <div class="card shadow-sm card-body text-center mb-3">
+                    <a asp-area="Driver" asp-page="/Index" class="text-decoration-none">
+                        <span class="fas fa-fw fa-lg fa-user"></span> Driver
+                    </a>
+                </div>
             </div>
-        </div>
         }
+
+        @if (User.IsInRole(Data.Constants.ApplicationRoles.RiderRoleName))
+        {
+            <div class="col-md">
+                <div class="card shadow-sm card-body text-center mb-3">
+                    <a asp-area="Rider" asp-page="/Index" class="text-decoration-none">
+                        <span class="fas fa-fw fa-lg fa-user-cog"></span> Rider
+                    </a>
+                </div>
+            </div>
+        }
+
+
+
 
     </div>
 
