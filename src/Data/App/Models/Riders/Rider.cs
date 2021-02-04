@@ -2,6 +2,7 @@
 using Data.App.Models.Users;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace Data.App.Models.Riders
 
     public class RiderBookmark
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string RiderBookmarkId { get; set; }
 
         public string RiderId { get; set; }

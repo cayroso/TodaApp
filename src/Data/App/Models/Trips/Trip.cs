@@ -5,6 +5,7 @@ using Data.App.Models.Users;
 using Data.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,40 +47,12 @@ namespace Data.App.Models.Trips
         public string DriverComment { get; set; }
 
 
-        DateTime _dateStart;
-        public DateTime DateStart
-        {
-            get => _dateStart.AsUtc();
-            set => _dateStart = value.Truncate();
-        }
-
-        DateTime _dateEnd;
-        public DateTime DateEnd
-        {
-            get => _dateEnd.AsUtc();
-            set => _dateEnd = value.Truncate();
-        }
-
-        DateTime _dateCreated;
+        DateTime _dateCreated = DateTime.Now.Truncate();
         public DateTime DateCreated
         {
             get => _dateCreated.AsUtc();
             set => _dateCreated = value.Truncate();
         }
-
-        //DateTime _dateUpdated;
-        //public DateTime DateUpdated
-        //{
-        //    get => _dateUpdated.AsUtc();
-        //    set => _dateUpdated = value.Truncate();
-        //}
-
-        //DateTime _dateDeleted;
-        //public DateTime DateDeleted
-        //{
-        //    get => _dateDeleted.AsUtc();
-        //    set => _dateDeleted = value.Truncate();
-        //}
 
         public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
         public virtual ICollection<TripLocation> Locations { get; set; } = new List<TripLocation>();
@@ -88,6 +61,7 @@ namespace Data.App.Models.Trips
 
     public class TripTimeline
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string TripTimelineId { get; set; }
 
         public string TripId { get; set; }
@@ -95,7 +69,9 @@ namespace Data.App.Models.Trips
 
         public EnumRideStatus Status { get; set; }
 
-        DateTime _dateTimeline;
+        public string Notes { get; set; }
+
+        DateTime _dateTimeline = DateTime.Now.Truncate();
         public DateTime DateTimeline
         {
             get => _dateTimeline.AsUtc();
@@ -103,15 +79,9 @@ namespace Data.App.Models.Trips
         }
     }
 
-    public enum EnunTripLocationType
-    {
-        Unknown = 0,
-        Rider = 1,
-        Driver = 2,
-    }
-
     public class TripLocation
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string TripLocationId { get; set; }
         public string TripId { get; set; }
         public virtual Trip Trip { get; set; }
@@ -121,7 +91,7 @@ namespace Data.App.Models.Trips
         public double GeoX { get; set; }
         public double GeoY { get; set; }
 
-        DateTime _dateCreated;
+        DateTime _dateCreated = DateTime.Now.Truncate();
         public DateTime DateCreated
         {
             get => _dateCreated.AsUtc();

@@ -9,10 +9,12 @@ namespace Data.Enums
     public enum EnumRideStatus
     {
         Unknown = 0,
+
+        Pending,
         /// <summary>
         /// Ride is requested by not yet processed by the system
         /// </summary>
-        Requested = 1,
+        Requested,
         /// <summary>
         /// System assigned ride to driver, 5min for driver to accept/reject
         /// </summary>
@@ -26,13 +28,17 @@ namespace Data.Enums
         /// </summary>
         DriverRejected,
         /// <summary>
+        /// Driver has accepted the trip and now offering fare to rider
+        /// </summary>
+        DriverOfferedFare,
+        /// <summary>
         /// Rider accepted the fare offered by driver, system will put ride to InProgress
         /// </summary>
-        RiderAccepted,
+        RiderOfferedFareAccepted,
         /// <summary>
         /// Rider rejected fare offered, system will put ride to Requested
         /// </summary>
-        RiderRejected,
+        RiderOfferedFareRejected,
         /// <summary>
         /// Ride is currently in travel
         /// </summary>
