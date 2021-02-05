@@ -21,6 +21,7 @@ import tasksIndex from './Pages/Tasks/index.vue';
 
 import tripsIndex from './Pages/Trips/index.vue';
 import tripsAdd from './Pages/Trips/Add/index.vue';
+import tripsView from './Pages/Trips/View/index.vue';
 
 const NotFound = {
     template: '<div>Not found</div>'
@@ -40,8 +41,8 @@ const routes = [
     { path: '/documents/view/:id', name: "documentsView", component: documentsView, props: true },
 
     { path: '/trips', name: "trips", component: tripsIndex },
-
     { path: '/trips/add', name: "tripsAdd", component: tripsAdd },
+    { path: '/trips/view/:id', name: "tripsView", component: tripsView, props: true },
 
     { path: '*', component: NotFound },
 ];

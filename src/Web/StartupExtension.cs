@@ -1,11 +1,13 @@
 ﻿using App.CQRS;
 using App.Services;
+using Data.App.Models.Trips;
 using Data.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.BackgroundServices;
 
 namespace Web
 {
@@ -13,6 +15,9 @@ namespace Web
     {
         public static void RegisterCQRS(IServiceCollection services)
         {
+            services.AddSingleton<JobQueue<Trip>>();
+            services.AddHostedService<MyJobBackgroundService>();
+
             services.AddTransient<IContainer, DotNetCoreContainer>();
             services.AddScoped<ITenantProvider, DefaultTenantProvider>();
             services.AddScoped<IAppDbContextFactory, DefaultAppDbContextFactory>();

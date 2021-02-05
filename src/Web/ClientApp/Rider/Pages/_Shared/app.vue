@@ -2,9 +2,9 @@
     <div v-cloak>
         <app-bar :uid="uid" :appName="appName" :urlProfilePicture="urlProfilePicture" :menus="menus"></app-bar>
         <main class="container-lg main mb-5 mb-md-0 pb-5 pb-sm-0">
-            <router-view></router-view>
+            <router-view :uid="uid"></router-view>
         </main>
-        <bottom-nav></bottom-nav>
+        <bottom-nav :menus="menus"></bottom-nav>
 
         <modal-view-chat ref="modalViewChat" :uid="uid"></modal-view-chat>
     </div>
@@ -20,18 +20,18 @@
     import NavDrawer from './nav-drawer.vue';
     //import AppFooter from './footer.vue';
     import BottomNav from './bottom-nav.vue';
-    
+
     export default {
         mixins: [appMixin],
         components: {
 
             modalViewChat,
 
-            //SystemBar, 
+            //SystemBar,
             AppBar, NavDrawer,
-            //AppFooter, 
+            //AppFooter,
             BottomNav,
-            
+
         },
         props: {
             uid: String,
@@ -45,11 +45,45 @@
                     //{ to: '/contacts', label: 'Contacts', icon: 'fas fa-fw fa-id-card' },
                     //{ to: '/tasks', label: 'Tasks', icon: 'fas fa-fw fa-tasks' },
                     //{ to: '/documents', label: 'Documents', icon: 'fas fa-fw fa-archive' },
-                    { to: '/trips/add', label: 'Add Trip', icon: 'fas fa-fw fa-users' },
+                    { to: '/trips', label: 'Trips', icon: 'fas fa-fw fa-users' },
                 ]
             }
         },
         async mounted() {
+            const vm = this;
+
+            vm.$bus.$on('event:trip-driver-assigned', async function (resp) {
+                vm.$bvToast.toast(`The system has assigned a driver to your trip request.`, {
+                    title: `Driver Assigned`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:trip-driver-accepted', async function (resp) {
+                vm.$bvToast.toast(`Driver accepted the trip request. Wait for the driver's fare offer.`, {
+                    title: `Driver Accepted Trip Request`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:trip-driver-rejected', async function (resp) {
+                vm.$bvToast.toast(`The assigned driver rejected the trip request. System will look for another driver`, {
+                    title: `Driver Rejected Trip Request`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:trip-driver-fare-offered', async function (resp) {
+                vm.$bvToast.toast(`The drifer offered ${resp.fare}.`, {
+                    title: `Driver Offered Fare`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
             //let theme = localStorage.getItem('theme') || '';
             //if (theme) {
             //    //debugger;

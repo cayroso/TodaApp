@@ -16,7 +16,7 @@ namespace Data.App.Models.Trips
     {
         public string TripId { get; set; }
 
-        public EnumRideStatus Status { get; set; }
+        public EnumTripStatus Status { get; set; }
         public string CancelReason { get; set; }
 
         public string RiderId { get; set; }
@@ -47,7 +47,7 @@ namespace Data.App.Models.Trips
         public string DriverComment { get; set; }
 
 
-        DateTime _dateCreated = DateTime.Now.Truncate();
+        DateTime _dateCreated = DateTime.UtcNow.Truncate();
         public DateTime DateCreated
         {
             get => _dateCreated.AsUtc();
@@ -64,14 +64,17 @@ namespace Data.App.Models.Trips
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string TripTimelineId { get; set; }
 
+        public string UserId { get; set; }
+        public User User { get; set; }
+
         public string TripId { get; set; }
         public virtual Trip Trip { get; set; }
 
-        public EnumRideStatus Status { get; set; }
+        public EnumTripStatus Status { get; set; }
 
         public string Notes { get; set; }
 
-        DateTime _dateTimeline = DateTime.Now.Truncate();
+        DateTime _dateTimeline = DateTime.UtcNow;
         public DateTime DateTimeline
         {
             get => _dateTimeline.AsUtc();

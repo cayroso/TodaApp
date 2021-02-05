@@ -123,6 +123,7 @@ namespace Web
             services.AddScoped<App.Services.ChatService>();
 
             services.AddTransient<ChatHub>();
+            services.AddTransient<TripHub>();
 
             StartupExtension.RegisterCQRS(services);
         }
@@ -178,6 +179,7 @@ namespace Web
                 endpoints.MapControllers();
 
                 endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<TripHub>("/tripHub"); 
             });
         }
     }

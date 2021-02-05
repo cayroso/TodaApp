@@ -77,7 +77,7 @@ namespace Data.Identity.DbContext
                     FirstName = "Kerina",
                     LastName = "Talandipa",
                     ConcurrencyToken = token1,
-                    Theme = "https://bootswatch.com/4/darkly/bootstrap.min.css"
+                    Theme = "https://bootswatch.com/4/slate/bootstrap.min.css"
                 }
             };
 
@@ -116,7 +116,7 @@ namespace Data.Identity.DbContext
                     FirstName = "Tina",
                     LastName = "Moran",
                     ConcurrencyToken = token1,
-                    Theme = "https://bootswatch.com/4/spacelab/bootstrap.min.css"
+                    Theme = "https://bootswatch.com/4/sketchy/bootstrap.min.css"
                 }
             };
             var admin2Roles = ApplicationRoles.Items.Select(e => new IdentityUserRole<string>

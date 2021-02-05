@@ -2,7 +2,7 @@
     <div v-cloak>
         <app-bar :uid="uid" :appName="appName" :urlProfilePicture="urlProfilePicture" :menus="menus"></app-bar>
         <main class="container-lg main mb-5 mb-md-0 pb-5 pb-sm-0">
-            <router-view></router-view>
+            <router-view :uid="uid"></router-view>
         </main>
         <bottom-nav :menus="menus"></bottom-nav>
 
@@ -41,10 +41,10 @@
             return {
                 menus: [
                     { to: '/', label: 'Home', icon: 'fas fa-fw fa-home' },
-                    { to: '/contacts', label: 'Contacts', icon: 'fas fa-fw fa-id-card' },
-                    { to: '/tasks', label: 'Tasks', icon: 'fas fa-fw fa-tasks' },
-                    { to: '/documents', label: 'Documents', icon: 'fas fa-fw fa-archive' },
-                    //{ to: '/teams', label: 'My Teams', icon: 'fas fa-fw fa-users' },
+                    //{ to: '/contacts', label: 'Contacts', icon: 'fas fa-fw fa-id-card' },
+                    //{ to: '/tasks', label: 'Tasks', icon: 'fas fa-fw fa-tasks' },
+                    //{ to: '/documents', label: 'Documents', icon: 'fas fa-fw fa-archive' },
+                    { to: '/trips', label: 'Trips', icon: 'fas fa-fw fa-users' },
                 ]
             }
         },

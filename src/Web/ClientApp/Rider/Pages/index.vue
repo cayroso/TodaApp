@@ -1,6 +1,9 @@
 ﻿<template>
     <div v-cloak>
-        <div class="row row-cols-2 row-cols-sm-3">
+        <div>
+            under construction
+        </div>
+        <div class="d-none row row-cols-2 row-cols-sm-3">
             <div class="col mb-2">
                 <div class="card">
                     <div class="card-body">

@@ -1,28 +1,10 @@
 ﻿<template>
     <b-navbar fixed="bottom" type="dark" variant="dark" class="d-block d-sm-none">
         <b-navbar-nav align="center" :justified="true">
-            <li class="nav-item">
-                <router-link to="/" class="nav-link">
-                    <span class="fas fa-fw fa-home mr-1"></span>
-                    <span class="d-none d-md-inline">Home</span>
-                </router-link>
-            </li>
-            <li class="nav-item">
-                <router-link to="/contacts" class="nav-link">
-                    <span class="fas fa-fw fa-id-card mr-1"></span>
-                    <span class="d-none d-md-inline">Contacts</span>
-                </router-link>
-            </li>
-            <li class="nav-item">
-                <router-link to="/tasks" class="nav-link">
-                    <span class="fas fa-fw fa-tasks mr-1"></span>
-                    <span class="d-none d-md-inline">Tasks</span>
-                </router-link>
-            </li>
-            <li class="nav-item">
-                <router-link to="/documents" class="nav-link">
-                    <span class="fas fa-fw fa-archive mr-1"></span>
-                    <span class="d-none d-md-inline">Documents</span>
+            <li v-for="menu in menus" class="nav-item">
+                <router-link :to="menu.to" class="nav-link">
+                    <span v-bind:class="menu.icon" class="mr-1"></span>
+                    <span v-text="menu.label" class="d-none d-md-inline"></span>
                 </router-link>
             </li>
         </b-navbar-nav>
@@ -36,6 +18,7 @@
 
         props: {
             uid: String,
+            menus: Array
         },
 
         data() {

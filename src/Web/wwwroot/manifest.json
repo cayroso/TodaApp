@@ -1,6 +1,6 @@
 {
   "background_color": "papayawhip",
-  "description": "<AppName> Description",
+  "description": "Toda App Description",
   "display": "standalone",
   "icons": [
     {
@@ -12,9 +12,9 @@
       "sizes": "512x512"
     }
   ],
-  "name": "<Application Name>",
+  "name": "Toda App",
   "scope": "/",
-  "short_name": "<AppName>",
+  "short_name": "Toda App",
   "start_url": "/",
   "theme_color": "#ffffff"
 }

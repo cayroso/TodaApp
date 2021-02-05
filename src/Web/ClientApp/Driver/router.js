@@ -19,7 +19,9 @@ import tasksIndex from './Pages/Tasks/index.vue';
 import tasksAdd from './Pages/Tasks/add.vue';
 import tasksView from './Pages/Tasks/View/index.vue';
 
-import teamsIndex from './Pages/Teams/index.vue';
+import tripsIndex from './Pages/Trips/index.vue';
+import tripsView from './Pages/Trips/View/index.vue';
+
 
 
 const NotFound = {
@@ -40,6 +42,9 @@ const routes = [
     { path: '/documents/view/:id', name: "documentsView", component: documentsView, props: true },
 
     { path: '/tasks', name: "tasks", component: tasksIndex },
+
+    { path: '/trips', name: "trips", component: tripsIndex },
+    { path: '/trips/view/:id', name: "tripsView", component: tripsView, props: true },
 
     //{ path: '/teams', name: "teams", component: teamsIndex },
 

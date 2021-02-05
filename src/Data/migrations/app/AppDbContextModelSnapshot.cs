@@ -163,6 +163,9 @@ namespace Data.migrations.app
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Availability")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ConcurrencyToken")
                         .IsRequired()
                         .HasMaxLength(36)
@@ -176,6 +179,7 @@ namespace Data.migrations.app
             modelBuilder.Entity("Data.App.Models.Drivers.Vehicle", b =>
                 {
                     b.Property<string>("VehicleId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
@@ -187,6 +191,9 @@ namespace Data.migrations.app
                     b.Property<string>("DriverId")
                         .IsRequired()
                         .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PlateNumber")
                         .HasColumnType("TEXT");
 
                     b.HasKey("VehicleId");
@@ -251,6 +258,7 @@ namespace Data.migrations.app
             modelBuilder.Entity("Data.App.Models.Riders.RiderBookmark", b =>
                 {
                     b.Property<string>("RiderBookmarkId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RiderId")
@@ -278,12 +286,6 @@ namespace Data.migrations.app
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateEnd")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateStart")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DriverComment")
@@ -363,6 +365,7 @@ namespace Data.migrations.app
             modelBuilder.Entity("Data.App.Models.Trips.TripLocation", b =>
                 {
                     b.Property<string>("TripLocationId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
@@ -393,10 +396,14 @@ namespace Data.migrations.app
             modelBuilder.Entity("Data.App.Models.Trips.TripTimeline", b =>
                 {
                     b.Property<string>("TripTimelineId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateTimeline")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -407,9 +414,16 @@ namespace Data.migrations.app
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("TripTimelineId");
 
                     b.HasIndex("TripId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TripTimeline");
                 });
@@ -704,7 +718,15 @@ namespace Data.migrations.app
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Data.App.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Trip");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Data.App.Models.Users.User", b =>

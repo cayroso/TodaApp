@@ -1,11 +1,14 @@
 ﻿<template>
     <div v-cloak>
-        <div class="text-right pb-1">
+        <div>
+            Under construction
+        </div>
+        <div class="d-none text-right pb-1">
             <button @click="get" class="btn btn-sm btn-outline-primary">
                 <i class="fas fa-fw fa-sync"></i>
             </button>
         </div>
-        <div class="row">
+        <div class="d-none row">
             <div class="col">
                 <div class="card shadow-sm">
                     <div @click="toggle('tasks')" class="card-header bg-primary text-white ">

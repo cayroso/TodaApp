@@ -4,4 +4,8 @@
     ViewBag.Title = "Manager";
     var urlProfilePicture = User.FindFirst("Profile:UrlProfilePicture").Value;
 }
-<app uid="@Model.UserId" url-profile-picture="@urlProfilePicture"></app>
+<app uid="@Model.UserId" app-name="Toda App" url-profile-picture="@urlProfilePicture"></app>
+
+@section Scripts{
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfucoZC5t-bH-q38_l6qn2XeP25Kr_1vw"></script>
+}

@@ -8,6 +8,7 @@ export default {
     },
     data() {
         return {
+            tripHub: null,
             enums: {
                 orderStatus: {
                     requested: 1,
@@ -50,6 +51,8 @@ export default {
             //await vm.connectNotificationHub();
 
             await vm.connectChatHub();
+
+            await vm.connectTripHub();
 
             vm.$bus.$on('event:open-chat', vm.onOpenChat);
             vm.$bus.$on('event:close-chat', vm.onCloseChat);
@@ -250,6 +253,90 @@ export default {
 
             vm.currentOpenChatId = null;
             vm.$refs.modalViewChat.close();
+        },
+
+        async connectTripHub() {
+            const vm = this;
+
+            const hub = new signalR.HubConnectionBuilder()
+                .withUrl('/tripHub')
+                //.configureLogging(signalR.LogLevel.Debug)
+                .withAutomaticReconnect()
+                .build();
+
+            hub.on('driverAssigned', function (resp) {                
+                vm.$bus.$emit('event:trip-driver-assigned', resp);
+            });
+
+            hub.on('driverAccepted', function (resp) {
+                vm.$bus.$emit('event:trip-driver-accepted', resp);
+            });
+
+            hub.on('driverRejected', function (resp) {
+                vm.$bus.$emit('event:trip-driver-rejected', resp);
+            });
+
+            hub.on('driverFareOffered', function (resp) {
+                vm.$bus.$emit('event:trip-driver-fare-offered', resp);
+            });
+
+            //hub.on('tripRequested', function () {
+            //    vm.$bvToast.toast(`tripRequested`, {
+            //        title: `tripRequested`,
+            //        variant: 'info',
+            //        solid: true
+            //    });
+            //});
+
+            hub.on('received', function (resp) {
+
+                const message = resp.content || "-no reason specified-";
+
+                const h = vm.$createElement;
+                // Create the message
+                let foo = [
+                    h('span', message),
+                    h('p'),
+                ];
+
+                if (resp.refLink) {
+                    //debugger
+                    foo.push(
+                        h('a', { attrs: { href: resp.refLink } }, 'Click here to View.')
+                    )
+                }
+                //debugger
+                const vNodesMsg = h(
+                    'div', foo
+                );
+
+                var route = window.location;
+                var contains = route.pathname.includes(resp.itemId);
+
+                if (!contains || (contains && resp.itemEvent !== 'Post:Comment')) {
+                    vm.$bvToast.toast([vNodesMsg], {
+                        title: `${resp.subject}`,
+                        variant: 'info',
+                        solid: true
+                    });
+                }
+
+                //  emit event
+                vm.$bus.$emit('event:notification-received', resp);
+            });
+
+            hub.on('jobUpdated', function (resp) {
+                vm.$bus.$emit('event:job-updated', resp);
+            });
+
+            await hub.start().then(function () {
+                //debugger;
+            }).catch(function (err) {
+                //debugger;
+                //vm.$util.handleError(err);
+            });
+
+            vm.tripHub = hub;
         },
     }
 }

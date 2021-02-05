@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Data.App.Models.Chats;
+using Data.App.Models.Drivers;
+using Data.App.Models.Riders;
 using Data.App.Models.Users;
 using Data.Constants;
 using Data.Identity.DbContext;
@@ -71,6 +73,39 @@ namespace Data.App.DbContext
                 }).ToList();
 
                 appUsers.Add(appUser);
+
+                // if driver
+                if (userRoles.Any(e => e.RoleId == ApplicationRoles.Driver.Id))
+                {
+                    var driver = new Driver
+                    {
+                        DriverId = appUser.UserId,
+                    };
+
+                    driver.Vehicles.Add(new Vehicle
+                    {
+                        DriverId = driver.DriverId,
+                        PlateNumber = "Vehicle #1"
+                    });
+                    driver.Vehicles.Add(new Vehicle
+                    {
+                        DriverId = driver.DriverId,
+                        PlateNumber = "Vehicle #2"
+                    });
+
+                    appDbContext.Add(driver);
+                }
+
+                // if rider
+                if (userRoles.Any(e => e.RoleId == ApplicationRoles.Rider.Id))
+                {
+                    var rider = new Rider
+                    {
+                        RiderId = appUser.UserId,
+                    };
+
+                    appDbContext.Add(rider);
+                }
             });
 
             appDbContext.AddRange(appUsers);

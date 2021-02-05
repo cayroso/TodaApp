@@ -322,6 +322,7 @@ namespace Data.App.DbContext
 
                 b.Property(e => e.TripTimelineId).HasMaxLength(KeyMaxLength).IsRequired();
                 b.Property(e => e.TripId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.UserId).HasMaxLength(KeyMaxLength).IsRequired();
             });
         }
         //void CreateTeams(ModelBuilder builder)

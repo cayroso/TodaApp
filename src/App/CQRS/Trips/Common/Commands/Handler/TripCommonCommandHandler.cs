@@ -13,13 +13,16 @@ using System.Threading.Tasks;
 namespace App.CQRS.Trips.Common.Commands.Handler
 {
     public sealed class TripCommonCommandHandler :
-        ICommandHandler<DriverAcceptedTripCommand>,
-        ICommandHandler<DriverOfferFareCommand>,
-        ICommandHandler<DriverRejectedTripCommand>,
-        ICommandHandler<RiderCancelledTripCommand>,
-        ICommandHandler<RiderCreatedTripCommand>,
-        ICommandHandler<RiderRejectedDriverOfferCommand>,
-        ICommandHandler<RiderRequestedTripCommand>
+        ICommandHandler<DriverAcceptRiderTripRequestCommand>,
+        ICommandHandler<DriverOfferFareToRiderTripRequestCommand>,
+        ICommandHandler<DriverRejectRiderTripRequestCommand>,
+        ICommandHandler<RiderAcceptDriverOfferCommand>,
+        ICommandHandler<RiderCancelTripCommand>,
+        ICommandHandler<RiderCreateTripCommand>,
+        ICommandHandler<RiderRejectDriverOfferCommand>,
+        ICommandHandler<RiderRequestTripCommand>,
+        ICommandHandler<SetTripToCompleteCommand>,
+        ICommandHandler<SetTripToInProgressCommand>
 
     {
         readonly AppDbContext _appDbContext;
@@ -33,52 +36,60 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
         #region Driver
 
-        async Task ICommandHandler<DriverAcceptedTripCommand>.HandleAsync(DriverAcceptedTripCommand command)
+        async Task ICommandHandler<DriverAcceptRiderTripRequestCommand>.HandleAsync(DriverAcceptRiderTripRequestCommand command)
         {
-            var trip = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == command.TripId);
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
 
             trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
 
-            trip.Status = EnumRideStatus.DriverAccepted;
+            trip.Status = EnumTripStatus.DriverAccepted;
             trip.Fare = 0;
+            trip.Driver.Availability = EnumDriverAvailability.Unavailable;
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status
             });
 
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<DriverOfferFareCommand>.HandleAsync(DriverOfferFareCommand command)
+        async Task ICommandHandler<DriverOfferFareToRiderTripRequestCommand>.HandleAsync(DriverOfferFareToRiderTripRequestCommand command)
         {
             var trip = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == command.TripId);
 
             trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
 
-            trip.Status = EnumRideStatus.DriverOfferedFare;
+            trip.Status = EnumTripStatus.DriverOfferedFare;
             trip.Fare = command.Fare;
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status,
-                Notes = $"Fare offered={command.Fare}"
+                Notes = command.Notes
             });
 
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<DriverRejectedTripCommand>.HandleAsync(DriverRejectedTripCommand command)
+        async Task ICommandHandler<DriverRejectRiderTripRequestCommand>.HandleAsync(DriverRejectRiderTripRequestCommand command)
         {
-            var trip = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == command.TripId);
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
 
             trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
 
-            trip.Status = EnumRideStatus.DriverRejected;
+            trip.Status = EnumTripStatus.DriverRejected;
             trip.Fare = 0;
+            trip.Driver.Availability = EnumDriverAvailability.Available;
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status,
                 Notes = command.Notes
             });
@@ -91,16 +102,42 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
         #region Rider
 
-        async Task ICommandHandler<RiderCancelledTripCommand>.HandleAsync(RiderCancelledTripCommand command)
+        async Task ICommandHandler<RiderAcceptDriverOfferCommand>.HandleAsync(RiderAcceptDriverOfferCommand command)
         {
-            var trip = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == command.TripId);
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
 
             trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
 
-            trip.Status = EnumRideStatus.Requested;
+            trip.Status = EnumTripStatus.RiderOfferedFareAccepted;
+            trip.Driver.Availability = EnumDriverAvailability.Unavailable;
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
+                Status = trip.Status
+            });
+
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        async Task ICommandHandler<RiderCancelTripCommand>.HandleAsync(RiderCancelTripCommand command)
+        {
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
+
+            trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
+
+            trip.Status = EnumTripStatus.Cancelled;
+
+            if (trip.Driver != null)
+            {
+                trip.Driver.Availability = EnumDriverAvailability.Available;
+            }
+
+            trip.Timelines.Add(new TripTimeline
+            {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status,
                 Notes = command.Notes
             });
@@ -108,11 +145,11 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<RiderCreatedTripCommand>.HandleAsync(RiderCreatedTripCommand command)
+        async Task ICommandHandler<RiderCreateTripCommand>.HandleAsync(RiderCreateTripCommand command)
         {
             //  check if user has pending trip
             var existingTrip = await _appDbContext.Trips.Where(e => e.RiderId == command.UserId
-                        && !(e.Status == EnumRideStatus.Complete || e.Status == EnumRideStatus.Cancelled)).AnyAsync();
+                        && !(e.Status == EnumTripStatus.Complete || e.Status == EnumTripStatus.Cancelled)).AnyAsync();
 
             if (existingTrip)
             {
@@ -134,11 +171,13 @@ namespace App.CQRS.Trips.Common.Commands.Handler
                 EndX = command.EndX,
                 EndY = command.EndY,
 
-                Status = EnumRideStatus.Pending,
+                Status = EnumTripStatus.Pending,
             };
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status,
             });
 
@@ -147,16 +186,20 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<RiderRejectedDriverOfferCommand>.HandleAsync(RiderRejectedDriverOfferCommand command)
+        async Task ICommandHandler<RiderRejectDriverOfferCommand>.HandleAsync(RiderRejectDriverOfferCommand command)
         {
-            var trip = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == command.TripId);
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
 
             trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
 
-            trip.Status = EnumRideStatus.Requested;
+            trip.Status = EnumTripStatus.RiderOfferedFareRejected;
+            trip.Fare = 0;
+            trip.Driver.Availability = EnumDriverAvailability.Available;
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status,
                 Notes = command.Notes
             });
@@ -164,22 +207,65 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<RiderRequestedTripCommand>.HandleAsync(RiderRequestedTripCommand command)
+        async Task ICommandHandler<RiderRequestTripCommand>.HandleAsync(RiderRequestTripCommand command)
         {
             var trip = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == command.TripId);
 
             trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
 
-            trip.Status = EnumRideStatus.Requested;
+            trip.Status = EnumTripStatus.Requested;
             trip.Fare = 0;
 
             trip.Timelines.Add(new TripTimeline
             {
+                TripId = trip.TripId,
+                UserId = command.UserId,
                 Status = trip.Status,
             });
 
             await _appDbContext.SaveChangesAsync();
         }
+
+        async Task ICommandHandler<SetTripToCompleteCommand>.HandleAsync(SetTripToCompleteCommand command)
+        {
+
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
+
+            trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
+
+            trip.Status = EnumTripStatus.Complete;
+            trip.Driver.Availability = EnumDriverAvailability.Available;
+
+            trip.Timelines.Add(new TripTimeline
+            {
+                TripId = trip.TripId,
+                UserId = command.UserId,
+                Status = trip.Status
+            });
+
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        async Task ICommandHandler<SetTripToInProgressCommand>.HandleAsync(SetTripToInProgressCommand command)
+        {
+            var trip = await _appDbContext.Trips.Include(e => e.Driver).FirstOrDefaultAsync(e => e.TripId == command.TripId);
+
+            trip.ThrowIfNullOrAlreadyUpdated(command.Token, _sequentialGuidGenerator.NewId());
+
+            trip.Status = EnumTripStatus.InProgress;
+            trip.Driver.Availability = EnumDriverAvailability.Unavailable;
+
+            trip.Timelines.Add(new TripTimeline
+            {
+                TripId = trip.TripId,
+                UserId = command.UserId,
+                Status = trip.Status
+            });
+
+            await _appDbContext.SaveChangesAsync();
+        }
+
+
 
         #endregion
 
