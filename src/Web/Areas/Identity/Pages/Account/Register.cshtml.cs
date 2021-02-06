@@ -19,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Data.Providers;
 using Data.Identity.Models;
 using Data.Constants;
+using Data.App.DbContext;
+using Data.App.Models.Users;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -52,19 +54,16 @@ namespace Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "Business Name")]
-            public string BusinessName { get; set; }
-            [Required]
-            [Display(Name = "Business Address")]
-            public string BusinessAddress { get; set; }
-
-            [Required]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
 
             [Required]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
+
+            [Required]
+            [Display(Name = "Middle Name")]
+            public string MiddleName { get; set; }
 
             [Required]
             [Phone]
@@ -86,6 +85,10 @@ namespace Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Role")]
+            public string RoleId { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -96,6 +99,7 @@ namespace Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(
             [FromServices] IdentityWebContext identityWebContext,
+            [FromServices] AppDbContext appDbContext,
             [FromServices] IConfiguration configuration,
             [FromServices] IAppDbContextFactory appDbContextFactory,
             string returnUrl = null)
@@ -104,49 +108,6 @@ namespace Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                if (!Input.BusinessName.All(p => char.IsLetterOrDigit(p) || char.IsWhiteSpace(p)))
-                {
-                    ModelState.AddModelError("", "Business Name should be letters, numbers, or spaces only");
-
-                    return Page();
-                }
-                var businessName = Input.BusinessName.Replace(" ", string.Empty);
-                if (businessName.Length <= 0)
-                {
-                    ModelState.AddModelError("", "Please, dont try that.");
-
-                    return Page();
-                }
-
-                var tenantId = Guid.NewGuid().ToString();
-
-                //  take 8 chars from business name
-                if (businessName.Length < 8)
-                {
-                    businessName += "".PadRight(8 - businessName.Length, '0');
-                }
-
-                var bu = businessName.Substring(0, 8).ToUpper();
-                if (bu.Length < 8)
-                {
-                    bu = bu.PadRight(8 - bu.Length, '0');
-                }
-                bu = $"{bu}-{tenantId}";
-
-                var serverName = configuration.GetValue<string>("AppSettings:SQLServer");
-                var connString = appDbContextFactory.GenerateConnectionString(serverName, bu.ToUpper());
-                //  add tenant
-                var tenant = new Tenant
-                {
-                    TenantId = tenantId,
-                    Host = bu,
-                    Name = Input.BusinessName,
-                    DatabaseConnectionString = connString,
-                    Email = Input.Email,
-                    PhoneNumber = Input.PhoneNumber,
-                    Address = Input.BusinessAddress
-                };
-
                 var userId = Guid.NewGuid().ToString();
                 var token = Guid.NewGuid().ToString();
 
@@ -168,48 +129,61 @@ namespace Web.Areas.Identity.Pages.Account
                 var user = new IdentityWebUser
                 {
                     Id = userId,
-                    TenantId = tenantId,
+                    //TenantId = tenantId,
                     UserName = Input.Email,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
-                    ConcurrencyStamp = token
+                    ConcurrencyStamp = token,
                 };
 
                 var userInfo = new UserInformation
                 {
-                    //UserInformationId = Guid.NewGuid().ToString(),
                     UserId = userId,
                     FirstName = Input.FirstName,
+                    MiddleName = Input.MiddleName,
                     LastName = Input.LastName,
-                    //PhoneNumber = Input.PhoneNumber,
-                    //Default = true,
-                    ConcurrencyToken = token
                 };
 
-                tenant.Users.Add(user);
-
-                await identityWebContext.AddRangeAsync(tenant, userInfo);
+                await identityWebContext.AddRangeAsync(userInfo);
                 await identityWebContext.AddRangeAsync(userRoles);
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-
-                    var provisionUserRole = new ProvisionUserRole
+                    var appUser = new User
                     {
-                        User = new Data.App.Models.Users.User
-                        {
-                            UserId = user.Id,
-                            FirstName = Input.FirstName,
-                            LastName = Input.LastName,
-                            Email = Input.Email,
-                            PhoneNumber = Input.PhoneNumber,
-                            ConcurrencyToken = token
-                        },
-                        RoleIds = userRoles.Select(e => e.RoleId).ToList()
+                        UserId = user.Id,
+                        Email = user.Email,
+                        FirstName = Input.FirstName,
+                        MiddleName = Input.MiddleName,
+                        LastName = Input.LastName,
+                        PhoneNumber = Input.PhoneNumber,
                     };
+                    appUser.UserRoles.Add(new UserRole
+                    {
+                        UserId = appUser.UserId,
+                        RoleId = Input.RoleId
+                    });
 
-                    appDbContextFactory.Provision(tenant, new List<ProvisionUserRole>(new[] { provisionUserRole }), true);
+                    await appDbContext.AddAsync(appUser);
+
+                    await appDbContext.SaveChangesAsync();
+
+                    //var provisionUserRole = new ProvisionUserRole
+                    //{
+                    //    User = new Data.App.Models.Users.User
+                    //    {
+                    //        UserId = user.Id,
+                    //        FirstName = Input.FirstName,
+                    //        LastName = Input.LastName,
+                    //        Email = Input.Email,
+                    //        PhoneNumber = Input.PhoneNumber,
+                    //        ConcurrencyToken = token
+                    //    },
+                    //    RoleIds = userRoles.Select(e => e.RoleId).ToList()
+                    //};
+
+                    //appDbContextFactory.Provision(tenant, new List<ProvisionUserRole>(new[] { provisionUserRole }), true);
 
                     _logger.LogInformation("User created a new account with password.");
 
