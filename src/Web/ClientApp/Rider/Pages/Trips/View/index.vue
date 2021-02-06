@@ -125,6 +125,9 @@
                                 <div class="form-control-plaintext">
                                     {{item.driver.firstName}} {{item.driver.middleName}} {{item.driver.lastName}}
                                 </div>
+                                <a @click.prevent="$bus.$emit('event:send-message', item.driver.driverId)" href="#">
+                                    xxxxxxx {{item.driver.driverId}}
+                                </a>
                             </div>
                             <div class="form-group col-md">
                                 <label>Phone Number</label>
