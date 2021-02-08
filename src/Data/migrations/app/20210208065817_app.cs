@@ -81,6 +81,8 @@ namespace Data.migrations.app
                     LastName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    OverallRating = table.Column<double>(type: "REAL", nullable: false),
+                    TotalRating = table.Column<double>(type: "REAL", nullable: false),
                     ConcurrencyToken = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -357,6 +359,32 @@ namespace Data.migrations.app
                 });
 
             migrationBuilder.CreateTable(
+                name: "TripExcludedDriver",
+                columns: table => new
+                {
+                    TripExcludedDriverId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    TripId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    DriverId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    Reason = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TripExcludedDriver", x => x.TripExcludedDriverId);
+                    table.ForeignKey(
+                        name: "FK_TripExcludedDriver_Driver_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Driver",
+                        principalColumn: "DriverId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TripExcludedDriver_Trip_TripId",
+                        column: x => x.TripId,
+                        principalTable: "Trip",
+                        principalColumn: "TripId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TripLocation",
                 columns: table => new
                 {
@@ -447,6 +475,16 @@ namespace Data.migrations.app
                 column: "VehicleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TripExcludedDriver_DriverId",
+                table: "TripExcludedDriver",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripExcludedDriver_TripId",
+                table: "TripExcludedDriver",
+                column: "TripId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TripLocation_TripId",
                 table: "TripLocation",
                 column: "TripId");
@@ -505,6 +543,9 @@ namespace Data.migrations.app
 
             migrationBuilder.DropTable(
                 name: "RiderBookmark");
+
+            migrationBuilder.DropTable(
+                name: "TripExcludedDriver");
 
             migrationBuilder.DropTable(
                 name: "TripLocation");

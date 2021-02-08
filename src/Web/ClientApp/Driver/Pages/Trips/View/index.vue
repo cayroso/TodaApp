@@ -1,13 +1,22 @@
-﻿<template>
+﻿<style>
+    label {
+        font-size: small;
+        font-weight: bold;
+    }
+</style>
+<template>
     <div v-cloak>
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
             <h1 class="h3 mb-sm-0">
-                <span class="fas fa-fw fa-id-card mr-1"></span>View Trip
+                <span class="fas fa-fw fa-map-marked mr-1"></span>View
             </h1>
 
             <div class="text-right">
 
-                <button v-if="item.status==4" @click="offerFare()" class="btn btn-primary">Offer Fare</button>
+                <button v-if="item.status===7" @click="startTrip()" class="btn btn-primary">Start</button>
+                <button v-if="item.status===9" @click="completeTrip()" class="btn btn-primary">Complete</button>
+
+                <button v-if="item.status==4 || item.status==6" @click="offerFare()" class="btn btn-primary">Offer Fare</button>
 
                 <button v-if="item.status==3" @click="acceptRequest()" class="btn btn-primary">Accept</button>
                 <button v-if="item.status==3 || item.status==4" @click="rejectRequest()" class="btn btn-warning">Reject</button>
@@ -19,32 +28,32 @@
                     <i class="fas fa-fw fa-times"></i>
                 </button>
                 <!--<div class="col-auto mr-1">
-                    <a :href="urlAdd" class="btn btn-primary">
-                        <span class="fas fa-fw fa-plus"></span>
-                    </a>
-                </div>
-                <div class="col-auto mr-1">
-                    <button @click="filter.visible = !filter.visible" class="btn btn-primary">
-                        <span class="fas fa-fw fa-filter"></span>
-                    </button>
-                </div>
-                <div class="col">
-                    <div class="input-group">
-                        <input v-model="filter.query.criteria" @keyup.enter="search(1)" type="text" class="form-control">
-                        <div class="input-group-append">
-                            <button @click="search(1)" class="btn btn-secondary" type="button" id="button-addon2">
-                                <span class="fa fas fa-fw fa-search"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>-->
+        <a :href="urlAdd" class="btn btn-primary">
+            <span class="fas fa-fw fa-plus"></span>
+        </a>
+    </div>
+    <div class="col-auto mr-1">
+        <button @click="filter.visible = !filter.visible" class="btn btn-primary">
+            <span class="fas fa-fw fa-filter"></span>
+        </button>
+    </div>
+    <div class="col">
+        <div class="input-group">
+            <input v-model="filter.query.criteria" @keyup.enter="search(1)" type="text" class="form-control">
+            <div class="input-group-append">
+                <button @click="search(1)" class="btn btn-secondary" type="button" id="button-addon2">
+                    <span class="fa fas fa-fw fa-search"></span>
+                </button>
+            </div>
+        </div>
+    </div>-->
             </div>
         </div>
 
         <div class="card mt-2">
             <div @click="toggle('information')" class="card-header d-flex flex-row justify-content-between align-items-center">
                 <h5 class="mb-0 align-self-start">
-                    <span class="fas fa-fw fa-info-circle mr-1 d-none"></span>Information
+                    <span class="fas fa-fw fa-info-circle mr-1"></span>Information
                 </h5>
                 <div>
                     <span>
@@ -61,16 +70,10 @@
                             <div class="form-control-plaintext">
                                 {{item.statusText}}
                             </div>
-                        </div>
-                        <div class="form-group col-md">
-                            <label>Status Reason</label>
-                            <div class="form-control-plaintext">
+                            <div class="small">
                                 {{item.cancelReason}}
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-row">
                         <div class="form-group col-md">
                             <label>Pickup</label>
                             <div class="form-control-plaintext">
@@ -80,8 +83,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="form-group col-md">
                             <label>Destination</label>
                             <div class="form-control-plaintext">
@@ -99,7 +100,7 @@
         <div class="card mt-2">
             <div @click="toggle('rider')" class="card-header d-flex flex-row justify-content-between align-items-center">
                 <h5 class="mb-0 align-self-start">
-                    <span class="fas fa-fw fa-info-circle mr-1 d-none"></span>Rider
+                    <span class="fas fa-fw fa-street-view mr-1"></span>Rider
                 </h5>
                 <div>
                     <span>
@@ -110,14 +111,49 @@
             </div>
             <b-collapse v-model="toggles.rider">
                 <div class="p-2">
-                    {{item.rider}}
+                    <div class="text-right">
+                        <button @click.prevent="$bus.$emit('event:send-message', item.rider.riderId)" class="btn btn-primary">
+                            <i class="fas fa-fw fa-envelope"></i>
+                        </button>
+                        <a :href="`tel:${item.rider.phoneNumber}`" class="btn btn-primary">
+                            <i class="fas fa-fw fa-phone"></i>
+                        </a>
+                        <a :href="`sms:${item.rider.phoneNumber}`" class="btn btn-primary">
+                            <i class="fas fa-fw fa-sms"></i>
+                        </a>
+                    </div>
+                    <div class="mt-2 form-row">
+                        <div class="form-group col-md">
+                            <label>Name</label>
+                            <div class="align-self-center">
+                                <b-avatar :src="item.rider.urlProfilePicture" :inline="true"></b-avatar>
+                                <span>
+                                    {{item.rider.firstName}} {{item.rider.middleName}} {{item.rider.lastName}}
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-md">
+                            <label>Phone Number</label>
+                            <div class="form-control-plaintext">
+                                {{item.rider.phoneNumber}}
+                            </div>
+                        </div>
+                        <div class="form-group col-md">
+                            <label>Offer</label>
+                            <div class="form-control-plaintext">
+                                {{item.fare|toCurrency}}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </b-collapse>
         </div>
         <div class="card mt-2">
             <div @click="toggle('map')" class="card-header d-flex flex-row justify-content-between align-items-center">
                 <h5 class="mb-0 align-self-start">
-                    <span class="fas fa-fw fa-info-circle mr-1 d-none"></span>Map
+                    <span class="fas fa-fw fa-map mr-1"></span>Map
                 </h5>
                 <div>
                     <span>
@@ -145,7 +181,7 @@
         <div class="card mt-2">
             <div @click="toggle('timeline')" class="card-header d-flex flex-row justify-content-between align-items-center">
                 <h5 class="mb-0 align-self-start">
-                    <span class="fas fa-fw fa-info-circle mr-1 d-none"></span>Timeline
+                    <span class="fas fa-fw fa-history mr-1"></span>Timeline
                 </h5>
                 <div>
                     <span>
@@ -156,25 +192,28 @@
             </div>
             <b-collapse v-model="toggles.timeline">
                 <div class="table-responsive mb-0">
-                    <table class="table">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Status</th>
                                 <th>Notes</th>
-                                <th>Date</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(tl,index) in item.timelines">
+                                <td>{{index+1}}</td>
                                 <td>
-                                    {{
-index+1
-                                    }}
+                                    <div>
+                                        {{tl.statusText}}
+                                    </div>
+                                    <div class="small ml-3">
+                                        {{tl.dateTimeline|moment('calendar')}}
+                                    </div>
                                 </td>
-                                <td>{{tl.statusText}}</td>
                                 <td>{{tl.notes}}</td>
-                                <td>{{tl.dateTimeline|moment('calendar')}}</td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -209,7 +248,9 @@ index+1
                     locations: false,
                 },
 
-                item: {}
+                item: {
+                    rider: {}
+                }
             };
         },
 
@@ -230,9 +271,23 @@ index+1
             const vm = this;
 
             await vm.get();
+
+            vm.$bus.$on('event:driver-assigned', vm.refresh);
+            vm.$bus.$on('event:rider-offered-fare-accepted', vm.refresh);
+            vm.$bus.$on('event:rider-offered-fare-rejected', vm.refresh);
+            vm.$bus.$on('event:rider-trip-cancelled', vm.refresh);
+            vm.$bus.$on('event:rider-trip-inprogress', vm.refresh);
+            vm.$bus.$on('event:rider-trip-completed', vm.refresh);
         },
 
         methods: {
+            async refresh(resp) {
+                const vm = this;
+
+                if (resp.tripId === vm.id) {
+                    await vm.get();
+                }
+            },
             async get() {
                 const vm = this;
 
@@ -316,9 +371,9 @@ index+1
             },
 
             async offerFare() {
-                var fare = prompt("Enter fare here...", "Fare Offered");
+                var fare = prompt("Fare Offered", 0);
 
-                if (isNaN(fare)) {
+                if (isNaN(fare) || fare <= 0) {
                     alert('Invalid value for fare.');
                     return;
                 }
@@ -344,6 +399,56 @@ index+1
                         .then(async resp => {
                             vm.$bvToast.toast('Fare offer sent to rider.', { title: 'Offer Fare', variant: 'success', toaster: 'b-toaster-bottom-right' });
                         })
+
+                } catch (e) {
+                    vm.$util.handleError(e);
+                } finally {
+                    vm.busy = false;
+
+                    await vm.get();
+                }
+            },
+
+            async startTrip() {
+                const vm = this;
+
+                if (vm.busy)
+                    return;
+
+                try {
+                    vm.busy = true;
+
+                    const item = vm.item;
+
+                    await vm.$util.axios.put(`/api/trips/${item.tripId}/driver-inprogress/${item.token}`)
+                        .then(async resp => {
+                            vm.$bvToast.toast('Trip started.', { title: 'Start Trip', variant: 'success', toaster: 'b-toaster-bottom-right' });
+                        })
+
+                } catch (e) {
+                    vm.$util.handleError(e);
+                } finally {
+                    vm.busy = false;
+
+                    await vm.get();
+                }
+            },
+
+            async completeTrip() {
+                const vm = this;
+
+                if (vm.busy)
+                    return;
+
+                try {
+                    vm.busy = true;
+
+                    const item = vm.item;
+
+                    await vm.$util.axios.put(`/api/trips/${item.tripId}/driver-complete/${item.token}`)
+                        .then(async resp => {
+                            vm.$bvToast.toast('Trip completed.', { title: 'Complete Trip', variant: 'success', toaster: 'b-toaster-bottom-right' });
+                        });
 
                 } catch (e) {
                     vm.$util.handleError(e);

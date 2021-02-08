@@ -264,22 +264,50 @@ export default {
                 .withAutomaticReconnect()
                 .build();
 
+            //  driver
             hub.on('driverAssigned', function (resp) {                
-                vm.$bus.$emit('event:trip-driver-assigned', resp);
+                vm.$bus.$emit('event:driver-assigned', resp);
             });
 
             hub.on('driverAccepted', function (resp) {
-                vm.$bus.$emit('event:trip-driver-accepted', resp);
+                vm.$bus.$emit('event:driver-accepted', resp);
             });
 
             hub.on('driverRejected', function (resp) {
-                vm.$bus.$emit('event:trip-driver-rejected', resp);
+                vm.$bus.$emit('event:driver-rejected', resp);
             });
 
             hub.on('driverFareOffered', function (resp) {
-                vm.$bus.$emit('event:trip-driver-fare-offered', resp);
+                vm.$bus.$emit('event:driver-fare-offered', resp);
             });
 
+            hub.on('driverTripInProgress', function (resp) {
+                vm.$bus.$emit('event:driver-trip-inprogress', resp);
+            });
+
+            hub.on('driverTripCompleted', function (resp) {
+                vm.$bus.$emit('event:driver-trip-completed', resp);
+            });
+
+            //  rider
+            hub.on('riderTripRequested', function (resp) {
+                vm.$bus.$emit('event:rider-trip-requested', resp);
+            });
+            hub.on('riderOfferedFareAccepted', function (resp) {
+                vm.$bus.$emit('event:rider-offered-fare-accepted', resp);
+            });
+            hub.on('riderOfferedFareRejected', function (resp) {
+                vm.$bus.$emit('event:rider-offered-fare-rejected', resp);
+            });
+            hub.on('riderTripCancelled', function (resp) {
+                vm.$bus.$emit('event:rider-trip-cancelled', resp);
+            });
+            hub.on('riderTripInProgress', function (resp) {
+                vm.$bus.$emit('event:rider-trip-inprogress', resp);
+            });
+            hub.on('riderTripCompleted', function (resp) {
+                vm.$bus.$emit('event:rider-trip-completed', resp);
+            });
             //hub.on('tripRequested', function () {
             //    vm.$bvToast.toast(`tripRequested`, {
             //        title: `tripRequested`,

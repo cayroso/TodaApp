@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Code;
+using System.Security.Claims;
 
 namespace Web.Pages
 {
@@ -18,9 +19,16 @@ namespace Web.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if (User.Claims.Count(e => e.Type == ClaimTypes.Role) == 1)
+            {
+                var role = User.Claims.First(e => e.Type == ClaimTypes.Role).Value;
 
+                return RedirectToPage("/Index", new { area = role });
+            }
+
+            return Page();
         }
     }
 }

@@ -362,6 +362,35 @@ namespace Data.migrations.app
                     b.ToTable("Trip");
                 });
 
+            modelBuilder.Entity("Data.App.Models.Trips.TripExcludedDriver", b =>
+                {
+                    b.Property<string>("TripExcludedDriverId")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DriverId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TripId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TripExcludedDriverId");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("TripId");
+
+                    b.ToTable("TripExcludedDriver");
+                });
+
             modelBuilder.Entity("Data.App.Models.Trips.TripLocation", b =>
                 {
                     b.Property<string>("TripLocationId")
@@ -476,10 +505,16 @@ namespace Data.migrations.app
                     b.Property<string>("MiddleName")
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("OverallRating")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("TotalRating")
+                        .HasColumnType("REAL");
 
                     b.HasKey("UserId");
 
@@ -699,6 +734,25 @@ namespace Data.migrations.app
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("Data.App.Models.Trips.TripExcludedDriver", b =>
+                {
+                    b.HasOne("Data.App.Models.Drivers.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.App.Models.Trips.Trip", "Trip")
+                        .WithMany("ExcludedDrivers")
+                        .HasForeignKey("TripId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Trip");
+                });
+
             modelBuilder.Entity("Data.App.Models.Trips.TripLocation", b =>
                 {
                     b.HasOne("Data.App.Models.Trips.Trip", "Trip")
@@ -813,6 +867,8 @@ namespace Data.migrations.app
 
             modelBuilder.Entity("Data.App.Models.Trips.Trip", b =>
                 {
+                    b.Navigation("ExcludedDrivers");
+
                     b.Navigation("Locations");
 
                     b.Navigation("Timelines");

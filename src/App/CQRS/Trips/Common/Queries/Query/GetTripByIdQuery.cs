@@ -67,6 +67,7 @@ namespace App.CQRS.Trips.Common.Queries.Query
         public class Rider
         {
             public string RiderId { get; set; }
+            public string UrlProfilePicture { get; set; }
             public string FirstName { get; set; }
             public string MiddleName { get; set; }
             public string LastName { get; set; }
@@ -76,6 +77,7 @@ namespace App.CQRS.Trips.Common.Queries.Query
         public class Driver
         {
             public string DriverId { get; set; }
+            public string UrlProfilePicture { get; set; }
             public string FirstName { get; set; }
             public string MiddleName { get; set; }
             public string LastName { get; set; }

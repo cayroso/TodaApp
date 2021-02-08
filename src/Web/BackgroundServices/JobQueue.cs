@@ -57,10 +57,18 @@ namespace Web.BackgroundServices
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var trip = await appDbContext.Trips.Include(e => e.Rider).ThenInclude(e => e.User).FirstOrDefaultAsync(e => e.TripId == job.TripId);
+                    var trip = await appDbContext.Trips
+                        .Include(e => e.Rider)
+                            .ThenInclude(e => e.User)
+                        .Include(e=> e.ExcludedDrivers)
+                        .FirstOrDefaultAsync(e => e.TripId == job.TripId);
 
                     //  get available drivers
-                    var drivers = await appDbContext.Drivers.Include(e => e.User).Where(e => e.DriverId != trip.RiderId && e.Availability == Data.Enums.EnumDriverAvailability.Available).ToListAsync();
+                    var drivers = await appDbContext.Drivers.Include(e => e.User)
+                        .Where(e => !trip.ExcludedDrivers.Any(ed=> ed.DriverId== e.DriverId) 
+                                    &&  e.DriverId != trip.RiderId 
+                                    && e.Availability == Data.Enums.EnumDriverAvailability.Available)
+                        .ToListAsync();
 
                     if (trip != null && drivers.Any())
                     {

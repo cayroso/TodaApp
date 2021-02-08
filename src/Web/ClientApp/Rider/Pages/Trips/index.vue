@@ -4,7 +4,7 @@
         <div class="row align-items-center">
             <div class="col-sm">
                 <h1 class="h3 mb-sm-0">
-                    <i class="fas fa-fw fa-users mr-1"></i>Trips
+                    <i class="fas fa-fw fa-map-marked mr-1"></i>Trips
                 </h1>
             </div>
             <div class="col-sm-auto">
@@ -46,14 +46,17 @@
                     <template slot="table" slot-scope="row">
                         <td v-text="getRowNumber(row.index)" class="text-center"></td>
                         <td>
-                            <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                <div v-if="row.item.driver">
-                                    {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
-                                </div>
-                                <div v-else>
-                                    View
-                                </div>
-                            </router-link>
+                            <span>
+                                <b-avatar size="sm" :src="row.item.driver.urlProfilePicture" :inline="true"></b-avatar>
+                                <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
+                                    <div v-if="row.item.driver">
+                                        {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
+                                    </div>
+                                    <div v-else>
+                                        View
+                                    </div>
+                                </router-link>
+                            </span>
                         </td>
                         <td>
                             {{row.item.statusText}}
@@ -72,13 +75,14 @@
                             <div class="form-group mb-0 row no-gutters">
                                 <label class="col-3 col-form-label">Driver</label>
                                 <div class="col align-self-center">
+                                    <b-avatar :src="row.item.driver.urlProfilePicture"></b-avatar>
                                     <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                        <div v-if="row.item.driver">
+                                        <span v-if="row.item.driver">
                                             {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
-                                        </div>
-                                        <div v-else>
+                                        </span>
+                                        <span v-else>
                                             View
-                                        </div>
+                                        </span>
                                     </router-link>
                                 </div>
                             </div>
@@ -129,7 +133,7 @@
 
         data() {
             return {
-                baseUrl: `/api/drivers/trips/search`,
+                baseUrl: `/api/riders/trips/search`,
                 filter: {
                     cacheKey: `filter-${this.uid}/search-trips`,
                 },

@@ -94,6 +94,13 @@ namespace App.CQRS.Trips.Common.Commands.Handler
                 Notes = command.Notes
             });
 
+            trip.ExcludedDrivers.Add(new TripExcludedDriver
+            {
+                TripId = trip.TripId,
+                DriverId = trip.DriverId,
+                Reason = command.Notes,
+            });
+
             await _appDbContext.SaveChangesAsync();
         }
 

@@ -55,50 +55,9 @@ namespace Data.App.Models.Trips
         }
 
         public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
+
+        public virtual ICollection<TripExcludedDriver> ExcludedDrivers { get; set; } = new List<TripExcludedDriver>();
         public virtual ICollection<TripLocation> Locations { get; set; } = new List<TripLocation>();
         public virtual ICollection<TripTimeline> Timelines { get; set; } = new List<TripTimeline>();
-    }
-
-    public class TripTimeline
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string TripTimelineId { get; set; }
-
-        public string UserId { get; set; }
-        public User User { get; set; }
-
-        public string TripId { get; set; }
-        public virtual Trip Trip { get; set; }
-
-        public EnumTripStatus Status { get; set; }
-
-        public string Notes { get; set; }
-
-        DateTime _dateTimeline = DateTime.UtcNow;
-        public DateTime DateTimeline
-        {
-            get => _dateTimeline.AsUtc();
-            set => _dateTimeline = value.Truncate();
-        }
-    }
-
-    public class TripLocation
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string TripLocationId { get; set; }
-        public string TripId { get; set; }
-        public virtual Trip Trip { get; set; }
-
-        public EnunTripLocationType TripLocationType { get; set; }
-
-        public double GeoX { get; set; }
-        public double GeoY { get; set; }
-
-        DateTime _dateCreated = DateTime.Now.Truncate();
-        public DateTime DateCreated
-        {
-            get => _dateCreated.AsUtc();
-            set => _dateCreated = value.Truncate();
-        }
     }
 }

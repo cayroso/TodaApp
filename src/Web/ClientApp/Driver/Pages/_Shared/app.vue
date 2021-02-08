@@ -49,15 +49,55 @@
             }
         },
         async mounted() {
-            //let theme = localStorage.getItem('theme') || '';
-            //if (theme) {
-            //    //debugger;
-            //    let style = document.createElement('link');
-            //    style.type = "text/css";
-            //    style.rel = "stylesheet";
-            //    style.href = theme;// 'https://bootswatch.com/4/yeti/bootstrap.min.css';
-            //    document.head.appendChild(style);
-            //}
+            const vm = this;
+
+            vm.$bus.$on('event:driver-assigned', async function (resp) {
+                vm.$bvToast.toast(`The system has assigned you as driver to a trip request.`, {
+                    title: `Driver Assigned`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:rider-offered-fare-accepted', async function (resp) {
+                vm.$bvToast.toast(`The rider accepted the offered fare ${resp.fare}.`, {
+                    title: `Rider Accepted Offered Fare`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:rider-offered-fare-rejected', async function (resp) {
+                vm.$bvToast.toast(`The rider rejected the offered fare ${resp.fare}.`, {
+                    title: `Rider Rejected Offered Fare`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:rider-trip-cancelled', async function (resp) {
+                vm.$bvToast.toast(`Rider cancelled the trip request, with reason "${resp.reason}".`, {
+                    title: `Trip Cancelled`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:rider-trip-inprogress', async function (resp) {
+                vm.$bvToast.toast(`The rider set the trip request to In-Progress`, {
+                    title: `Trip In-Progress`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:rider-trip-completed', async function (resp) {
+                vm.$bvToast.toast(`The rider set the trip request to Completed.`, {
+                    title: `Trip Completed`,
+                    variant: 'info',
+                    solid: true
+                });
+            });            
         },
         async created() {
             //const vm = this;

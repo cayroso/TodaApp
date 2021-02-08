@@ -45,14 +45,14 @@
                     //{ to: '/contacts', label: 'Contacts', icon: 'fas fa-fw fa-id-card' },
                     //{ to: '/tasks', label: 'Tasks', icon: 'fas fa-fw fa-tasks' },
                     //{ to: '/documents', label: 'Documents', icon: 'fas fa-fw fa-archive' },
-                    { to: '/trips', label: 'Trips', icon: 'fas fa-fw fa-users' },
+                    { to: '/trips', label: 'Trips', icon: 'fas fa-fw fa-map-marked' },
                 ]
             }
         },
         async mounted() {
             const vm = this;
 
-            vm.$bus.$on('event:trip-driver-assigned', async function (resp) {
+            vm.$bus.$on('event:driver-assigned', async function (resp) {
                 vm.$bvToast.toast(`The system has assigned a driver to your trip request.`, {
                     title: `Driver Assigned`,
                     variant: 'info',
@@ -60,7 +60,7 @@
                 });
             });
 
-            vm.$bus.$on('event:trip-driver-accepted', async function (resp) {
+            vm.$bus.$on('event:driver-accepted', async function (resp) {
                 vm.$bvToast.toast(`Driver accepted the trip request. Wait for the driver's fare offer.`, {
                     title: `Driver Accepted Trip Request`,
                     variant: 'info',
@@ -68,17 +68,33 @@
                 });
             });
 
-            vm.$bus.$on('event:trip-driver-rejected', async function (resp) {
-                vm.$bvToast.toast(`The assigned driver rejected the trip request. System will look for another driver`, {
+            vm.$bus.$on('event:driver-rejected', async function (resp) {
+                vm.$bvToast.toast(`The assigned driver rejected the trip request. System will look for another available driver.`, {
                     title: `Driver Rejected Trip Request`,
                     variant: 'info',
                     solid: true
                 });
             });
 
-            vm.$bus.$on('event:trip-driver-fare-offered', async function (resp) {
-                vm.$bvToast.toast(`The drifer offered ${resp.fare}.`, {
+            vm.$bus.$on('event:driver-fare-offered', async function (resp) {
+                vm.$bvToast.toast(`The driver offered fare is ${resp.fare}.`, {
                     title: `Driver Offered Fare`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:driver-trip-inprogress', async function (resp) {
+                vm.$bvToast.toast(`The driver set the trip request to in-progress.`, {
+                    title: `Trip In-Progress`,
+                    variant: 'info',
+                    solid: true
+                });
+            });
+
+            vm.$bus.$on('event:driver-trip-completed', async function (resp) {
+                vm.$bvToast.toast(`The driver set the trip request to completed.`, {
+                    title: `Trip Completed`,
                     variant: 'info',
                     solid: true
                 });

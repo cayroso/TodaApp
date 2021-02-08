@@ -129,8 +129,8 @@ namespace Web.Controllers
                     Content = bytes,
                     Length = file.Length,
                     DateCreated = DateTime.UtcNow,
-                    Url = $"api/files/{TenantId}/{fileUploadId}",
-
+                    //Url = $"api/files/{TenantId}/{fileUploadId}",
+                    Url = $"api/files/{fileUploadId}",
                 };
 
                 //  update profile picture of this account

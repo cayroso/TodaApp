@@ -42,3 +42,9 @@ label[data-v-e00f3dda] {
     font-size: small;
 }
 
+
+label {
+    font-size: small;
+    font-weight: bold;
+}
+

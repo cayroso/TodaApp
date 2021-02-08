@@ -35,6 +35,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           Driver = t.Driver == null ? null : new GetTripByIdQuery.Driver
                           {
                               DriverId = t.Driver.DriverId,
+                              UrlProfilePicture = t.Driver.User.Image == null ? null : t.Driver.User.Image.Url,
                               FirstName = t.Driver.User.FirstName,
                               MiddleName = t.Driver.User.MiddleName,
                               LastName = t.Driver.User.LastName,
@@ -48,6 +49,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           Rider = new GetTripByIdQuery.Rider
                           {
                               RiderId = t.Rider.RiderId,
+                              UrlProfilePicture = t.Rider.User.Image == null ? null : t.Rider.User.Image.Url,
                               FirstName = t.Rider.User.FirstName,
                               MiddleName = t.Rider.User.MiddleName,
                               LastName = t.Rider.User.LastName,
@@ -74,7 +76,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
 
                           Token = t.ConcurrencyToken,
 
-                          Timelines = t.Timelines.Where(e => e.UserId == query.UserId).OrderBy(e => e.DateTimeline).Select(e => new GetTripByIdQuery.TripTimeline
+                          Timelines = t.Timelines.OrderBy(e => e.DateTimeline).Select(e => new GetTripByIdQuery.TripTimeline
                           {
                               Status = e.Status,
                               Notes = e.Notes,
@@ -111,6 +113,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           Driver = t.Driver == null ? null : new SearchTripQuery.Driver
                           {
                               DriverId = t.Driver.DriverId,
+                              UrlProfilePicture = t.Driver.User.Image == null ? null : t.Driver.User.Image.Url,
                               FirstName = t.Driver.User.FirstName,
                               MiddleName = t.Driver.User.MiddleName,
                               LastName = t.Driver.User.LastName,
@@ -120,6 +123,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           Rider = new SearchTripQuery.Rider
                           {
                               RiderId = t.Rider.RiderId,
+                              UrlProfilePicture = t.Rider.User.Image == null ? null : t.Rider.User.Image.Url,
                               FirstName = t.Rider.User.FirstName,
                               MiddleName = t.Rider.User.MiddleName,
                               LastName = t.Rider.User.LastName,

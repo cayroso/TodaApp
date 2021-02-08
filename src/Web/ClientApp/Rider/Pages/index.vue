@@ -1,8 +1,14 @@
 ﻿<template>
     <div v-cloak>
+
         <div>
-            under construction
+            Drivers
+
+            <div v-for="driver in item.topDrivers" class="card p-2">
+                {{driver}}
+            </div>
         </div>
+        
         <div class="d-none row row-cols-2 row-cols-sm-3">
             <div class="col mb-2">
                 <div class="card">
@@ -115,15 +121,15 @@
         async mounted() {
             const vm = this;
 
-            //await vm.get();
+            await vm.get();
         },
 
         methods: {
             async get() {
                 const vm = this;
-
+                
                 try {
-                    await vm.$util.axios.get(`/api/managers/default/dashboard`)
+                    await vm.$util.axios.get(`/api/riders/default/dashboard`)
                         .then(resp => vm.item = resp.data);
                 } catch (e) {
                     vm.$util.handleError(e);

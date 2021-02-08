@@ -289,6 +289,7 @@ namespace Data.App.DbContext
                 b.Property(e => e.RiderId).HasMaxLength(KeyMaxLength).IsRequired();
                 b.Property(e => e.DriverId).HasMaxLength(KeyMaxLength);
                 b.Property(e => e.VehicleId).HasMaxLength(KeyMaxLength);
+                //b.Property(e => e.TripFeedbackId).HasMaxLength(KeyMaxLength);
 
                 b.Property(e => e.StartAddress).HasMaxLength(DescMaxLength).IsRequired();
                 b.Property(e => e.StartAddressDescription).HasMaxLength(DescMaxLength).IsRequired();
@@ -297,6 +298,10 @@ namespace Data.App.DbContext
 
                 b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
 
+                b.HasMany(e => e.ExcludedDrivers)
+                    .WithOne(d => d.Trip)
+                    .HasForeignKey(f => f.TripId);
+
                 b.HasMany(e => e.Locations)
                     .WithOne(d => d.Trip)
                     .HasForeignKey(f => f.TripId);
@@ -304,6 +309,16 @@ namespace Data.App.DbContext
                 b.HasMany(e => e.Timelines)
                     .WithOne(d => d.Trip)
                     .HasForeignKey(f => f.TripId);
+            });
+
+            builder.Entity<TripExcludedDriver>(b =>
+            {
+                b.ToTable("TripExcludedDriver");
+                b.HasKey(e => e.TripExcludedDriverId);
+
+                b.Property(e => e.TripExcludedDriverId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.TripId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.DriverId).HasMaxLength(KeyMaxLength).IsRequired();
             });
 
             builder.Entity<TripLocation>(b =>
@@ -324,6 +339,7 @@ namespace Data.App.DbContext
                 b.Property(e => e.TripId).HasMaxLength(KeyMaxLength).IsRequired();
                 b.Property(e => e.UserId).HasMaxLength(KeyMaxLength).IsRequired();
             });
+
         }
         //void CreateTeams(ModelBuilder builder)
         //{
@@ -384,21 +400,19 @@ namespace Data.App.DbContext
 
                 b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
 
-                //b.HasMany(e => e.OrderStatusHistories)
-                //    .WithOne(d => d.User)
-                //    .HasForeignKey(d => d.UserId);
-
                 b.HasMany(e => e.UserTasks)
                     .WithOne(d => d.User)
                     .HasForeignKey(d => d.UserId);
 
-                //b.HasMany(e => e.UserRoles)
-                //    .WithOne(d => d.User)
-                //    .HasForeignKey(d => d.UserId);
+                //b.HasMany(a => a.GivenFeedbacks)
+                //    .WithOne(j => j.GivenBy)
+                //    .HasForeignKey(j => j.GivenById)
+                //    //.OnDelete(DeleteBehavior.Restrict)
+                //    ;
 
-                //b.HasMany(p => p.DocumentAccessHistories)
-                //    .WithOne(d => d.AccessedBy)
-                //    .HasForeignKey(d => d.AccessedById)
+                //b.HasMany(a => a.ReceivedFeedbacks)
+                //    .WithOne(j => j.ReceivedBy)
+                //    .HasForeignKey(j => j.ReceivedById)
                 //    //.OnDelete(DeleteBehavior.Restrict)
                 //    ;
             });

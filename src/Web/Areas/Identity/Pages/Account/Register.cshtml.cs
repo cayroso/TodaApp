@@ -111,20 +111,11 @@ namespace Web.Areas.Identity.Pages.Account
                 var userId = Guid.NewGuid().ToString();
                 var token = Guid.NewGuid().ToString();
 
-                var userRoles = new List<IdentityUserRole<string>>(new[]{
-                    new IdentityUserRole<string> {
-                        UserId = userId,
-                        RoleId = ApplicationRoles.Administrator.Id
-                    },
-                    new IdentityUserRole<string> {
-                        UserId = userId,
-                        RoleId = ApplicationRoles.Driver.Id
-                    },
-                    new IdentityUserRole<string> {
-                        UserId = userId,
-                        RoleId = ApplicationRoles.Rider.Id
-                    },
-                });
+                var userRole = new IdentityUserRole<string>
+                {
+                    UserId = userId,
+                    RoleId = Input.RoleId
+                };
 
                 var user = new IdentityWebUser
                 {
@@ -145,7 +136,7 @@ namespace Web.Areas.Identity.Pages.Account
                 };
 
                 await identityWebContext.AddRangeAsync(userInfo);
-                await identityWebContext.AddRangeAsync(userRoles);
+                await identityWebContext.AddRangeAsync(userRole);
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -165,25 +156,24 @@ namespace Web.Areas.Identity.Pages.Account
                         RoleId = Input.RoleId
                     });
 
+                    if (Input.RoleId == ApplicationRoles.Driver.Id)
+                    {
+                        await appDbContext.AddAsync(new Data.App.Models.Drivers.Driver
+                        {
+                            User = appUser
+                        });
+                    }
+                    if (Input.RoleId == ApplicationRoles.Rider.Id)
+                    {
+                        await appDbContext.AddAsync(new Data.App.Models.Riders.Rider
+                        {
+                            User = appUser,
+                        });
+                    }
+
                     await appDbContext.AddAsync(appUser);
 
                     await appDbContext.SaveChangesAsync();
-
-                    //var provisionUserRole = new ProvisionUserRole
-                    //{
-                    //    User = new Data.App.Models.Users.User
-                    //    {
-                    //        UserId = user.Id,
-                    //        FirstName = Input.FirstName,
-                    //        LastName = Input.LastName,
-                    //        Email = Input.Email,
-                    //        PhoneNumber = Input.PhoneNumber,
-                    //        ConcurrencyToken = token
-                    //    },
-                    //    RoleIds = userRoles.Select(e => e.RoleId).ToList()
-                    //};
-
-                    //appDbContextFactory.Provision(tenant, new List<ProvisionUserRole>(new[] { provisionUserRole }), true);
 
                     _logger.LogInformation("User created a new account with password.");
 

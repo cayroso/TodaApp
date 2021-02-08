@@ -4,7 +4,7 @@
         <div class="row align-items-center">
             <div class="col-sm">
                 <h1 class="h3 mb-sm-0">
-                    <i class="fas fa-fw fa-users mr-1"></i>Trips
+                    <i class="fas fa-fw fa-map-marked mr-1"></i>Trips
                 </h1>
             </div>
             <div class="col-sm-auto">
@@ -46,9 +46,12 @@
                     <template slot="table" slot-scope="row">
                         <td v-text="getRowNumber(row.index)" class="text-center"></td>
                         <td>
-                            <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                {{row.item.rider.firstName}} {{row.item.rider.middleName}} {{row.item.rider.lastName}}
-                            </router-link>
+                            <span>
+                                <b-avatar size="sm" :src="row.item.rider.urlProfilePicture" :inline="true"></b-avatar>
+                                <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
+                                    {{row.item.rider.firstName}} {{row.item.rider.middleName}} {{row.item.rider.lastName}}
+                                </router-link>
+                            </span>
                         </td>
                         <td>
                             {{row.item.statusText}}
