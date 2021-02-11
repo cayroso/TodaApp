@@ -89,6 +89,17 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                               GeoX = e.GeoX,
                               GeoY = e.GeoY,
                               DateCreated = e.DateCreated
+                          }),
+
+                          ExcludedDrivers = t.ExcludedDrivers.Select(e => new GetTripByIdQuery.ExcludedDriver
+                          {
+                              DriverId = e.Driver.DriverId,
+                              UrlProfilePicture = e.Driver.User.Image.Url,
+                              FirstName = e.Driver.User.FirstName,
+                              MiddleName = e.Driver.User.MiddleName,
+                              LastName = e.Driver.User.LastName,
+                              PhoneNumber = e.Driver.User.PhoneNumber,
+                              RejectReason = e.Reason,
                           })
 
                       };

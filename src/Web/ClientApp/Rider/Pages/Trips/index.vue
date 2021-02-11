@@ -46,15 +46,15 @@
                     <template slot="table" slot-scope="row">
                         <td v-text="getRowNumber(row.index)" class="text-center"></td>
                         <td>
-                            <span>
+                            <span v-if="row.item.driver">
                                 <b-avatar size="sm" :src="row.item.driver.urlProfilePicture" :inline="true"></b-avatar>
                                 <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                    <div v-if="row.item.driver">
-                                        {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
-                                    </div>
-                                    <div v-else>
-                                        View
-                                    </div>
+                                    {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
+                                </router-link>
+                            </span>
+                            <span v-else>
+                                <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
+                                    View
                                 </router-link>
                             </span>
                         </td>
@@ -75,15 +75,17 @@
                             <div class="form-group mb-0 row no-gutters">
                                 <label class="col-3 col-form-label">Driver</label>
                                 <div class="col align-self-center">
-                                    <b-avatar :src="row.item.driver.urlProfilePicture"></b-avatar>
-                                    <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                        <span v-if="row.item.driver">
+                                    <span v-if="row.item.driver">
+                                        <b-avatar size="sm" :src="row.item.driver.urlProfilePicture" :inline="true"></b-avatar>
+                                        <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
                                             {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
-                                        </span>
-                                        <span v-else>
+                                        </router-link>
+                                    </span>
+                                    <span v-else>
+                                        <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
                                             View
-                                        </span>
-                                    </router-link>
+                                        </router-link>
+                                    </span>
                                 </div>
                             </div>
                             <div class="form-group mb-0 row no-gutters">

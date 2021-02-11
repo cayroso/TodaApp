@@ -54,67 +54,77 @@ namespace Web.BackgroundServices
             {
                 var job = await _queue.DequeueAsync(stoppingToken);
 
-                using (var scope = _serviceScopeFactory.CreateScope())
+                try
                 {
-                    var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var trip = await appDbContext.Trips
-                        .Include(e => e.Rider)
-                            .ThenInclude(e => e.User)
-                        .Include(e=> e.ExcludedDrivers)
-                        .FirstOrDefaultAsync(e => e.TripId == job.TripId);
-
-                    //  get available drivers
-                    var drivers = await appDbContext.Drivers.Include(e => e.User)
-                        .Where(e => !trip.ExcludedDrivers.Any(ed=> ed.DriverId== e.DriverId) 
-                                    &&  e.DriverId != trip.RiderId 
-                                    && e.Availability == Data.Enums.EnumDriverAvailability.Available)
-                        .ToListAsync();
-
-                    if (trip != null && drivers.Any())
+                    using (var scope = _serviceScopeFactory.CreateScope())
                     {
-                        // do stuff
-                        _logger.LogInformation("Working on job {JobId}", job.TripId);
+                        var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        var trip = await appDbContext.Trips
+                            .Include(e => e.Rider)
+                                .ThenInclude(e => e.User)
+                            .Include(e => e.ExcludedDrivers)
+                            .FirstOrDefaultAsync(e => e.TripId == job.TripId);
 
-                        //  TODO: sort drivers by rider's preferrence
-                        var driver = drivers.First();
+                        //  get available drivers
+                        var drivers = await appDbContext.Drivers.Include(e => e.User)
+                            .Where(e => e.DriverId != trip.RiderId && e.Availability == Data.Enums.EnumDriverAvailability.Available)
+                            .ToListAsync();
 
-                        trip.DriverId = driver.DriverId;
-                        trip.Status = Data.Enums.EnumTripStatus.DriverAssigned;
-                        trip.Timelines.Add(new TripTimeline
+                        var filteredDrivers = drivers.Where(e => !trip.ExcludedDrivers.Any(ed => ed.DriverId == e.DriverId)).ToList();
+
+                        if (trip != null && filteredDrivers.Any())
                         {
-                            TripId = trip.TripId,
-                            UserId = trip.RiderId,
-                            Status = trip.Status,
-                        });
+                            // do stuff
+                            _logger.LogInformation("Working on job {JobId}", job.TripId);
 
-                        driver.Availability = Data.Enums.EnumDriverAvailability.Unavailable;
+                            //  TODO: sort drivers by rider's preferrence
+                            var driver = filteredDrivers.First();
 
-                        var tripContext = scope.ServiceProvider.GetRequiredService<IHubContext<TripHub, ITripClient>>();
+                            trip.DriverId = driver.DriverId;
+                            trip.Status = Data.Enums.EnumTripStatus.DriverAssigned;
+                            trip.Timelines.Add(new TripTimeline
+                            {
+                                TripId = trip.TripId,
+                                UserId = trip.RiderId,
+                                Status = trip.Status,
+                            });
 
-                        //  TODO: notify driver/rider that trip is assigned
-                        var resp = new DriverAssigned.Response
+                            driver.Availability = Data.Enums.EnumDriverAvailability.Unavailable;
+
+                            var tripContext = scope.ServiceProvider.GetRequiredService<IHubContext<TripHub, ITripClient>>();
+
+                            //  TODO: notify driver/rider that trip is assigned
+                            var resp = new DriverAssigned.Response
+                            {
+                                TripId = trip.TripId,
+                                DriverId = trip.DriverId,
+                                DriverName = driver.User.FirstLastName,
+
+                                RiderId = trip.RiderId,
+                                RiderName = trip.Rider.User.FirstLastName
+                            };
+
+                            await tripContext.Clients.Users(new[] { trip.DriverId, trip.RiderId }).DriverAssigned(resp);
+
+                            await appDbContext.SaveChangesAsync();
+                        }
+                        else
                         {
-                            TripId = trip.TripId,
-                            DriverId = trip.DriverId,
-                            DriverName = driver.User.FirstLastName,
-
-                            RiderId = trip.RiderId,
-                            RiderName = trip.Rider.User.FirstLastName
-                        };
-
-                        await tripContext.Clients.Users(new[] { trip.DriverId, trip.RiderId }).DriverAssigned(resp);
-
-                        await appDbContext.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        //  no available drivers, put them back
-                        if (!drivers.Any())
-                        {
-                            _queue.Enqueue(job);
+                            //  no available drivers, put them back
+                            if (!filteredDrivers.Any())
+                            {
+                                _queue.Enqueue(job);
+                                Console.WriteLine($"{DateTime.UtcNow} MyJobBackgroundService: No available driver found!!!");
+                            }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    //throw;
+                }
+
                 await Task.Delay(2000);
             }
         }

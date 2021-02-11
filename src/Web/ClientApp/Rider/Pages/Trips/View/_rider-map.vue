@@ -104,15 +104,15 @@
                 for (var type in google.maps.MapTypeId) {
                     mapTypeIds.push(google.maps.MapTypeId[type]);
                 }
-                mapTypeIds.push("OSM");
+                //mapTypeIds.push("OSM");
 
                 const lastZoom = Number.parseInt(localStorage.getItem('zoom')) || 15;
 
                 vm.map = new google.maps.Map(document.getElementById(vm.mapName), {
                     center: vm.centerPosition,//{ lat: 13.948779, lng: 120.733035 }, //13.948779,120.733035
                     zoom: lastZoom,
-                    mapTypeId: "OSM",
-                    mapTypeControl: false,
+                    //mapTypeId: "OSM",
+                    mapTypeControl: true,
                     streetViewControl: false,
                     mapTypeControlOptions: {
                         mapTypeIds: mapTypeIds

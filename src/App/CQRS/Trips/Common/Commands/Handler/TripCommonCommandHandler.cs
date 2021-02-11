@@ -84,8 +84,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
             trip.Status = EnumTripStatus.DriverRejected;
             trip.Fare = 0;
-            trip.Driver.Availability = EnumDriverAvailability.Available;
-
+            
             trip.Timelines.Add(new TripTimeline
             {
                 TripId = trip.TripId,
@@ -100,6 +99,9 @@ namespace App.CQRS.Trips.Common.Commands.Handler
                 DriverId = trip.DriverId,
                 Reason = command.Notes,
             });
+
+            trip.Driver.Availability = EnumDriverAvailability.Available;
+            trip.DriverId = null;
 
             await _appDbContext.SaveChangesAsync();
         }
@@ -139,6 +141,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             if (trip.Driver != null)
             {
                 trip.Driver.Availability = EnumDriverAvailability.Available;
+                trip.DriverId = null;
             }
 
             trip.Timelines.Add(new TripTimeline
@@ -201,8 +204,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
             trip.Status = EnumTripStatus.RiderOfferedFareRejected;
             trip.Fare = 0;
-            trip.Driver.Availability = EnumDriverAvailability.Available;
-
+            
             trip.Timelines.Add(new TripTimeline
             {
                 TripId = trip.TripId,
@@ -210,6 +212,16 @@ namespace App.CQRS.Trips.Common.Commands.Handler
                 Status = trip.Status,
                 Notes = command.Notes
             });
+
+            trip.ExcludedDrivers.Add(new TripExcludedDriver
+            {
+                TripId = trip.TripId,
+                DriverId = trip.DriverId,
+                Reason = $"Rider Rejected Offered Fare: {command.Notes}",
+            });
+
+            trip.Driver.Availability = EnumDriverAvailability.Available;
+            trip.DriverId = null;
 
             await _appDbContext.SaveChangesAsync();
         }

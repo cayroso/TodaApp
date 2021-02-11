@@ -216,7 +216,43 @@
             </b-collapse>
         </div>
 
+        <div class="card mt-2">
+            <div @click="toggle('excludedDrivers')" class="card-header d-flex flex-row justify-content-between align-items-center">
+                <h5 class="mb-0 align-self-start">
+                    <span class="fas fa-fw fa-history mr-1"></span>Excluded Drivers
+                </h5>
+                <div>
+                    <span>
+                        <span v-if="toggles.excludedDrivers" class="fas fa-fw fa-angle-up"></span>
+                        <span v-else class="fas fa-fw fa-angle-down"></span>
+                    </span>
+                </div>
+            </div>
+            <b-collapse v-model="toggles.excludedDrivers">
+                <div class="table-responsive mb-0">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Driver</th>
+                                <th>Reason</th>
 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(ed,index) in item.excludedDrivers">
+                                <td>{{index+1}}</td>
+                                <td>
+                                    {{ed}}
+                                </td>
+                                <td>{{ed.rejectReason}}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </b-collapse>
+        </div>
     </div>
 </template>
 <script>
@@ -241,6 +277,7 @@
                     map: false,
                     timeline: false,
                     locations: false,
+                    excludedDrivers: false,
                 },
 
                 item: {}

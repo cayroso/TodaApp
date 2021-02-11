@@ -61,6 +61,7 @@ namespace App.CQRS.Trips.Common.Queries.Query
 
             public IEnumerable<TripTimeline> Timelines { get; set; } = new List<TripTimeline>();
             public IEnumerable<TripLocation> Locations { get; set; } = new List<TripLocation>();
+            public IEnumerable<ExcludedDriver> ExcludedDrivers { get; set; } = new List<ExcludedDriver>();
 
         }
 
@@ -82,6 +83,17 @@ namespace App.CQRS.Trips.Common.Queries.Query
             public string MiddleName { get; set; }
             public string LastName { get; set; }
             public string PhoneNumber { get; set; }
+        }
+
+        public class ExcludedDriver
+        {
+            public string DriverId { get; set; }
+            public string UrlProfilePicture { get; set; }
+            public string FirstName { get; set; }
+            public string MiddleName { get; set; }
+            public string LastName { get; set; }
+            public string PhoneNumber { get; set; }
+            public string RejectReason { get; set; }
         }
 
         public class Vehicle
