@@ -161,8 +161,27 @@
                         <span v-else class="fas fa-fw fa-angle-down"></span>
                     </span>
                 </div>
+
             </div>
             <b-collapse v-model="toggles.map">
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>
+                            <i class="fas fa-fw fa-map-signs"></i>Distance
+                        </label>
+                        <div readonly>
+                            &nbsp;{{calculatedTrip.distance.text}}
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <label>
+                            <i class="fas fa-fw fa-clock"></i>Duration
+                        </label>
+                        <div readonly>
+                            &nbsp;{{calculatedTrip.duration.text}}
+                        </div>
+                    </div>
+                </div>
                 <div v-if="item.startAddress && toggles.map" style="height:500px;">
                     <rider-map map-name="add-trip"
                                :fixed="false"
@@ -173,7 +192,8 @@
                                :startY="item.startY"
                                :endX="item.endX"
                                :endY="item.endY"
-                               :draggable="false">
+                               :draggable="false"
+                               @onCalculatedTrip="onCalculatedTrip">
                     </rider-map>
                 </div>
             </b-collapse>
@@ -247,7 +267,10 @@
                     timeline: false,
                     locations: false,
                 },
-
+                calculatedTrip: {
+                    distance: {},
+                    duration: {},
+                },
                 item: {
                     rider: {}
                 }
@@ -281,6 +304,9 @@
         },
 
         methods: {
+            onCalculatedTrip(info) {
+                this.calculatedTrip = info;
+            },
             async refresh(resp) {
                 const vm = this;
 

@@ -157,6 +157,24 @@
                 </div>
             </div>
             <b-collapse v-model="toggles.map">
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>
+                            <i class="fas fa-fw fa-map-signs"></i>Distance
+                        </label>
+                        <div readonly>
+                            &nbsp;{{calculatedTrip.distance.text}}
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <label>
+                            <i class="fas fa-fw fa-clock"></i>Duration
+                        </label>
+                        <div readonly>
+                            &nbsp;{{calculatedTrip.duration.text}}
+                        </div>
+                    </div>
+                </div>
                 <div v-if="item.startAddress && toggles.map" style="height:500px;">
                     <rider-map map-name="add-trip"
                                :fixed="false"
@@ -167,7 +185,8 @@
                                :startY="item.startY"
                                :endX="item.endX"
                                :endY="item.endY"
-                               :draggable="false">
+                               :draggable="false"
+                               @onCalculatedTrip="onCalculatedTrip">
                     </rider-map>
                 </div>
             </b-collapse>
@@ -219,7 +238,7 @@
         <div class="card mt-2">
             <div @click="toggle('excludedDrivers')" class="card-header d-flex flex-row justify-content-between align-items-center">
                 <h5 class="mb-0 align-self-start">
-                    <span class="fas fa-fw fa-history mr-1"></span>Excluded Drivers
+                    <span class="fas fa-fw fa-user-slash mr-1"></span>Excluded Drivers
                 </h5>
                 <div>
                     <span>
@@ -243,7 +262,22 @@
                             <tr v-for="(ed,index) in item.excludedDrivers">
                                 <td>{{index+1}}</td>
                                 <td>
-                                    {{ed}}
+                                    <!--<button @click.prevent="$bus.$emit('event:send-message', item.driver.driverId)" class="btn btn-primary">
+                                        <i class="fas fa-fw fa-envelope"></i>
+                                    </button>
+                                    <a :href="`tel:${ed.phoneNumber}`" class="btn btn-primary">
+                                        <i class="fas fa-fw fa-phone"></i>
+                                    </a>
+                                    <a :href="`sms:${ed.phoneNumber}`" class="btn btn-primary">
+                                        <i class="fas fa-fw fa-sms"></i>
+                                    </a>-->
+
+                                    <span>
+                                        <b-avatar :src="ed.urlProfilePicture" :inline="true"></b-avatar>
+                                        <span>
+                                            {{ed.firstName}} {{ed.middleName}} {{ed.lastName}}
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>{{ed.rejectReason}}</td>
 
@@ -279,7 +313,10 @@
                     locations: false,
                     excludedDrivers: false,
                 },
-
+                calculatedTrip: {
+                    distance: {},
+                    duration: {},
+                },
                 item: {}
             };
         },
@@ -311,6 +348,9 @@
         },
 
         methods: {
+            onCalculatedTrip(info) {
+                this.calculatedTrip = info;
+            },
             async refresh(resp) {
                 const vm = this;
 

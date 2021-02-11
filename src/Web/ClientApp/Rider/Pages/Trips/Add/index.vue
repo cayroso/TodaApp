@@ -22,7 +22,7 @@
                         <i class="fas fa-fw fa-map-marker"></i>Pickup
                     </label>
                     <div readonly>
-                        {{item.from.address}}
+                        &nbsp;{{item.from.address}}
                     </div>
                     <textarea rows="2" class="form-control" v-model="item.from.addressDescription" placeholder="Enter description"></textarea>
                 </div>
@@ -32,15 +32,31 @@
                         <i class="fas fa-fw fa-map-marker"></i>Destination
                     </label>
                     <div readonly>
-                        {{item.to.address}}
+                        &nbsp;{{item.to.address}}
                     </div>
                     <textarea rows="2" class="form-control" v-model="item.to.addressDescription" placeholder="Enter description"></textarea>
                 </div>
             </div>
-
-
         </div>
         <div class="mt-2">
+            <div class="form-row">
+                <div class="form-group col">
+                    <label>
+                        <i class="fas fa-fw fa-map-signs"></i>Distance
+                    </label>
+                    <div readonly>
+                        &nbsp;{{calculatedTrip.distance.text}}
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <label>
+                        <i class="fas fa-fw fa-clock"></i>Duration
+                    </label>
+                    <div readonly>
+                        &nbsp;{{calculatedTrip.duration.text}}
+                    </div>
+                </div>
+            </div>
             <div style="height:500px;">
                 <rider-map map-name="add-trip"
                            :fixed="false"
@@ -53,7 +69,8 @@
                            :draggable="true"
                            @onMapReady="onMapReady"
                            @onFromAddress="onFromAddress"
-                           @onToAddress="onToAddress">
+                           @onToAddress="onToAddress"
+                           @onCalculatedTrip="onCalculatedTrip">
                 </rider-map>
             </div>
         </div>
@@ -74,18 +91,22 @@
 
         data() {
             return {
+                calculatedTrip: {
+                    distance: {},
+                    duration: {},
+                },
                 item: {
                     from: {
                         address: null,
                         addressDescription: '',
-                        geoX: 13.816806399999999,// 0,
-                        geoY: 121.08500999999998,//0,
+                        geoX: 0,
+                        geoY: 0,
                     },
                     to: {
                         address: null,
                         addressDescription: '',
-                        geoX: 13.816806399999999,
-                        geoY: 121.08500999999998,
+                        geoX: 0,
+                        geoY: 0,
                     },
 
                     geoX: 0, geoY: 0
@@ -130,17 +151,28 @@
                 vm.item.to.geoX = location.lat;
                 vm.item.to.geoY = location.lng;
             },
+            onCalculatedTrip(info) {
+                this.calculatedTrip = info;
+            },
 
             async save() {
                 const vm = this;
+                const item = vm.item;
+
+                if (item.from.geoX == 0 && item.from.geoY == 0) {
+                    alert('Please move the pickup marker.')
+                    return;
+                }
+                if (item.to.geoX == 0 && item.to.geoY == 0) {
+                    alert('Please move the destination marker.')
+                    return;
+                }
 
                 if (vm.busy)
                     return;
 
                 try {
                     vm.busy = true;
-
-                    const item = vm.item;
 
                     const payload = {
                         startAddress: item.from.address || '',

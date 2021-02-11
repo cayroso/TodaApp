@@ -201,6 +201,9 @@
                     },
                     (response, status) => {
                         if (status === "OK") {
+                            var tripInfo = response.routes[0].legs[0];
+                            vm.$emit('onCalculatedTrip', tripInfo);
+
                             vm.directionsRenderer.setDirections(response);
                         } else {
                             window.alert("Directions request failed due to " + status);
