@@ -84,7 +84,8 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
             trip.Status = EnumTripStatus.DriverRejected;
             trip.Fare = 0;
-            
+            trip.Driver.Availability = EnumDriverAvailability.Available;
+
             trip.Timelines.Add(new TripTimeline
             {
                 TripId = trip.TripId,
@@ -99,9 +100,6 @@ namespace App.CQRS.Trips.Common.Commands.Handler
                 DriverId = trip.DriverId,
                 Reason = command.Notes,
             });
-
-            trip.Driver.Availability = EnumDriverAvailability.Available;
-            trip.DriverId = null;
 
             await _appDbContext.SaveChangesAsync();
         }
@@ -141,7 +139,6 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             if (trip.Driver != null)
             {
                 trip.Driver.Availability = EnumDriverAvailability.Available;
-                trip.DriverId = null;
             }
 
             trip.Timelines.Add(new TripTimeline
@@ -157,7 +154,6 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
         async Task ICommandHandler<RiderCreateTripCommand>.HandleAsync(RiderCreateTripCommand command)
         {
-            //  check if user has pending trip
             var existingTrip = await _appDbContext.Trips.Where(e => e.RiderId == command.UserId
                         && !(e.Status == EnumTripStatus.Complete || e.Status == EnumTripStatus.Cancelled)).AnyAsync();
 
@@ -204,7 +200,8 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
             trip.Status = EnumTripStatus.RiderOfferedFareRejected;
             trip.Fare = 0;
-            
+            trip.Driver.Availability = EnumDriverAvailability.Available;
+
             trip.Timelines.Add(new TripTimeline
             {
                 TripId = trip.TripId,
@@ -220,9 +217,6 @@ namespace App.CQRS.Trips.Common.Commands.Handler
                 Reason = $"Rider Rejected Offered Fare: {command.Notes}",
             });
 
-            trip.Driver.Availability = EnumDriverAvailability.Available;
-            trip.DriverId = null;
-
             await _appDbContext.SaveChangesAsync();
         }
 
@@ -234,6 +228,12 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
             trip.Status = EnumTripStatus.Requested;
             trip.Fare = 0;
+
+            if (trip.Driver != null)
+            {
+                trip.Driver.Availability = EnumDriverAvailability.Available;
+                trip.DriverId = null;
+            }
 
             trip.Timelines.Add(new TripTimeline
             {
