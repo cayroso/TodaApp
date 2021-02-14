@@ -70,9 +70,12 @@
                             <div class="form-group mb-0 row no-gutters">
                                 <label class="col-3 col-form-label">Rider</label>
                                 <div class="col align-self-center">
-                                    <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                        {{row.item.rider.firstName}} {{row.item.rider.middleName}} {{row.item.rider.lastName}}
-                                    </router-link>
+                                    <span>
+                                        <b-avatar size="sm" :src="row.item.rider.urlProfilePicture" :inline="true"></b-avatar>
+                                        <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
+                                            {{row.item.rider.firstName}} {{row.item.rider.middleName}} {{row.item.rider.lastName}}
+                                        </router-link>
+                                    </span>
                                 </div>
                             </div>
                             <div class="form-group mb-0 row no-gutters">
