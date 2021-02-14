@@ -143,18 +143,30 @@ namespace Web
             }
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path.Value.StartsWith("/administrator/"))
+                var path = context.Request.Path.Value;
+
+                ApplicationRoles.Items.ForEach(r =>
                 {
-                    context.Request.Path = "/administrator/";
-                }
-                else if (context.Request.Path.Value.StartsWith("/driver/"))
-                {
-                    context.Request.Path = "/driver/";
-                }
-                else if (context.Request.Path.Value.StartsWith("/rider/"))
-                {
-                    context.Request.Path = "/rider/";
-                }
+                    var find = $"/{r.Id}/";
+
+                    if (path.StartsWith(find))
+                    {
+                        context.Request.Path = find;
+                    }
+                });
+
+                //if (context.Request.Path.Value.StartsWith("/administrator/"))
+                //{
+                //    context.Request.Path = "/administrator/";
+                //}
+                //else if (context.Request.Path.Value.StartsWith("/driver/"))
+                //{
+                //    context.Request.Path = "/driver/";
+                //}
+                //else if (context.Request.Path.Value.StartsWith("/rider/"))
+                //{
+                //    context.Request.Path = "/rider/";
+                //}
 
 
                 //context.Response.ContentType = "text/html";
