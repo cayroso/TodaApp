@@ -13,10 +13,22 @@ namespace Data.App.Models.Riders
     {
         public string RiderId { get; set; }
         public virtual User User { get; set; }
+
+        public double OverallRating { get; set; }
+        public double TotalRating { get; set; }
+
+
         public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
 
         public virtual ICollection<RiderBookmark> Bookmarks { get; set; } = new List<RiderBookmark>();
-        public virtual ICollection<Trip> Trips { get; set; } = new List<Trip>();        
+        public virtual ICollection<Trip> Trips { get; set; } = new List<Trip>();
+
+
+        public void CalculateRating(double newRating)
+        {
+            OverallRating = ((OverallRating * TotalRating) + newRating) / (TotalRating + 1);
+            TotalRating += newRating;
+        }
     }
 
     public class RiderBookmark

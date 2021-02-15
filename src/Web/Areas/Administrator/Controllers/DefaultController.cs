@@ -25,42 +25,57 @@ namespace Web.Areas.Administrator.Controllers
         }
 
         [HttpGet("dashboard")]
-        public async Task<IActionResult> GetDashboard([FromServices] AppDbContext dbContext, int year, int month)
+        public async Task<IActionResult> GetDashboard([FromServices] AppDbContext appdbContext, int year, int month)
         {
-            //var now = DateTime.UtcNow;
-            //var startDate = new DateTime(now.Year, now.Month, 1);
-            //var endDate = startDate.AddMonths(1).AddDays(-1);
+            var users = await appdbContext.Users.ToListAsync();
 
-            ////  number of teams
-            //var teams = await dbContext.Teams.AsNoTracking().CountAsync();
+            var drivers = await appdbContext.Drivers.AsNoTracking().CountAsync();
+            var riders = await appdbContext.Riders.AsNoTracking().CountAsync();
 
-            ////  number of users
-            //var users = await dbContext.Users.AsNoTracking().CountAsync();
+            var trips = await appdbContext.Trips
+                .Include(e => e.Driver).ThenInclude(e => e.User)
+                .Include(e => e.Rider).ThenInclude(e => e.User)
+                .AsNoTracking().ToListAsync();
+            var totalCompletedTrips = trips.Where(e => e.Status == Data.Enums.EnumTripStatus.Complete);
 
-            ////  number of contacts
-            //var contacts = await dbContext.Contacts.AsNoTracking().CountAsync();
+            var totalTripsCount = trips.Count();
+            var totalComplatedTripCount = totalCompletedTrips.Count();
 
-            ////  number of documens
-            //var documents = await dbContext.Documents.AsNoTracking().CountAsync();
+            var totalEarnings = totalCompletedTrips.Sum(e => e.Fare);
 
-            ////  number of attachments
-            //var attachments = await dbContext.ContactAttachments.AsNoTracking().CountAsync();
+            // top drivers
+            var topDrivers = totalCompletedTrips.GroupBy(e => e.Driver.User.FirstLastName)
+                            .Select(e => new
+                            {
+                                Rider = e.Key,
+                                TotalFare = e.Sum(p => p.Fare),
+                                TotalTrip = e.Count()
+                            }).OrderByDescending(e => e.TotalFare).Take(10).ToList();
 
-            ////  number of tasks
-            //var tasks = await dbContext.UserTasks.AsNoTracking().CountAsync();
+            // top riders
+            var topRiders = totalCompletedTrips.GroupBy(e => e.Rider.User.FirstLastName)
+                            .Select(e => new
+                            {
+                                Rider = e.Key,
+                                TotalFare = e.Sum(p => p.Fare),
+                                TotalTrip = e.Count()
+                            }).OrderByDescending(e => e.TotalFare).Take(10).ToList();
 
-            //var dto = new
-            //{
-            //    teams,
-            //    users,
-            //    contacts,
-            //    documents,
-            //    attachments,
-            //    tasks
-            //};
+            var dto = new
+            {
+                drivers,
+                riders,
+                totalTripsCount,
+                totalComplatedTripCount,
+                totalEarnings,
+                topDrivers,
+                topRiders,
 
-            //return Ok(dto);
-            return Ok();
+            };
+
+
+
+            return Ok(dto);
         }
 
         public class DashboardView

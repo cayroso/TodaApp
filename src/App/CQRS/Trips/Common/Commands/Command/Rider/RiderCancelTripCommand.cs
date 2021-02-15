@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.CQRS.Trips.Common.Commands.Command
+namespace App.CQRS.Trips.Common.Commands.Command.Rider
 {
-    public sealed class RiderRejectDriverOfferCommand : AbstractCommand
+    public sealed class RiderCancelTripCommand : AbstractCommand
     {
         public string TripId { get; }
         public string RiderId { get; }
         public string Token { get; }
-        public string Notes { get;   }
 
-        public RiderRejectDriverOfferCommand(string correlationId, string tenantId, string userId,
+        public string Notes { get; }
+
+        public RiderCancelTripCommand(string correlationId, string tenantId, string userId,
             string tripId, string riderId, string token, string notes)
             : base(correlationId, tenantId, userId)
         {

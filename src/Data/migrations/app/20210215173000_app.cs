@@ -59,6 +59,24 @@ namespace Data.migrations.app
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    NotificationId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    NotificationType = table.Column<int>(type: "INTEGER", nullable: false),
+                    IconClass = table.Column<string>(type: "TEXT", nullable: true),
+                    Subject = table.Column<string>(type: "TEXT", nullable: true),
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    ReferenceId = table.Column<string>(type: "TEXT", nullable: true),
+                    DateSent = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.NotificationId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Role",
                 columns: table => new
                 {
@@ -81,8 +99,6 @@ namespace Data.migrations.app
                     LastName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
-                    OverallRating = table.Column<double>(type: "REAL", nullable: false),
-                    TotalRating = table.Column<double>(type: "REAL", nullable: false),
                     ConcurrencyToken = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -159,6 +175,8 @@ namespace Data.migrations.app
                 {
                     DriverId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
                     Availability = table.Column<int>(type: "INTEGER", nullable: false),
+                    OverallRating = table.Column<double>(type: "REAL", nullable: false),
+                    TotalRating = table.Column<double>(type: "REAL", nullable: false),
                     ConcurrencyToken = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -173,10 +191,39 @@ namespace Data.migrations.app
                 });
 
             migrationBuilder.CreateTable(
+                name: "NotificationReceiver",
+                columns: table => new
+                {
+                    NotificationReceiverId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    NotificationId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    ReceiverId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    DateReceived = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateRead = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationReceiver", x => x.NotificationReceiverId);
+                    table.ForeignKey(
+                        name: "FK_NotificationReceiver_Notification_NotificationId",
+                        column: x => x.NotificationId,
+                        principalTable: "Notification",
+                        principalColumn: "NotificationId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NotificationReceiver_User_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rider",
                 columns: table => new
                 {
                     RiderId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    OverallRating = table.Column<double>(type: "REAL", nullable: false),
+                    TotalRating = table.Column<double>(type: "REAL", nullable: false),
                     ConcurrencyToken = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -455,6 +502,16 @@ namespace Data.migrations.app
                 column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NotificationReceiver_NotificationId",
+                table: "NotificationReceiver",
+                column: "NotificationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationReceiver_ReceiverId",
+                table: "NotificationReceiver",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RiderBookmark_RiderId",
                 table: "RiderBookmark",
                 column: "RiderId");
@@ -542,6 +599,9 @@ namespace Data.migrations.app
                 name: "ChatReceiver");
 
             migrationBuilder.DropTable(
+                name: "NotificationReceiver");
+
+            migrationBuilder.DropTable(
                 name: "RiderBookmark");
 
             migrationBuilder.DropTable(
@@ -561,6 +621,9 @@ namespace Data.migrations.app
 
             migrationBuilder.DropTable(
                 name: "Chat");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "Trip");

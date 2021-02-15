@@ -36,10 +36,9 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           {
                               DriverId = t.Driver.DriverId,
                               UrlProfilePicture = t.Driver.User.Image == null ? null : t.Driver.User.Image.Url,
-                              FirstName = t.Driver.User.FirstName,
-                              MiddleName = t.Driver.User.MiddleName,
-                              LastName = t.Driver.User.LastName,
-                              PhoneNumber = t.Driver.User.PhoneNumber
+                              Name = t.Driver.User.FirstLastName,
+                              PhoneNumber = t.Driver.User.PhoneNumber,
+                              OverallRating = t.Driver.OverallRating,
                           },
                           Vehicle = t.Vehicle == null ? null : new GetTripByIdQuery.Vehicle
                           {
@@ -50,10 +49,9 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           {
                               RiderId = t.Rider.RiderId,
                               UrlProfilePicture = t.Rider.User.Image == null ? null : t.Rider.User.Image.Url,
-                              FirstName = t.Rider.User.FirstName,
-                              MiddleName = t.Rider.User.MiddleName,
-                              LastName = t.Rider.User.LastName,
-                              PhoneNumber = t.Rider.User.PhoneNumber
+                              Name = t.Rider.User.FirstLastName,
+                              PhoneNumber = t.Rider.User.PhoneNumber,
+                              OverallRating = t.Rider.OverallRating
                           },
 
                           StartAddress = t.StartAddress,
@@ -95,11 +93,10 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           {
                               DriverId = e.Driver.DriverId,
                               UrlProfilePicture = e.Driver.User.Image.Url,
-                              FirstName = e.Driver.User.FirstName,
-                              MiddleName = e.Driver.User.MiddleName,
-                              LastName = e.Driver.User.LastName,
+                              Name = e.Driver.User.FirstLastName,
                               PhoneNumber = e.Driver.User.PhoneNumber,
                               RejectReason = e.Reason,
+                              OverallRating = e.Driver.OverallRating
                           })
 
                       };
@@ -125,20 +122,18 @@ namespace App.CQRS.Trips.Common.Queries.Handler
                           {
                               DriverId = t.Driver.DriverId,
                               UrlProfilePicture = t.Driver.User.Image == null ? null : t.Driver.User.Image.Url,
-                              FirstName = t.Driver.User.FirstName,
-                              MiddleName = t.Driver.User.MiddleName,
-                              LastName = t.Driver.User.LastName,
-                              PhoneNumber = t.Driver.User.PhoneNumber
+                              Name = t.Driver.User.FirstLastName,
+                              PhoneNumber = t.Driver.User.PhoneNumber,
+                              OverallRating = t.Driver.OverallRating,
                           },
 
                           Rider = new SearchTripQuery.Rider
                           {
                               RiderId = t.Rider.RiderId,
                               UrlProfilePicture = t.Rider.User.Image == null ? null : t.Rider.User.Image.Url,
-                              FirstName = t.Rider.User.FirstName,
-                              MiddleName = t.Rider.User.MiddleName,
-                              LastName = t.Rider.User.LastName,
+                              Name = t.Rider.User.FirstLastName,
                               PhoneNumber = t.Rider.User.PhoneNumber,
+                              OverallRating = t.Rider.OverallRating
                           },
 
                           StartAddress = t.StartAddress,

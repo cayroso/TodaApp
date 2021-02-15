@@ -65,20 +65,18 @@ namespace App.CQRS.Trips.Common.Queries.Query
         {
             public string DriverId { get; set; }
             public string UrlProfilePicture { get; set; }
-            public string FirstName { get; set; }
-            public string MiddleName { get; set; }
-            public string LastName { get; set; }
+            public string Name { get; set; }
             public string PhoneNumber { get; set; }
+            public double OverallRating { get; set; }
         }
 
         public class Rider
         {
             public string RiderId { get; set; }
             public string UrlProfilePicture { get; set; }
-            public string FirstName { get; set; }
-            public string MiddleName { get; set; }
-            public string LastName { get; set; }
+            public string Name { get; set; }
             public string PhoneNumber { get; set; }
+            public double OverallRating { get; set; }
         }
 
 

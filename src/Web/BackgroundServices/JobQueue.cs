@@ -94,7 +94,7 @@ namespace Web.BackgroundServices
                             var tripContext = scope.ServiceProvider.GetRequiredService<IHubContext<TripHub, ITripClient>>();
 
                             //  TODO: notify driver/rider that trip is assigned
-                            var resp = new DriverAssigned.Response
+                            var response = new Response
                             {
                                 TripId = trip.TripId,
                                 DriverId = trip.DriverId,
@@ -104,7 +104,7 @@ namespace Web.BackgroundServices
                                 RiderName = trip.Rider.User.FirstLastName
                             };
 
-                            await tripContext.Clients.Users(new[] { trip.DriverId, trip.RiderId }).DriverAssigned(resp);
+                            await tripContext.Clients.Users(new[] { trip.DriverId, trip.RiderId }).DriverAssigned(response);
 
                             await appDbContext.SaveChangesAsync();
                         }

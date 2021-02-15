@@ -9,21 +9,32 @@ using ViewModel.Trips;
 
 namespace App.Hubs
 {
+    public class Response
+    {
+        public string TripId { get; set; }
+        public string DriverId { get; set; }
+        public string DriverName { get; set; }
+        public string RiderId { get; set; }
+        public string RiderName { get; set; }
+        public decimal Fare { get; set; }
+        public string Reason { get; set; }
+    }
+
     public interface ITripClient
     {
-        Task DriverAssigned(DriverAssigned.Response resp);
-        Task DriverAccepted(DriverAccepted.Response resp);
-        Task DriverRejected(DriverRejected.Response resp);
-        Task DriverFareOffered(DriverFareOffered.Response resp);
-        Task DriverTripInProgress(DriverTripInProgress.Response resp);
-        Task DriverTripCompleted(DriverTripCompleted.Response resp);
+        Task DriverAssigned(Response resp);
+        Task DriverAccepted(Response resp);
+        Task DriverRejected(Response resp);
+        Task DriverFareOffered(Response resp);
+        Task DriverTripInProgress(Response resp);
+        Task DriverTripCompleted(Response resp);
 
-        Task RiderTripRequested(RiderTripRequested.Response resp);
-        Task RiderOfferedFareAccepted(RiderOfferedFareAccepted.Response resp);
-        Task RiderOfferedFareRejected(RiderOfferedFareRejected.Response resp);
-        Task RiderTripCancelled(RiderTripCancelled.Response resp);
-        Task RiderTripInProgress(RiderTripInProgress.Response resp);
-        Task RiderTripCompleted(RiderTripCompleted.Response resp);
+        Task RiderTripRequested(Response resp);
+        Task RiderOfferedFareAccepted(Response resp);
+        Task RiderOfferedFareRejected(Response resp);
+        Task RiderTripCancelled(Response resp);
+        Task RiderTripInProgress(Response resp);
+        Task RiderTripCompleted(Response resp);
     }
 
     [Authorize]

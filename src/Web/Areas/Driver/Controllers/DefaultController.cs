@@ -86,13 +86,13 @@ namespace Web.Areas.Driver.Controllers
             var sumYesterdayEarnings = yesterdayTrips.Where(e => e.Status == Data.Enums.EnumTripStatus.Complete).Sum(e => e.Fare);
 
             // top riders
-            var topRiders = monthTrips.GroupBy(e => e.Rider)
+            var topRiders = monthTrips.GroupBy(e => e.Rider.User.FirstLastName)
                             .Select(e => new
                             {
                                 Rider = e.Key,
                                 TotalFare = e.Sum(p => p.Fare),
                                 TotalTrip = e.Count()
-                            }).ToList();
+                            }).OrderByDescending(e => e.TotalFare).ToList();
 
             var dto = new
             {
@@ -110,42 +110,6 @@ namespace Web.Areas.Driver.Controllers
             };
 
             return Ok(dto);
-
-            ////  number of teams
-            //var teams = await dbContext.TeamMembers.AsNoTracking().Where(m => m.MemberId == UserId).CountAsync();
-
-            ////  number of members
-            //var users = await dbContext.Teams
-            //                .AsNoTracking()
-            //                .Where(e => e.Members.Any(m => m.MemberId == UserId))
-            //                .SelectMany(e => e.Members).Select(e => e.MemberId)
-            //                .Distinct()
-            //                .CountAsync();
-
-            ////  number of contacts
-            //var contacts = await dbContext.Contacts.CountAsync();
-
-            ////  number of documens
-            //var documents = await dbContext.Documents.CountAsync();
-
-            ////  number of attachments
-            //var attachments = await dbContext.ContactAttachments.CountAsync();
-
-            ////  number of tasks
-            //var tasks = await dbContext.UserTasks.CountAsync();
-
-            //var dto = new
-            //{
-            //    teams,
-            //    users,
-            //    contacts,
-            //    documents,
-            //    attachments,
-            //    tasks
-            //};
-
-            //return Ok(dto);
-            //return Ok();
         }
     }
 }

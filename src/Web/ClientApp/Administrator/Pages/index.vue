@@ -1,14 +1,14 @@
 ﻿<template>
     <div v-cloak>
-        <div class="row row-cols-2 row-cols-sm-3">
+        <div class="row row-cols-2 row-cols-sm-4">
             <div class="col mb-2">
-                <div class="card">                    
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Teams</h5>
+                        <h5 class="card-title">Drivers</h5>
                         <div class="d-flex flex-row justify-content-between">
-                            <h5>{{item.teams}}</h5>
+                            <h5>{{item.drivers}}</h5>
                             <div>
-                                <i class="fas fa-fw fa-lg fa-users"></i>
+                                <i class="fas fa-fw fa-lg fa-motorcycle"></i>
                             </div>
                         </div>
                     </div>
@@ -17,11 +17,11 @@
             <div class="col mb-2">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Users</h5>
+                        <h5 class="card-title">Riders</h5>
                         <div class="d-flex flex-row justify-content-between">
-                            <h5>{{item.users}}</h5>
+                            <h5>{{item.riders}}</h5>
                             <div>
-                                <i class="fas fa-fw fa-lg fa-user"></i>
+                                <i class="fas fa-fw fa-lg fa-street-view"></i>
                             </div>
                         </div>
                     </div>
@@ -30,11 +30,11 @@
             <div class="col mb-2">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Tasks</h5>
+                        <h5 class="card-title">Trips</h5>
                         <div class="d-flex flex-row justify-content-between">
-                            <h5>{{item.tasks}}</h5>
+                            <h5>{{item.totalComplatedTripCount}} / {{item.totalTripsCount}}</h5>
                             <div>
-                                <i class="fas fa-fw fa-lg fa-tasks"></i>
+                                <i class="fas fa-fw fa-lg fa-map-marked"></i>
                             </div>
                         </div>
                     </div>
@@ -42,46 +42,65 @@
             </div>
             <div class="col mb-2">
                 <div class="card">
-                    <div class="card-body">                        
-                        <h5 class="card-title">Contacts</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Total Fare</h5>
                         <div class="d-flex flex-row justify-content-between">
-                            <h5>{{item.contacts}}</h5>
+                            <h5>{{item.totalEarnings|toCurrency}}</h5>
                             <div>
-                                <i class="fas fa-fw fa-lg fa-id-card"></i>
+                                <i class="fas fa-fw fa-lg fa-money-bill"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col mb-2">
-                <div class="card">
-                    <div class="card-body">                        
-                        <h5 class="card-title">Attachments</h5>
-                        <div class="d-flex flex-row justify-content-between">
-                            <h5>{{item.attachments}}</h5>
-                            <div>
-                                <i class="fas fa-fw fa-lg fa-paperclip"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-            <div class="col mb-2">
-                <div class="card">
-                    <div class="card-body">                        
-                        <h5 class="card-title">Documents</h5>
-                        <div class="d-flex flex-row justify-content-between">
-                            <h5>{{item.documents}}</h5>
-                            <div>
-                                <i class="fas fa-fw fa-lg fa-archive"></i>
-                            </div>
-                        </div>
-                    </div>
+        <div class="mb-2">
+            <div class="card">
+                
+                <div class="table-responsive mb-0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Fare</th>
+                                <th>Trip</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th colspan="5">Top Drivers</th>
+                            </tr>
+
+                            <tr v-for="(t,index) in item.topDrivers">
+                                <td></td>
+                                <td>{{index+1}}</td>
+                                <td>{{t.rider}}</td>
+                                <td>{{t.totalFare|toCurrency}}</td>
+                                <td>{{t.totalTrip}}</td>
+                            </tr>
+                            <tr>
+                                <th colspan="5">Top Riders</th>
+                            </tr>
+                            <tr v-for="(t,index) in item.topRiders">
+                                <td></td>
+                                <td>{{index+1}}</td>
+                                <td>{{t.rider}}</td>
+                                <td>{{t.totalFare|toCurrency}}</td>
+                                <td>{{t.totalTrip}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
+
+        
+
     </div>
 </template>
 <script>

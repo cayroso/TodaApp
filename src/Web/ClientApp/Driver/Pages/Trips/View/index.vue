@@ -9,14 +9,18 @@
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
             <h1 class="h3 mb-sm-0">
                 <span class="fas fa-fw fa-map-marked mr-1"></span>View
+                <b-form-rating v-model="item.riderRating" id="rating-inline" inline no-border size="sm" readonly></b-form-rating>
             </h1>
 
             <div class="text-right">
+                <button v-if="item.status===10" @click="addFeedback()" class="btn btn-primary">
+                    Rate Rider
+                </button>
 
                 <button v-if="item.status===7" @click="startTrip()" class="btn btn-primary">Start</button>
                 <button v-if="item.status===9" @click="completeTrip()" class="btn btn-primary">Complete</button>
 
-                <button v-if="item.status==4 || item.status==6" @click="offerFare()" class="btn btn-primary">Offer Fare</button>
+                <button v-if="item.status==4 || item.status==6 || item.status === 8" @click="offerFare()" class="btn btn-primary">Offer Fare</button>
 
                 <button v-if="item.status==3" @click="acceptRequest()" class="btn btn-primary">Accept</button>
                 <button v-if="item.status==3 || item.status==4" @click="rejectRequest()" class="btn btn-warning">Reject</button>
@@ -28,25 +32,25 @@
                     <i class="fas fa-fw fa-times"></i>
                 </button>
                 <!--<div class="col-auto mr-1">
-        <a :href="urlAdd" class="btn btn-primary">
-            <span class="fas fa-fw fa-plus"></span>
-        </a>
-    </div>
-    <div class="col-auto mr-1">
-        <button @click="filter.visible = !filter.visible" class="btn btn-primary">
-            <span class="fas fa-fw fa-filter"></span>
-        </button>
-    </div>
-    <div class="col">
-        <div class="input-group">
-            <input v-model="filter.query.criteria" @keyup.enter="search(1)" type="text" class="form-control">
-            <div class="input-group-append">
-                <button @click="search(1)" class="btn btn-secondary" type="button" id="button-addon2">
-                    <span class="fa fas fa-fw fa-search"></span>
-                </button>
-            </div>
-        </div>
-    </div>-->
+                    <a :href="urlAdd" class="btn btn-primary">
+                        <span class="fas fa-fw fa-plus"></span>
+                    </a>
+                </div>
+                <div class="col-auto mr-1">
+                    <button @click="filter.visible = !filter.visible" class="btn btn-primary">
+                        <span class="fas fa-fw fa-filter"></span>
+                    </button>
+                </div>
+                <div class="col">
+                    <div class="input-group">
+                        <input v-model="filter.query.criteria" @keyup.enter="search(1)" type="text" class="form-control">
+                        <div class="input-group-append">
+                            <button @click="search(1)" class="btn btn-secondary" type="button" id="button-addon2">
+                                <span class="fa fas fa-fw fa-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>-->
             </div>
         </div>
 
@@ -128,18 +132,21 @@
                             <div class="align-self-center">
                                 <b-avatar :src="item.rider.urlProfilePicture" :inline="true"></b-avatar>
                                 <span>
-                                    {{item.rider.firstName}} {{item.rider.middleName}} {{item.rider.lastName}}
+                                    {{item.rider.name}}
                                 </span>
+                                <div class="mt-2">
+                                    <b-form-rating v-model="item.rider.overallRating" id="rating-inline" inline no-border readonly size="sm"></b-form-rating>
+                                </div>
                             </div>
 
                         </div>
-                        <div class="form-group col-md">
+                        <div class="form-group col-sm">
                             <label>Phone Number</label>
                             <div class="form-control-plaintext">
                                 {{item.rider.phoneNumber}}
                             </div>
                         </div>
-                        <div class="form-group col-md">
+                        <div class="form-group col-sm">
                             <label>Offer</label>
                             <div class="form-control-plaintext">
                                 {{item.fare|toCurrency}}
@@ -241,16 +248,20 @@
             </b-collapse>
         </div>
 
-
+        <add-feedback ref="addFeedback" @onSave="onSaveFeedback"></add-feedback>
     </div>
 </template>
 <script>
     import pageMixin from '../../../../_Core/Mixins/pageMixin';
     import RiderMap from './_rider-map.vue';
+
+    import addFeedback from '../../../../_Common/Modals/Trips/add-feedback.vue';
+
     export default {
         mixins: [pageMixin],
         components: {
-            RiderMap
+            RiderMap,
+            addFeedback
         },
         props: {
             uid: String,
@@ -304,6 +315,36 @@
         },
 
         methods: {
+            async addFeedback() {
+                const vm = this;
+
+                vm.$refs.addFeedback.open(vm.id, null, null, null);
+            },
+            async onSaveFeedback(info) {
+                ;
+                const vm = this;
+
+                try {
+                    const payload = {
+                        tripId: vm.id,
+                        rating: info.rate,
+                        comment: info.comment
+                    };
+
+                    await vm.$util.axios.put(`/api/trips/driver-feedback`, payload)
+                        .then(_ => {
+                            vm.$refs.addFeedback.close();
+                        });
+
+                    await vm.get();
+
+                } catch (e) {
+                    vm.$util.handleError(e);
+                }
+
+
+            },
+
             onCalculatedTrip(info) {
                 this.calculatedTrip = info;
             },

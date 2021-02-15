@@ -1,5 +1,7 @@
 ﻿using App.CQRS;
 using App.CQRS.Trips.Common.Commands.Command;
+using App.CQRS.Trips.Common.Commands.Command.Driver;
+using App.CQRS.Trips.Common.Commands.Command.Rider;
 using App.CQRS.Trips.Common.Queries.Query;
 using App.Hubs;
 using App.Services;
@@ -53,21 +55,8 @@ namespace Web.Controllers
         [HttpPut("driver/accept-rider-request")]
         public async Task<IActionResult> PutDriverAcceptRiderTripRequestAsync([FromBody] DriverAcceptRiderTripRequestInfo info)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, info.TripId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-
             var cmd = new DriverAcceptRiderTripRequestCommand("", TenantId, UserId, info.TripId, UserId, info.Token);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Rider.RiderId }).DriverAccepted(new ViewModel.Trips.DriverAccepted.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-            });
 
             return Ok();
         }
@@ -78,24 +67,11 @@ namespace Web.Controllers
             [FromServices] JobQueue<Trip> job,
             [FromBody] DriverRejectRiderTripRequestInfo info)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, info.TripId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-
             var cmd = new DriverRejectRiderTripRequestCommand("", TenantId, UserId, info.TripId, UserId, info.Token, info.Notes);
             await _commandHandlerDispatcher.HandleAsync(cmd);
 
             var trip = await _appDbContext.Trips.AsNoTracking().FirstOrDefaultAsync(e => e.TripId == cmd.TripId);
             job.Enqueue(trip);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Rider.RiderId }).DriverRejected(new ViewModel.Trips.DriverRejected.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-            });
 
             return Ok();
         }
@@ -103,22 +79,8 @@ namespace Web.Controllers
         [HttpPut("driver/offer-fare-to-rider-request")]
         public async Task<IActionResult> PutDriverOfferFareToRiderTripRequestAsync([FromBody] DriverOfferFareToRiderTripRequestInfo info)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, info.TripId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-            
             var cmd = new DriverOfferFareToRiderTripRequestCommand("", TenantId, UserId, info.TripId, UserId, info.Token, info.Fare, info.Notes);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Rider.RiderId }).DriverFareOffered(new ViewModel.Trips.DriverFareOffered.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-                Fare = info.Fare
-            });
 
             return Ok();
         }
@@ -126,21 +88,8 @@ namespace Web.Controllers
         [HttpPut("{id}/driver-complete/{token}")]
         public async Task<IActionResult> PutDriverTripToCompleteAsync(string id, string token)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, id);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-            
-            var cmd = new SetTripToCompleteCommand("", TenantId, UserId, id, token);
+            var cmd = new SetTripToCompleteCommand("", TenantId, UserId, id, token, false);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Rider.RiderId }).DriverTripCompleted(new ViewModel.Trips.DriverTripCompleted.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-            });
 
             return Ok();
         }
@@ -148,21 +97,8 @@ namespace Web.Controllers
         [HttpPut("{id}/driver-inprogress/{token}")]
         public async Task<IActionResult> PutDriverTripToInCompleteAsync(string id, string token)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, id);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-            
-            var cmd = new SetTripToInProgressCommand("", TenantId, UserId, id, token);
+            var cmd = new SetTripToInProgressCommand("", TenantId, UserId, id, token, false);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Rider.RiderId }).DriverTripInProgress(new ViewModel.Trips.DriverTripInProgress.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-            });
 
             return Ok();
         }
@@ -204,22 +140,8 @@ namespace Web.Controllers
         [HttpPut("rider/cancel")]
         public async Task<IActionResult> PutRiderCancelTripAsync([FromBody] RiderCancelTripInfo info)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, info.TripId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-
             var cmd = new RiderCancelTripCommand("", TenantId, UserId, info.TripId, UserId, info.Token, info.Notes);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Driver.DriverId }).RiderTripCancelled(new ViewModel.Trips.RiderTripCancelled.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver == null ? null : dto.Driver.DriverId,
-                DriverName = dto.Driver == null ? null : $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-                Reason = info.Notes
-            });
 
             return Ok();
         }
@@ -227,23 +149,8 @@ namespace Web.Controllers
         [HttpPut("rider/accept-driver-offer")]
         public async Task<IActionResult> PutRiderAcceptDriverOfferAsync([FromBody] RiderAcceptDriverOfferInfo info)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, info.TripId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-            
             var cmd = new RiderAcceptDriverOfferCommand("", TenantId, UserId, info.TripId, UserId, info.Token);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Driver.DriverId }).RiderOfferedFareAccepted(new ViewModel.Trips.RiderOfferedFareAccepted.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-
-                Fare = dto.Fare
-            });
 
             return Ok();
         }
@@ -254,25 +161,11 @@ namespace Web.Controllers
             [FromServices] JobQueue<Trip> job,
             [FromBody] RiderRejectDriverOfferInfo info)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, info.TripId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-
             var cmd = new RiderRejectDriverOfferCommand("", TenantId, UserId, info.TripId, UserId, info.Token, info.Notes);
             await _commandHandlerDispatcher.HandleAsync(cmd);
 
             var trip = await _appDbContext.Trips.AsNoTracking().FirstOrDefaultAsync(e => e.TripId == cmd.TripId);
             job.Enqueue(trip);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Driver.DriverId }).RiderOfferedFareRejected(new ViewModel.Trips.RiderOfferedFareRejected.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-                Fare = dto.Fare
-            });
 
             return Ok();
         }
@@ -281,21 +174,8 @@ namespace Web.Controllers
         [HttpPut("{id}/rider-complete/{token}")]
         public async Task<IActionResult> PutRiderTripToCompleteAsync(string id, string token)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, id);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-            
-            var cmd = new SetTripToCompleteCommand("", TenantId, UserId, id, token);
+            var cmd = new SetTripToCompleteCommand("", TenantId, UserId, id, token, true);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Driver.DriverId }).RiderTripCompleted(new ViewModel.Trips.RiderTripCompleted.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-            });
 
             return Ok();
         }
@@ -303,21 +183,8 @@ namespace Web.Controllers
         [HttpPut("{id}/rider-inprogress/{token}")]
         public async Task<IActionResult> PutRiderTripToInCompleteAsync(string id, string token)
         {
-            var query = new GetTripByIdQuery("", TenantId, UserId, id);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetTripByIdQuery, GetTripByIdQuery.Trip>(query);
-            
-            var cmd = new SetTripToInProgressCommand("", TenantId, UserId, id, token);
+            var cmd = new SetTripToInProgressCommand("", TenantId, UserId, id, token, true);
             await _commandHandlerDispatcher.HandleAsync(cmd);
-
-            await _tripHubContext.Clients.Users(new[] { dto.Driver.DriverId }).RiderTripInProgress(new ViewModel.Trips.RiderTripInProgress.Response
-            {
-                TripId = dto.TripId,
-                DriverId = dto.Driver.DriverId,
-                DriverName = $"{dto.Driver.FirstName} {dto.Driver.MiddleName} {dto.Driver.LastName}",
-
-                RiderId = dto.Rider.RiderId,
-                RiderName = $"{dto.Rider.FirstName} {dto.Rider.MiddleName} {dto.Rider.LastName}",
-            });
 
             return Ok();
         }
@@ -336,6 +203,70 @@ namespace Web.Controllers
 
 
         #region Feedback
+
+        [HttpPut("rider-feedback")]
+        public async Task<IActionResult> PutRiderReview([FromBody] AddFeedbackInfo info)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var data = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == info.TripId);
+
+            data.ThrowIfNull();
+
+            data.DriverRating = info.Rating;
+            data.DriverComment = info.Comment;
+
+            var user = await _appDbContext.Drivers.FirstOrDefaultAsync(e => e.DriverId == data.DriverId);
+
+            //get other driver's trips
+            var trips = await _appDbContext.Trips.AsNoTracking().Where(e => e.TripId != info.TripId && e.DriverId == data.DriverId).ToListAsync();
+
+            user.OverallRating = 0;
+            user.TotalRating = 0;
+
+            user.CalculateRating(info.Rating);
+            trips.ForEach(t =>
+            {
+                user.CalculateRating(t.DriverRating);
+            });
+
+            await _appDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("driver-feedback")]
+        public async Task<IActionResult> PutDriverReview([FromBody] AddFeedbackInfo info)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var data = await _appDbContext.Trips.FirstOrDefaultAsync(e => e.TripId == info.TripId);
+
+            data.ThrowIfNull();
+
+            data.RiderRating = info.Rating;
+            data.RiderComment = info.Comment;
+
+            var user = await _appDbContext.Riders.FirstOrDefaultAsync(e => e.RiderId == data.RiderId);
+
+            //get all rider's trips
+            var trips = await _appDbContext.Trips.AsNoTracking().Where(e => e.TripId != info.TripId && e.DriverId == data.RiderId).ToListAsync();
+
+            user.OverallRating = 0;
+            user.TotalRating = 0;
+
+            user.CalculateRating(info.Rating);
+            trips.ForEach(t =>
+            {
+                user.CalculateRating(t.RiderRating);
+            });
+
+            await _appDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
 
         #endregion
     }

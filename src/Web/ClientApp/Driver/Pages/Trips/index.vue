@@ -46,12 +46,15 @@
                     <template slot="table" slot-scope="row">
                         <td v-text="getRowNumber(row.index)" class="text-center"></td>
                         <td>
-                            <span>
+                            <div>
                                 <b-avatar size="sm" :src="row.item.rider.urlProfilePicture" :inline="true"></b-avatar>
                                 <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                    {{row.item.rider.firstName}} {{row.item.rider.middleName}} {{row.item.rider.lastName}}
+                                    {{row.item.rider.name}}
                                 </router-link>
-                            </span>
+                                <div class="mt-1">
+                                    <b-form-rating v-model="row.item.rider.overallRating" id="rating-inline" inline no-border readonly size="sm"></b-form-rating>
+                                </div>
+                            </div>
                         </td>
                         <td>
                             {{row.item.statusText}}
@@ -70,12 +73,15 @@
                             <div class="form-group mb-0 row no-gutters">
                                 <label class="col-3 col-form-label">Rider</label>
                                 <div class="col align-self-center">
-                                    <span>
+                                    <div>
                                         <b-avatar size="sm" :src="row.item.rider.urlProfilePicture" :inline="true"></b-avatar>
                                         <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                            {{row.item.rider.firstName}} {{row.item.rider.middleName}} {{row.item.rider.lastName}}
+                                            {{row.item.rider.name}}
                                         </router-link>
-                                    </span>
+                                        <div class="mt-1">
+                                            <b-form-rating v-model="row.item.rider.overallRating" id="rating-inline" inline no-border readonly size="sm"></b-form-rating>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group mb-0 row no-gutters">

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.CQRS.Trips.Common.Commands.Command
+namespace App.CQRS.Trips.Common.Commands.Command.Rider
 {
     public sealed class RiderCreateTripCommand : AbstractCommand
     {

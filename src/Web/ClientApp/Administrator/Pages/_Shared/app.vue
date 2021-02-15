@@ -33,15 +33,18 @@
         },
         props: {
             uid: String,
-            appName: String,
+            appName: {
+                type: String,
+                required: true,
+            },
             urlProfilePicture: String,
         },
         data() {
             return {
                 menus: [
                     { to: '/', label: 'Home', icon: 'fas fa-fw fa-home' },
-                    { to: '/teams', label: 'Teams', icon: 'fas fa-fw fa-users' },
-                    { to: '/users', label: 'Users', icon: 'fas fa-fw fa-user' },
+                    //{ to: '/teams', label: 'Teams', icon: 'fas fa-fw fa-users' },
+                    //{ to: '/users', label: 'Users', icon: 'fas fa-fw fa-user' },
                     //{ to: '/contacts', label: 'Contacts', icon: 'fas fa-fw fa-id-card' },
 
                 ]

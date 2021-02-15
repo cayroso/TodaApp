@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.migrations.app
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210213234201_app")]
+    [Migration("20210215173000_app")]
     partial class app
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,6 +173,12 @@ namespace Data.migrations.app
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("OverallRating")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("TotalRating")
+                        .HasColumnType("REAL");
+
                     b.HasKey("DriverId");
 
                     b.ToTable("Driver");
@@ -241,6 +247,72 @@ namespace Data.migrations.app
                     b.ToTable("FileUpload");
                 });
 
+            modelBuilder.Entity("Data.App.Models.Notifications.Notification", b =>
+                {
+                    b.Property<string>("NotificationId")
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateSent")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IconClass")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReferenceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Notifications.NotificationReceiver", b =>
+                {
+                    b.Property<string>("NotificationReceiverId")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateRead")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateReceived")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NotificationId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("NotificationReceiverId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.ToTable("NotificationReceiver");
+                });
+
             modelBuilder.Entity("Data.App.Models.Riders.Rider", b =>
                 {
                     b.Property<string>("RiderId")
@@ -251,6 +323,12 @@ namespace Data.migrations.app
                         .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("OverallRating")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("TotalRating")
+                        .HasColumnType("REAL");
 
                     b.HasKey("RiderId");
 
@@ -507,16 +585,10 @@ namespace Data.migrations.app
                     b.Property<string>("MiddleName")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("OverallRating")
-                        .HasColumnType("REAL");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("TotalRating")
-                        .HasColumnType("REAL");
 
                     b.HasKey("UserId");
 
@@ -693,6 +765,25 @@ namespace Data.migrations.app
                     b.Navigation("Driver");
                 });
 
+            modelBuilder.Entity("Data.App.Models.Notifications.NotificationReceiver", b =>
+                {
+                    b.HasOne("Data.App.Models.Notifications.Notification", "Notification")
+                        .WithMany("Receivers")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.App.Models.Users.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
+
+                    b.Navigation("Receiver");
+                });
+
             modelBuilder.Entity("Data.App.Models.Riders.Rider", b =>
                 {
                     b.HasOne("Data.App.Models.Users.User", "User")
@@ -858,6 +949,11 @@ namespace Data.migrations.app
             modelBuilder.Entity("Data.App.Models.Drivers.Vehicle", b =>
                 {
                     b.Navigation("Trips");
+                });
+
+            modelBuilder.Entity("Data.App.Models.Notifications.Notification", b =>
+                {
+                    b.Navigation("Receivers");
                 });
 
             modelBuilder.Entity("Data.App.Models.Riders.Rider", b =>

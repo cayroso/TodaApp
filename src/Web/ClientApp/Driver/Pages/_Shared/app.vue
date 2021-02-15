@@ -40,7 +40,7 @@
         data() {
             return {
                 menus: [
-                    { to: '/', label: 'Home', icon: 'fas fa-fw fa-home' },
+                    { to: '/', label: 'Dashboard', icon: 'fas fa-fw fa-tachometer-alt' },
                     //{ to: '/contacts', label: 'Contacts', icon: 'fas fa-fw fa-id-card' },
                     //{ to: '/tasks', label: 'Tasks', icon: 'fas fa-fw fa-tasks' },
                     //{ to: '/documents', label: 'Documents', icon: 'fas fa-fw fa-archive' },

@@ -46,17 +46,20 @@
                     <template slot="table" slot-scope="row">
                         <td v-text="getRowNumber(row.index)" class="text-center"></td>
                         <td>
-                            <span v-if="row.item.driver">
+                            <div v-if="row.item.driver">
                                 <b-avatar size="sm" :src="row.item.driver.urlProfilePicture" :inline="true"></b-avatar>
                                 <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                    {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
+                                    {{row.item.driver.name}}
                                 </router-link>
-                            </span>
-                            <span v-else>
+                                <div class="mt-1">
+                                    <b-form-rating v-model="row.item.driver.overallRating" id="rating-inline" inline no-border readonly size="sm"></b-form-rating>
+                                </div>
+                            </div>
+                            <div v-else>
                                 <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
                                     View
                                 </router-link>
-                            </span>
+                            </div>
                         </td>
                         <td>
                             {{row.item.statusText}}
@@ -75,17 +78,20 @@
                             <div class="form-group mb-0 row no-gutters">
                                 <label class="col-3 col-form-label">Driver</label>
                                 <div class="col align-self-center">
-                                    <span v-if="row.item.driver">
+                                    <div v-if="row.item.driver">
                                         <b-avatar size="sm" :src="row.item.driver.urlProfilePicture" :inline="true"></b-avatar>
                                         <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
-                                            {{row.item.driver.firstName}} {{row.item.driver.middleName}} {{row.item.driver.lastName}}
+                                            {{row.item.driver.name}}
                                         </router-link>
-                                    </span>
-                                    <span v-else>
+                                        <div class="mt-1">
+                                            <b-form-rating v-model="row.item.driver.overallRating" id="rating-inline" inline no-border readonly size="sm"></b-form-rating>
+                                        </div>
+                                    </div>
+                                    <div v-else>
                                         <router-link :to="{name: 'tripsView', params:{id: row.item.tripId}}">
                                             View
                                         </router-link>
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group mb-0 row no-gutters">

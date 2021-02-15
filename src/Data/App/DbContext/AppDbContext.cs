@@ -3,6 +3,7 @@ using Data.App.Models.Calendars;
 using Data.App.Models.Chats;
 using Data.App.Models.Drivers;
 using Data.App.Models.FileUploads;
+using Data.App.Models.Notifications;
 using Data.App.Models.Riders;
 using Data.App.Models.Trips;
 using Data.App.Models.Users;
@@ -76,6 +77,9 @@ namespace Data.App.DbContext
 
         public DbSet<FileUpload> FileUploads { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationReceiver> NotificationReceivers { get; set; }
+
         public DbSet<Rider> Riders { get; set; }
 
         public DbSet<Trip> Trips { get; set; }
@@ -130,6 +134,8 @@ namespace Data.App.DbContext
             CreateDrivers(builder);
 
             CreateFileUploads(builder);
+
+            CreateNotifications(builder);
 
             CreateRiders(builder);
 
@@ -254,6 +260,33 @@ namespace Data.App.DbContext
 
 
             });
+        }
+
+        void CreateNotifications(ModelBuilder builder)
+        {
+            builder.Entity<Notification>(b =>
+            {
+                b.ToTable("Notification");
+                b.HasKey(e => e.NotificationId);
+
+                b.Property(e => e.NotificationId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.ConcurrencyStamp).HasMaxLength(KeyMaxLength).IsRequired();
+
+                b.HasMany(e => e.Receivers)
+                    .WithOne(d => d.Notification)
+                    .HasForeignKey(f => f.NotificationId);
+            });
+
+            builder.Entity<NotificationReceiver>(b =>
+            {
+                b.ToTable("NotificationReceiver");
+                b.HasKey(e => e.NotificationReceiverId);
+
+                b.Property(e => e.NotificationReceiverId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.NotificationId).HasMaxLength(KeyMaxLength).IsRequired();
+                b.Property(e => e.ReceiverId).HasMaxLength(KeyMaxLength).IsRequired();
+            });
+
         }
 
         void CreateRiders(ModelBuilder builder)

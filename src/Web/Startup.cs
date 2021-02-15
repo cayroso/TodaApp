@@ -121,6 +121,7 @@ namespace Web
             services.AddProgressiveWebApp();
 #endif
             services.AddScoped<App.Services.ChatService>();
+            services.AddScoped<App.Services.NotificationService>();
 
             services.AddTransient<ChatHub>();
             services.AddTransient<TripHub>();

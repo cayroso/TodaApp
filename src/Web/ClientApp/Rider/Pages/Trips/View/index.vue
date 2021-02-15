@@ -10,10 +10,15 @@
             <div class="col-sm">
                 <h1 class="h3 mb-sm-0">
                     <span class="fas fa-fw fa-map-marked mr-1"></span>View
+                    <b-form-rating v-model="item.driverRating" id="rating-inline" inline no-border size="sm" readonly></b-form-rating>
                 </h1>
             </div>
             <div class="col-sm-auto">
                 <div class="text-right">
+                    <button v-if="item.status===10" @click="addFeedback()" class="btn btn-primary">
+                        Rate Driver
+                    </button>
+
                     <button v-if="item.status!==10 && item.status!==11" @click="cancelTrip()" class="btn btn-danger mr-2">Cancel</button>
 
                     <button v-if="item.status===7" @click="startTrip()" class="btn btn-primary">Start</button>
@@ -113,23 +118,27 @@
                             </a>
                         </div>
                         <div class="mt-2 form-row">
+
                             <div class="form-group col-md">
                                 <label>Name</label>
                                 <div class="form-control-plaintext">
                                     <b-avatar :src="item.driver.urlProfilePicture" :inline="true"></b-avatar>
                                     <span>
-                                        {{item.driver.firstName}} {{item.driver.middleName}} {{item.driver.lastName}}
+                                        {{item.driver.name}}
                                     </span>
+                                    <div class="mt-2">
+                                        <b-form-rating v-model="item.driver.overallRating" id="rating-inline" inline no-border size="sm"></b-form-rating>
+                                    </div>
                                 </div>
 
                             </div>
-                            <div class="form-group col-md">
+                            <div class="form-group col-sm">
                                 <label>Phone Number</label>
                                 <div class="form-control-plaintext">
                                     {{item.driver.phoneNumber}}
                                 </div>
                             </div>
-                            <div class="form-group col-md">
+                            <div class="form-group col-sm">
                                 <label>Offer</label>
                                 <div class="form-control-plaintext">
                                     {{item.fare|toCurrency}}
@@ -287,15 +296,22 @@
                 </div>
             </b-collapse>
         </div>
+
+        <add-feedback ref="addFeedback" @onSave="onSaveFeedback"></add-feedback>
+
     </div>
 </template>
 <script>
     import pageMixin from '../../../../_Core/Mixins/pageMixin';
     import RiderMap from './_rider-map.vue';
+
+    import addFeedback from '../../../../_Common/Modals/Trips/add-feedback.vue';
+
     export default {
         mixins: [pageMixin],
         components: {
-            RiderMap
+            RiderMap,
+            addFeedback
         },
         props: {
             uid: String,
@@ -348,6 +364,36 @@
         },
 
         methods: {
+            async addFeedback() {
+                const vm = this;
+
+                vm.$refs.addFeedback.open(vm.id, null, null, null);
+            },
+            async onSaveFeedback(info) {
+                ;
+                const vm = this;
+
+                try {
+                    const payload = {
+                        tripId: vm.id,
+                        rating: info.rate,
+                        comment: info.comment
+                    };
+
+                    await vm.$util.axios.put(`/api/trips/rider-feedback`, payload)
+                        .then(_ => {
+                            vm.$refs.addFeedback.close();
+                        });
+
+                    await vm.get();
+
+                } catch (e) {
+                    vm.$util.handleError(e);
+                }
+
+
+            },
+
             onCalculatedTrip(info) {
                 this.calculatedTrip = info;
             },

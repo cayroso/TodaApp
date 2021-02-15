@@ -94,7 +94,7 @@ namespace Web.Areas.Rider.Controllers
                                 Rider = e.Key,
                                 TotalFare = e.Sum(p => p.Fare),
                                 TotalTrip = e.Count()
-                            }).ToList();
+                            }).OrderByDescending(e => e.TotalFare).ToList();
 
             var dto = new
             {

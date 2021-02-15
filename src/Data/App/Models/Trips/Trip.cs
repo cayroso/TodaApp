@@ -59,5 +59,16 @@ namespace Data.App.Models.Trips
         public virtual ICollection<TripExcludedDriver> ExcludedDrivers { get; set; } = new List<TripExcludedDriver>();
         public virtual ICollection<TripLocation> Locations { get; set; } = new List<TripLocation>();
         public virtual ICollection<TripTimeline> Timelines { get; set; } = new List<TripTimeline>();
+
+        public void AddTimeline(string userId, EnumTripStatus status, string notes)
+        {
+            Timelines.Add(new TripTimeline
+            {
+                TripId = TripId,
+                UserId = userId,
+                Status = status,
+                Notes = notes
+            });
+        }
     }
 }

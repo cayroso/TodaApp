@@ -26,8 +26,6 @@ namespace Data.App.Models.Users
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
-        public double OverallRating { get; set; }
-        public double TotalRating { get; set; }
 
         public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
 
@@ -36,11 +34,6 @@ namespace Data.App.Models.Users
 
         //public virtual ICollection<DocumentAccessHistory> DocumentAccessHistories { get; set; } = new List<DocumentAccessHistory>();
 
-        public void CalculateRating(double newRating)
-        {
-            OverallRating = ((OverallRating * TotalRating) + newRating) / (TotalRating + 1);
-            TotalRating += newRating;
-        }
     }
 
     public static class UserExtension
