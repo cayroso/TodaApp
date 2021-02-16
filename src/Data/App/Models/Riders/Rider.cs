@@ -16,7 +16,8 @@ namespace Data.App.Models.Riders
 
         public double OverallRating { get; set; }
         public double TotalRating { get; set; }
-
+        public bool IsEnabled { get; set; }
+        public string DisabledReason { get; set; }
 
         public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
 

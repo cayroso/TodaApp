@@ -1,9 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    var appName = "Toda App";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Toda App</title>
+    <title>@ViewData["Title"] - @appName</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/solid.min.css" />
@@ -84,7 +87,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2021 - @appName - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 

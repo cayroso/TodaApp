@@ -171,6 +171,12 @@ namespace Data.migrations.app
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DisabledReason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("OverallRating")
                         .HasColumnType("REAL");
 
@@ -321,6 +327,12 @@ namespace Data.migrations.app
                         .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("DisabledReason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("OverallRating")
                         .HasColumnType("REAL");

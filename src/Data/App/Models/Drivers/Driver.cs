@@ -17,6 +17,9 @@ namespace Data.App.Models.Drivers
 
         public EnumDriverAvailability Availability { get; set; } = EnumDriverAvailability.Available;
 
+        public bool IsEnabled { get; set; }
+        public string DisabledReason { get; set; }
+
         public double OverallRating { get; set; }
         public double TotalRating { get; set; }
 
@@ -24,7 +27,6 @@ namespace Data.App.Models.Drivers
 
         public virtual ICollection<Trip> Trips { get; set; } = new List<Trip>();
         public virtual ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
-
 
         public void CalculateRating(double newRating)
         {

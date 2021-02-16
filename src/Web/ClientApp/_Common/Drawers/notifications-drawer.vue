@@ -1,9 +1,8 @@
 ﻿<template>
     <b-sidebar id="notificationsDrawer" title="Notifications" backdrop right shadow>
         <div v-if="notifications" v-cloak>
-            <a v-for="item in notifications" v-on:click="viewNotification(item.notificationId)" style="cursor:pointer" class="dropdown-item d-flex align-items-center">
+            <a v-for="item in notifications" v-on:click="viewNotification(item)" style="cursor:pointer" class="dropdown-item d-flex align-items-center">
                 <div class="mr-3">
-
                     <i v-bind:class="item.iconClass"></i>
                 </div>
                 <div>
@@ -12,23 +11,72 @@
                 </div>
             </a>
         </div>
-        <a class="dropdown-item text-center small" href="/patient/notifications">Show All Motifications</a>
+        <!--<a class="dropdown-item text-center small" href="/patient/notifications">Show All Motifications</a>-->
+
+        <b-modal ref="modal"
+                 :no-close-on-esc="false"
+                 :no-close-on-backdrop="true"
+                 scrollable>
+            <template v-slot:modal-header>
+                <div class="w-100">
+                    <div class="d-flex flex-row  align-items-center justify-content-between">
+                        <h5 class="m-0">
+                            <i v-bind:class="item.iconClass"></i> {{item.subject}}
+                        </h5>
+                        <div class="small">
+                            {{item.dateSent|moment('calendar')}}
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:modal-footer>
+                <button @click="viewTrip" class="btn btn-primary mr-auto">
+                    View Trip
+                </button>
+                <button @click="markAsRead" class="btn btn-warning">
+                    Marked As Read
+                </button>
+                <button @click="close" class="btn btn-secondary">
+                    Close
+                </button>
+            </template>
+            <div>
+                <div v-if="item.content" v-text="item.content" style="white-space:pre"></div>
+            </div>
+        </b-modal>
     </b-sidebar>
 </template>
 <script>
     export default {
         props: {
-            notifications: Array
+            notifications: Array,
+            urlViewTrip: String
         },
+        data() {
+            return {
+                item: {}
+            }
+        },
+        async mounted() {
+            const vm = this;
 
+            //await vm.getUnreadNotifications();
+        },
         methods: {
+            viewTrip() {
+                const vm = this;
+
+                vm.$router.push({ name: vm.urlViewTrip, params: { id: vm.item.referenceId } });
+
+                vm.close();
+            },
 
             async getUnreadNotifications() {
 
                 const vm = this;
 
                 try {
-                    await vm.$util.axios.get(`api/accounts/unread-notifications`)
+                    await vm.$util.axios.get(`/api/notifications/unread/?criteria=&pageIndex=1&pageSize=20`)
                         .then(resp => {
                             vm.notifications = resp.data;
                         });
@@ -37,10 +85,34 @@
                 }
             },
 
-            viewNotification(id) {
-                this.$bus.$emit('event:open-notification', id);
-            },
+            viewNotification(item) {
+                //this.$bus.$emit('event:open-notification', id);
+                const vm = this;
 
+                vm.item = item;
+                vm.$refs.modal.show();
+            },
+            close() {
+                const vm = this;
+
+                vm.item = {};
+                vm.$refs.modal.hide();
+            },
+            async markAsRead() {
+                const vm = this;
+                const item = vm.item;
+
+                try {
+                    await vm.$util.axios.post(`/api/notifications/${item.notificationId}/markAsRead`);
+
+                    vm.close();
+                    //await vm.getUnreadNotifications();
+                    vm.$bus.$emit('event:notification-received');
+
+                } catch (e) {
+                    vm.$util.handleError(e);
+                }
+            },
             showHiddenElements() {
                 let vm = this;
 

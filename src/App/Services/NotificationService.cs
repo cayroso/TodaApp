@@ -28,7 +28,6 @@ namespace App.Services
             }
 
             var notificationId = Guid.NewGuid().ToString();
-
             var notification = new Notification
             {
                 NotificationId = notificationId,
@@ -40,21 +39,41 @@ namespace App.Services
                 NotificationType = notificationType,
             };
 
+            var existingNotification = await _appDbContext.Notifications.Include(e=> e.Receivers).FirstOrDefaultAsync(e => e.ReferenceId == referenceId);
+
+            if (existingNotification != null)
+            {
+                notificationId = existingNotification.NotificationId;
+                notification = existingNotification;
+
+                notification.NotificationId = notificationId;
+                notification.IconClass = iconClass;
+                notification.Subject = subject;
+                notification.Content = content;
+                notification.ReferenceId = referenceId;
+                notification.DateSent = DateTime.UtcNow;
+                notification.NotificationType = notificationType;                
+            }
+
             var combinedUserIds = new List<string>();
 
             if (userIds != null && userIds.Any())
             {
                 foreach (var userId in userIds)
                 {
-                    notification.Receivers.Add(new NotificationReceiver
+                    var alreadyReceiver = notification.Receivers.Any(e => e.ReceiverId == userId);
+                    if (!alreadyReceiver)
                     {
-                        NotificationId = notification.NotificationId,
-                        ReceiverId = userId,
-                        DateRead = DateTime.MaxValue,
-                        DateReceived = notification.DateSent
-                    });
+                        notification.Receivers.Add(new NotificationReceiver
+                        {
+                            NotificationId = notification.NotificationId,
+                            ReceiverId = userId,
+                            DateRead = DateTime.MaxValue,
+                            DateReceived = notification.DateSent
+                        });
 
-                    combinedUserIds.Add(userId);
+                        combinedUserIds.Add(userId);
+                    }
                 }
             }
 
@@ -83,7 +102,11 @@ namespace App.Services
                 }
             }
 
-            await _appDbContext.AddAsync(notification);
+            if (existingNotification == null)
+            {
+                await _appDbContext.AddAsync(notification);
+            }
+
             await _appDbContext.SaveChangesAsync();
 
             //if (combinedUserIds.Any())
@@ -204,6 +227,23 @@ namespace App.Services
                 {
                     _appDbContext.Remove(data);
                 }
+
+                await _appDbContext.SaveChangesAsync();
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task DeleteNotificationByReferenceId(string referenceId)
+        {
+            var data = await _appDbContext
+                .Notifications                
+                .Where(p => p.ReferenceId == referenceId)                
+                .FirstOrDefaultAsync();
+
+            if (data != null)
+            {
+                _appDbContext.Remove(data);
 
                 await _appDbContext.SaveChangesAsync();
             }

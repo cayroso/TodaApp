@@ -55,13 +55,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <div>
                                 <button @click="$refs.modalChangeTheme.open()" class="btn btn-sm btn-info">
                                     Update Theme
                                 </button>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>

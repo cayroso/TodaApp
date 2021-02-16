@@ -33,8 +33,8 @@ namespace Web.Areas.Administrator.Controllers
             var riders = await appdbContext.Riders.AsNoTracking().CountAsync();
 
             var trips = await appdbContext.Trips
-                .Include(e => e.Driver).ThenInclude(e => e.User)
-                .Include(e => e.Rider).ThenInclude(e => e.User)
+                .Include(e => e.Driver).ThenInclude(e => e.User).ThenInclude(e => e.Image)
+                .Include(e => e.Rider).ThenInclude(e => e.User).ThenInclude(e => e.Image)
                 .AsNoTracking().ToListAsync();
             var totalCompletedTrips = trips.Where(e => e.Status == Data.Enums.EnumTripStatus.Complete);
 
@@ -44,19 +44,23 @@ namespace Web.Areas.Administrator.Controllers
             var totalEarnings = totalCompletedTrips.Sum(e => e.Fare);
 
             // top drivers
-            var topDrivers = totalCompletedTrips.GroupBy(e => e.Driver.User.FirstLastName)
+            var topDrivers = totalCompletedTrips.GroupBy(e => new { e.Driver.User.FirstLastName, e.Driver.OverallRating, e.Driver.User.Image?.Url })
                             .Select(e => new
                             {
-                                Rider = e.Key,
+                                Name = e.Key.FirstLastName,
+                                ImageUrl = e.Key.Url,
+                                Rating = e.Key.OverallRating,
                                 TotalFare = e.Sum(p => p.Fare),
                                 TotalTrip = e.Count()
                             }).OrderByDescending(e => e.TotalFare).Take(10).ToList();
 
             // top riders
-            var topRiders = totalCompletedTrips.GroupBy(e => e.Rider.User.FirstLastName)
+            var topRiders = totalCompletedTrips.GroupBy(e => new { e.Rider.User.FirstLastName, e.Rider.OverallRating, e.Rider.User.Image?.Url })
                             .Select(e => new
                             {
-                                Rider = e.Key,
+                                Name = e.Key.FirstLastName,
+                                ImageUrl = e.Key.Url,
+                                Rating = e.Key.OverallRating,
                                 TotalFare = e.Sum(p => p.Fare),
                                 TotalTrip = e.Count()
                             }).OrderByDescending(e => e.TotalFare).Take(10).ToList();

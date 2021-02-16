@@ -9,8 +9,8 @@
                 </h5>
             </template>
             <template v-slot:modal-footer>
-                <button @click="close" class="btn btn-outline-primary">Cancel</button>
                 <button @click="save" class="btn btn-primary">Save</button>
+                <button @click="close" class="btn btn-outline-primary">Cancel</button>
             </template>
             <div>
 

@@ -58,7 +58,7 @@
 
         <div class="mb-2">
             <div class="card">
-                
+
                 <div class="table-responsive mb-0">
                     <table class="table">
                         <thead>
@@ -78,7 +78,21 @@
                             <tr v-for="(t,index) in item.topDrivers">
                                 <td></td>
                                 <td>{{index+1}}</td>
-                                <td>{{t.rider}}</td>
+                                <td>
+                                    <div class="d-flex flex-row justify-content-start align-items-center">
+                                        <div>
+                                            <b-avatar :src="t.imageUrl" :inline="true"></b-avatar>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div>{{t.name}}</div>
+                                            <div class="mt-1">
+                                                <b-form-rating v-model="t.rating" id="rating-inline" inline no-border size="sm" readonly></b-form-rating>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </td>
                                 <td>{{t.totalFare|toCurrency}}</td>
                                 <td>{{t.totalTrip}}</td>
                             </tr>
@@ -88,7 +102,19 @@
                             <tr v-for="(t,index) in item.topRiders">
                                 <td></td>
                                 <td>{{index+1}}</td>
-                                <td>{{t.rider}}</td>
+                                <td>
+                                    <div class="d-flex flex-row justify-content-start align-items-center">
+                                        <div>
+                                            <b-avatar :src="t.imageUrl" :inline="true"></b-avatar>
+                                        </div>
+                                        <div class="ml-2">
+                                            <div>{{t.name}}</div>
+                                            <div class="mt-1">
+                                                <b-form-rating v-model="t.rating" id="rating-inline" inline no-border size="sm" readonly></b-form-rating>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>{{t.totalFare|toCurrency}}</td>
                                 <td>{{t.totalTrip}}</td>
                             </tr>
@@ -99,7 +125,7 @@
             </div>
         </div>
 
-        
+
 
     </div>
 </template>

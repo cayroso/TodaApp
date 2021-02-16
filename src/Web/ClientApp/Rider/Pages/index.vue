@@ -88,11 +88,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(r,index) in item.topDrivers">
+                                    <tr v-for="(t,index) in item.topDrivers">
                                         <td>{{index+1}}</td>
-                                        <td>{{r.rider}}</td>
-                                        <td>{{r.totalFare|toCurrency}}</td>
-                                        <td>{{r.totalTrip}}</td>
+                                        <td>
+                                            <div class="d-flex flex-row justify-content-start align-items-center">
+                                                <div>
+                                                    <b-avatar :src="t.imageUrl" :inline="true"></b-avatar>
+                                                </div>
+                                                <div class="ml-2">
+                                                    <div>{{t.name}}</div>
+                                                    <div class="mt-1">
+                                                        <b-form-rating v-model="t.rating" id="rating-inline" inline no-border size="sm" readonly></b-form-rating>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{t.totalFare|toCurrency}}</td>
+                                        <td>{{t.totalTrip}}</td>
                                     </tr>
                                 </tbody>
                             </table>

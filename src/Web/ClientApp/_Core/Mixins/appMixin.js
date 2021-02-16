@@ -267,46 +267,58 @@ export default {
             //  driver
             hub.on('driverAssigned', function (resp) {                
                 vm.$bus.$emit('event:driver-assigned', resp);
+                vm.$bus.$emit('event:notification-received');
             });
 
             hub.on('driverAccepted', function (resp) {
                 vm.$bus.$emit('event:driver-accepted', resp);
+                vm.$bus.$emit('event:notification-received');
             });
 
             hub.on('driverRejected', function (resp) {
                 vm.$bus.$emit('event:driver-rejected', resp);
+                vm.$bus.$emit('event:notification-received');
             });
 
             hub.on('driverFareOffered', function (resp) {
                 vm.$bus.$emit('event:driver-fare-offered', resp);
+                vm.$bus.$emit('event:notification-received');
             });
 
             hub.on('driverTripInProgress', function (resp) {
                 vm.$bus.$emit('event:driver-trip-inprogress', resp);
+                vm.$bus.$emit('event:notification-received');
             });
 
             hub.on('driverTripCompleted', function (resp) {
                 vm.$bus.$emit('event:driver-trip-completed', resp);
+                vm.$bus.$emit('event:notification-received');
             });
 
             //  rider
             hub.on('riderTripRequested', function (resp) {
                 vm.$bus.$emit('event:rider-trip-requested', resp);
+                vm.$bus.$emit('event:notification-received');
             });
             hub.on('riderOfferedFareAccepted', function (resp) {
                 vm.$bus.$emit('event:rider-offered-fare-accepted', resp);
+                vm.$bus.$emit('event:notification-received');
             });
             hub.on('riderOfferedFareRejected', function (resp) {
                 vm.$bus.$emit('event:rider-offered-fare-rejected', resp);
+                vm.$bus.$emit('event:notification-received');
             });
             hub.on('riderTripCancelled', function (resp) {
                 vm.$bus.$emit('event:rider-trip-cancelled', resp);
+                vm.$bus.$emit('event:notification-received');
             });
             hub.on('riderTripInProgress', function (resp) {
                 vm.$bus.$emit('event:rider-trip-inprogress', resp);
+                vm.$bus.$emit('event:notification-received');
             });
             hub.on('riderTripCompleted', function (resp) {
                 vm.$bus.$emit('event:rider-trip-completed', resp);
+                vm.$bus.$emit('event:notification-received');
             });
             //hub.on('tripRequested', function () {
             //    vm.$bvToast.toast(`tripRequested`, {

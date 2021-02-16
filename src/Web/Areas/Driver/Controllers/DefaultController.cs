@@ -44,7 +44,11 @@ namespace Web.Areas.Driver.Controllers
             var startYesterday = now.Date.AddDays(-1);
             var endYesterday = now.Date;
 
-            var monthTrips = await appDbContext.Trips.Include(e => e.Rider).ThenInclude(e => e.User).AsNoTracking()
+            var monthTrips = await appDbContext.Trips
+                .Include(e => e.Rider)
+                    .ThenInclude(e => e.User)
+                        .ThenInclude(e => e.Image)
+                .AsNoTracking()
                 .Where(e => e.DriverId == UserId && e.DateCreated >= startMonth && e.DateCreated <= endMonth).ToListAsync();
 
             var weekTrips = monthTrips.Where(e => e.DateCreated >= startWeek && e.DateCreated <= endWeek).ToList();
@@ -86,12 +90,16 @@ namespace Web.Areas.Driver.Controllers
             var sumYesterdayEarnings = yesterdayTrips.Where(e => e.Status == Data.Enums.EnumTripStatus.Complete).Sum(e => e.Fare);
 
             // top riders
-            var topRiders = monthTrips.GroupBy(e => e.Rider.User.FirstLastName)
+            var topRiders = monthTrips
+                            .Where(e => e.Status == Data.Enums.EnumTripStatus.Complete)
+                            .GroupBy(e => new { e.Rider.User.FirstLastName, e.Rider.OverallRating, e.Rider.User.Image?.Url })
                             .Select(e => new
                             {
-                                Rider = e.Key,
+                                Name = e.Key.FirstLastName,
+                                ImageUrl = e.Key.Url,
+                                Rating = e.Key.OverallRating,
                                 TotalFare = e.Sum(p => p.Fare),
-                                TotalTrip = e.Count()
+                                TotalTrip = e.Count(),
                             }).OrderByDescending(e => e.TotalFare).ToList();
 
             var dto = new

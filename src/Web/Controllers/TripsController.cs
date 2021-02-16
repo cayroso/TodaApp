@@ -220,7 +220,7 @@ namespace Web.Controllers
             var user = await _appDbContext.Drivers.FirstOrDefaultAsync(e => e.DriverId == data.DriverId);
 
             //get other driver's trips
-            var trips = await _appDbContext.Trips.AsNoTracking().Where(e => e.TripId != info.TripId && e.DriverId == data.DriverId).ToListAsync();
+            var trips = await _appDbContext.Trips.AsNoTracking().Where(e => e.TripId != info.TripId && e.DriverId == data.DriverId && e.Status == Data.Enums.EnumTripStatus.Complete).ToListAsync();
 
             user.OverallRating = 0;
             user.TotalRating = 0;
@@ -252,7 +252,7 @@ namespace Web.Controllers
             var user = await _appDbContext.Riders.FirstOrDefaultAsync(e => e.RiderId == data.RiderId);
 
             //get all rider's trips
-            var trips = await _appDbContext.Trips.AsNoTracking().Where(e => e.TripId != info.TripId && e.DriverId == data.RiderId).ToListAsync();
+            var trips = await _appDbContext.Trips.AsNoTracking().Where(e => e.TripId != info.TripId && e.DriverId == data.RiderId && e.Status == Data.Enums.EnumTripStatus.Complete).ToListAsync();
 
             user.OverallRating = 0;
             user.TotalRating = 0;

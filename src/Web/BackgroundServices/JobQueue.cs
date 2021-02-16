@@ -1,5 +1,7 @@
 ﻿using App.Hubs;
+using App.Services;
 using Data.App.DbContext;
+using Data.App.Models.Notifications;
 using Data.App.Models.Trips;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +61,8 @@ namespace Web.BackgroundServices
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        var notifService = scope.ServiceProvider.GetRequiredService<NotificationService>();
+
                         var trip = await appDbContext.Trips
                             .Include(e => e.Rider)
                                 .ThenInclude(e => e.User)
@@ -107,6 +111,16 @@ namespace Web.BackgroundServices
                             await tripContext.Clients.Users(new[] { trip.DriverId, trip.RiderId }).DriverAssigned(response);
 
                             await appDbContext.SaveChangesAsync();
+
+                            var notifyIds = new[] { trip.DriverId, trip.RiderId };
+
+                            await notifService.DeleteNotificationByReferenceId(trip.TripId);
+
+                            await notifService.AddNotification(trip.TripId, "fas fa-fw fa-info-circle",
+                                "Driver Assigned", "A driver was assigned to your trip request", EnumNotificationType.Info, new[] { trip.RiderId }, null);
+
+                            await notifService.AddNotification(trip.TripId, "fas fa-fw fa-info-circle",
+                                "Driver Assigned", "You was assigned as a Driver to a trip request", EnumNotificationType.Info, new[] { trip.DriverId }, null);
                         }
                         else
                         {

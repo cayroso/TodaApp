@@ -11,22 +11,22 @@ export default {
         const vm = this;
 
         //  event handlers
-        vm.$bus.$on('event:notification-received', () => {
-            vm.getUnreadNotifications();
+        vm.$bus.$on('event:notification-received', async _ => {
+            await vm.getUnreadNotifications();
         });
 
-        vm.$bus.$on('event:notification-marked-as-read', (notificationId) => {
+        vm.$bus.$on('event:notification-marked-as-read', async (notificationId) => {
             let found = vm.notifications.some(p => p.notificationId === notificationId);
 
             if (found) {
-                vm.getUnreadNotifications();
+                await vm.getUnreadNotifications();
             }
         });
 
-        vm.$bus.$on('event:notification-removed', (notificationId) => {
+        vm.$bus.$on('event:notification-removed', async (notificationId) => {
             let found = vm.notifications.some(p => p.notificationId === notificationId);
             if (found) {
-                vm.getUnreadNotifications();
+                await vm.getUnreadNotifications();
             }
         });
 
@@ -42,14 +42,15 @@ export default {
         const elNotif = vm.$refs.notifications;
         const elMessage = vm.$refs.messages;
 
-        if (elNotif && elNotif.offsetParent) {
-            //await vm.getUnreadNotifications();
-            //debugger;
-        }
+        //debugger;
+        //if (elNotif && elNotif.offsetParent) {
+        await vm.getUnreadNotifications();
+        //debugger;
+        //}
 
-        if (elMessage && elMessage.offsetParent) {
-            await vm.getUnreadChats();
-        }
+        //if (elMessage && elMessage.offsetParent) {
+        await vm.getUnreadChats();
+        //}
 
         vm.showHiddenElements();
     },
@@ -91,9 +92,9 @@ export default {
             const vm = this;
 
             try {
-                await vm.$util.axios.get(`api/accounts/unread-notifications`)
+                await vm.$util.axios.get(`/api/notifications/unread/?criteria=&pageIndex=1&pageSize=20`)
                     .then(resp => {
-                        vm.notifications = resp.data;
+                        vm.notifications = resp.data.items;
                     });
             } catch (e) {
                 vm.$util.handleError(e);
