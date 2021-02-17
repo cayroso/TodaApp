@@ -82,7 +82,7 @@
             uid: String,
             appName: {
                 type: String, required: true,
-                default: 'LMS'
+                default: 'App'
             },
             urlProfilePicture: String,
             menus: Array
