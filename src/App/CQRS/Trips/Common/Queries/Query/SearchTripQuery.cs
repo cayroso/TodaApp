@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Cayent.Core.CQRS.Queries;
+using Common.Extensions;
 using Data.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,14 @@ namespace App.CQRS.Trips.Common.Queries.Query
 {
     public sealed class SearchTripQuery : AbstractPagedQuery<SearchTripQuery.Trip>
     {
-        public SearchTripQuery(string correlationId, string tenantId, string userId, string criteria, int pageIndex, int pageSize, string sortField, int sortOrder)
+        public EnumTripStatus Status { get; }
+
+        public SearchTripQuery(string correlationId, string tenantId, string userId, EnumTripStatus status, string criteria, int pageIndex, int pageSize, string sortField, int sortOrder)
             : base(correlationId, tenantId, userId, criteria, pageIndex, pageSize, sortField, sortOrder)
         {
 
         }
+
 
         public class Trip
         {

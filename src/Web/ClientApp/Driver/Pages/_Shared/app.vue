@@ -1,10 +1,10 @@
 ﻿<template>
     <div v-cloak>
         <app-bar :uid="uid" :appName="appName" :urlProfilePicture="urlProfilePicture" :menus="menus"></app-bar>
-        <main class="container-lg main mb-5 mb-md-0 pb-5 pb-sm-0">
+        <main class="container-lg main" v-bind:style="bottomNavHeightStyle">
             <router-view :uid="uid"></router-view>
         </main>
-        <bottom-nav :menus="menus"></bottom-nav>
+        <bottom-nav ref="bottomNav" :menus="menus"></bottom-nav>
 
         <modal-view-chat ref="modalViewChat" :uid="uid"></modal-view-chat>
     </div>
@@ -50,7 +50,7 @@
         },
         async mounted() {
             const vm = this;
-
+    
             vm.$bus.$on('event:driver-assigned', async function (resp) {
                 vm.$bvToast.toast(`The system has assigned you as driver to a trip request.`, {
                     title: `Driver Assigned`,

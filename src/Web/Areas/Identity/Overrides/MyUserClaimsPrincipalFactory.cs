@@ -1,7 +1,6 @@
 ﻿using Common.Extensions;
 using Data.Identity.DbContext;
-using Data.Identity.Models;
-using Data.Identity.Models.Users;
+using Cayent.Core.Data.Identity.Models.Users;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Cayent.Core.Data.Identity.Models;
 
 namespace Web.Areas.Identity.Overrides
 {

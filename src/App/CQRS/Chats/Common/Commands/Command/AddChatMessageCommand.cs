@@ -1,4 +1,5 @@
 ﻿using Data.App.Models.Chats;
+using Cayent.Core.CQRS.Commands;
 
 namespace App.CQRS.Chats.Common.Commands.Command
 {

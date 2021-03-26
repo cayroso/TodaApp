@@ -1,4 +1,5 @@
-﻿using Data.App.DbContext;
+﻿using Cayent.Core.Common;
+using Data.App.DbContext;
 using Data.App.Models.Notifications;
 using Data.Common;
 using Microsoft.EntityFrameworkCore;

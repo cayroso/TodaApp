@@ -13,14 +13,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Data.Identity.Models.Users;
 using Data.Identity.DbContext;
 using Microsoft.Extensions.Configuration;
 using Data.Providers;
-using Data.Identity.Models;
 using Data.Constants;
 using Data.App.DbContext;
 using Data.App.Models.Users;
+using Cayent.Core.Data.Identity.Models.Users;
 
 namespace Web.Areas.Identity.Pages.Account
 {

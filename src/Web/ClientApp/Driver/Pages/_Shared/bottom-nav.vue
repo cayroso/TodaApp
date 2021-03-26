@@ -1,5 +1,5 @@
 ﻿<template>
-    <b-navbar fixed="bottom" type="dark" variant="dark" class="d-block d-sm-none">
+    <b-navbar  fixed="bottom" type="dark" variant="dark" class="d-block d-sm-none">
         <b-navbar-nav align="center" :justified="true">
             <li v-for="menu in menus" class="nav-item">
                 <router-link :to="menu.to" class="nav-link">

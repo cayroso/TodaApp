@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Cayent.Core.Data.Identity.Models.Users;
 using Data.Identity.DbContext;
-using Data.Identity.Models.Users;
+using Cayent.Core.Data.Identity.Models.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;

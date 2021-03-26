@@ -1,4 +1,5 @@
 ﻿using App.CQRS.Users.Common.Queries.Query;
+using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
 using Microsoft.EntityFrameworkCore;
 using System;

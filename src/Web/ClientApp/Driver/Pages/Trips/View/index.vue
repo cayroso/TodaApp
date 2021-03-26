@@ -114,8 +114,8 @@
                 </div>
             </div>
             <b-collapse v-model="toggles.rider">
-                <div class="p-2">
-                    <div class="text-right">
+                <div class="border-bottom">
+                    <div class="text-right p-1">
                         <button @click.prevent="$bus.$emit('event:send-message', item.rider.riderId)" class="btn btn-primary">
                             <i class="fas fa-fw fa-envelope"></i>
                         </button>
@@ -126,6 +126,9 @@
                             <i class="fas fa-fw fa-sms"></i>
                         </a>
                     </div>
+                </div>
+                <div class="p-2">
+
                     <div class="mt-2 form-row">
                         <div class="form-group col-md">
                             <label>Name</label>
@@ -135,7 +138,7 @@
                                     {{item.rider.name}}
                                 </span>
                                 <div class="mt-2">
-                                    <b-form-rating v-model="item.rider.overallRating" id="rating-inline" inline no-border readonly size="sm"></b-form-rating>
+                                    <b-form-rating v-model="item.rider.overallRating" inline no-border readonly size="sm"></b-form-rating>
                                 </div>
                             </div>
 
@@ -283,6 +286,7 @@
                     duration: {},
                 },
                 item: {
+                    driver: {},
                     rider: {}
                 }
             };
@@ -317,8 +321,11 @@
         methods: {
             async addFeedback() {
                 const vm = this;
-
-                vm.$refs.addFeedback.open(vm.id, null, null, null);
+                const feedback = {
+                    rate: vm.item.driverRating,
+                    comment: vm.item.driverComment,
+                };
+                vm.$refs.addFeedback.open(vm.id, vm.item.driver.driverId, null, feedback);
             },
             async onSaveFeedback(info) {
                 ;

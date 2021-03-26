@@ -1,5 +1,5 @@
-﻿using Data.Identity.DbContext;
-using Data.Identity.Models;
+﻿using Cayent.Core.Data.Identity.Models;
+using Data.Identity.DbContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;

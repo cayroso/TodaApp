@@ -2,6 +2,9 @@
 using App.CQRS.Chats.Common.Commands.Command;
 using App.CQRS.Chats.Common.Queries.Query;
 using App.Services;
+using Cayent.Core.Common;
+using Cayent.Core.CQRS.Commands;
+using Cayent.Core.CQRS.Queries;
 using Data.App.Models.Chats;
 using Data.Common;
 using Microsoft.AspNetCore.Authorization;

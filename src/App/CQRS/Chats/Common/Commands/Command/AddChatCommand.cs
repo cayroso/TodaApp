@@ -1,4 +1,6 @@
-﻿namespace App.CQRS.Chats.Common.Commands.Command
+﻿using Cayent.Core.CQRS.Commands;
+
+namespace App.CQRS.Chats.Common.Commands.Command
 {
     public sealed class AddChatCommand: AbstractCommand
     {

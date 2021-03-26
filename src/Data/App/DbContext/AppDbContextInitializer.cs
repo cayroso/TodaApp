@@ -8,7 +8,6 @@ using Data.App.Models.Riders;
 using Data.App.Models.Users;
 using Data.Constants;
 using Data.Identity.DbContext;
-using Data.Identity.Models.Users;
 using Data.Providers;
 using Microsoft.EntityFrameworkCore;
 

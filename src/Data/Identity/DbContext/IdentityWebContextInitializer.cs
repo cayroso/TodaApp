@@ -1,6 +1,5 @@
-﻿using Data.Constants;
-using Data.Identity.Models;
-using Data.Identity.Models.Users;
+﻿using Cayent.Core.Data.Identity.Models.Users;
+using Data.Constants;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -72,7 +71,7 @@ namespace Data.Identity.DbContext
                 AccessFailedCount = 0,
                 //TenantId = tenant.TenantId,
                 ConcurrencyStamp = token1,
-                UserInformation = new Models.Users.UserInformation
+                UserInformation = new UserInformation
                 {
                     FirstName = "Kerina",
                     LastName = "Talandipa",
@@ -111,7 +110,7 @@ namespace Data.Identity.DbContext
                 AccessFailedCount = 0,
                 //TenantId = tenant.TenantId,
                 ConcurrencyStamp = token1,
-                UserInformation = new Models.Users.UserInformation
+                UserInformation = new UserInformation
                 {
                     FirstName = "Tina",
                     LastName = "Moran",

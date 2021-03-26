@@ -1,4 +1,6 @@
-﻿using Common.Extensions;
+﻿using Cayent.Core.Common;
+using Cayent.Core.CQRS.Queries;
+using Common.Extensions;
 using Data.Common;
 using System;
 

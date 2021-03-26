@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cayent.Core.CQRS.Queries;
 
 namespace App.CQRS.Users.Common.Queries.Query
 {

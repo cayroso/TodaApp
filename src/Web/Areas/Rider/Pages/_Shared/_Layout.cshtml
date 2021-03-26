@@ -1,1 +1,71 @@
-@{ var email = User.Identity.Name; var appName = "Toda App"; var theme = User.FindFirst("Profile:Theme")?.Value; }<!doctype html><html lang="en"><head><base href="~/"/><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui"/><title>@ViewData["Title"] - @appName</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/solid.min.css"/><script defer="defer" src="/app/x-69f1d48e00b767eae165-bundle.js"></script><script defer="defer" src="/app/x-75e59105ea2a9f9b39f4-bundle.js"></script><script defer="defer" src="/app/x-ba5b41ee5c62173ca1a0-bundle.js"></script><script defer="defer" src="/app/x-a7ec07d97999ff4afe8d-bundle.js"></script><script defer="defer" src="/app/x-7bf26522bfb56f7dd769-bundle.js"></script><script defer="defer" src="/app/x-55cda7b963e7062c2db7-bundle.js"></script><script defer="defer" src="/app/x-7592c4d1a6870b303f8c-bundle.js"></script><script defer="defer" src="/app/x-1de2cc9347246e2d06f7-bundle.js"></script><script defer="defer" src="/app/x-70360f9c7ca597785e71-bundle.js"></script><script defer="defer" src="/app/x-aa5fddbb9488e8a17f8c-bundle.js"></script><script defer="defer" src="/app/x-998ca8e57aa4b63d96ec-bundle.js"></script><script defer="defer" src="/app/x-1fef3b6dd252f26db44d-bundle.js"></script><script defer="defer" src="/app/x-999e2b1d155e9055ff26-bundle.js"></script><script defer="defer" src="/app/x-e8a8740c6f55d62fb6d5-bundle.js"></script><script defer="defer" src="/app/x-cf223cc313afdf2d7cc6-bundle.js"></script><script defer="defer" src="/app/x-479463e1a9e92a9388e9-bundle.js"></script><script defer="defer" src="/app/x-5fdd403598d28df9754b-bundle.js"></script><script defer="defer" src="/app/x-3657e2156eb6046a53f3-bundle.js"></script><script defer="defer" src="/app/x-bcffe0f53235f0de09e8-bundle.js"></script><script defer="defer" src="/app/x-42d89a5075873f9f940a-bundle.js"></script><script defer="defer" src="/app/x-69b7b49a39ac161a0cb1-bundle.js"></script><script defer="defer" src="/app/x-b549a639bd1618d90f40-bundle.js"></script><script defer="defer" src="/app/x-d21cd2691c09fc756575-bundle.js"></script><script defer="defer" src="/app/x-250f659dd55e4e341989-bundle.js"></script><script defer="defer" src="/app/x-d2d5d1eb39b8f615fae4-bundle.js"></script><script defer="defer" src="/app/rider-f8002aa5c1996c6deac9.js"></script><link href="/app/x-a7ade75286b2a37fa1f8-bundle.css" rel="stylesheet"><link href="/app/x-578113cb1ac08e831148-bundle.css" rel="stylesheet"><link href="/app/x-51c221c534256bb214d0-bundle.css" rel="stylesheet"><link href="/app/x-67b868ab279d024984c0-bundle.css" rel="stylesheet"><link href="/app/rider-772aa92049a756e11f7e.css" rel="stylesheet"><link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css"/>@*@if (!string.IsNullOrWhiteSpace(theme)) {<link rel="stylesheet" href="@theme"/>}*@<link rel="stylesheet" href="~/css/site.css"/></head><body id="top"><div id="app">@RenderBody() @*<app inline-template><div style="padding-top:60px"><app-bar email="@email" app-name="@appName"></app-bar><main class="container-lg main">@RenderBody()</main></div></app>*@</div><partial name="_LogoutModal"/>@RenderSection("Scripts", required: false)</body></html>
+@{
+    var email = User.Identity.Name;
+    var appName = "Toda App";
+    var theme = User.FindFirst("Profile:Theme")?.Value;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="~/" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <title>@ViewData["Title"] - @appName</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/solid.min.css" />
+
+    <script defer src="/app/x-d153ab5e1523379d8ca0-bundle.js"></script><script defer src="/app/x-d5d4a8bebab55fa96e97-bundle.js"></script><script defer src="/app/x-b49b48b79f8886c8d2e2-bundle.js"></script><script defer src="/app/x-80a659b5e3516b0a3cf3-bundle.js"></script><script defer src="/app/x-abe3e5cff0a47b621864-bundle.js"></script><script defer src="/app/x-0686a3d91ec8a2f3d2b5-bundle.js"></script><script defer src="/app/x-10bacceff58c3e24c782-bundle.js"></script><script defer src="/app/x-fc12e1246b02e281e05a-bundle.js"></script><script defer src="/app/x-c07c54285dcac6acfb60-bundle.js"></script><script defer src="/app/x-9a5fb056feccfbfc704c-bundle.js"></script><script defer src="/app/x-979854c8f0c452aa7dbd-bundle.js"></script><script defer src="/app/x-91950d7947635c2ad33a-bundle.js"></script><script defer src="/app/x-12ca118b43e416bd6b31-bundle.js"></script><script defer src="/app/x-e9e495b9e2e4f295bef9-bundle.js"></script><script defer src="/app/x-639fa1e70c1313c48f78-bundle.js"></script><script defer src="/app/x-4a3eaa9db838a3a40143-bundle.js"></script><script defer src="/app/x-224eda6a9249e3c43bad-bundle.js"></script><script defer src="/app/x-ac34697af5d258ee6954-bundle.js"></script><script defer src="/app/x-ef805a646c0fcaada80d-bundle.js"></script><script defer src="/app/x-e3bad7748072263b5aaf-bundle.js"></script><script defer src="/app/x-c298ffc523e06cfe7918-bundle.js"></script><script defer src="/app/x-bf1276bb52264fa5d6b1-bundle.js"></script><script defer src="/app/x-c4cdcefe269b1f92fc69-bundle.js"></script><script defer src="/app/x-49cd510d8fffc73fc531-bundle.js"></script><script defer src="/app/x-2fa9f3dad203302ef854-bundle.js"></script><script defer src="/app/rider-b7676e67277e9d6c606f.js"></script><link href="/app/x-1ede9b942d85cf2ea8dd-bundle.css" rel="stylesheet"><link href="/app/x-af8954429ef3ff58c285-bundle.css" rel="stylesheet"><link href="/app/x-443e0f6fc4472d38a932-bundle.css" rel="stylesheet"><link href="/app/x-90e2ccbb3fe80d1e1aec-bundle.css" rel="stylesheet"><link href="/app/rider-ec63000d357aac81d876.css" rel="stylesheet">
+
+    <!---
+        lumen
+        sketchy
+        spacelab
+        superhero
+        yeti
+
+        cerulean
+        darkly
+        materia
+        sandstone
+        slate
+
+        cosmo
+
+
+        minty
+        simplex
+        solar
+        journal
+        lux
+        pulse
+
+        -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css" />
+    @*@if (!string.IsNullOrWhiteSpace(theme))
+        {
+        <link rel="stylesheet" href="@theme" />
+        }*@
+
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body id="top">
+    <div id="app">
+        @RenderBody()
+        @*<app inline-template>
+                <div style="padding-top:60px">
+                    <app-bar email="@email" app-name="@appName"></app-bar>
+                    <main class="container-lg main">
+                        @RenderBody()
+                    </main>
+                </div>
+            </app>*@
+    </div>
+
+    <partial name="_LogoutModal" />
+
+    
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

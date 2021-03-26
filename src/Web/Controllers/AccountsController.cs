@@ -1,5 +1,7 @@
 ﻿using App.CQRS;
 using App.CQRS.Navbar.Common.Queries.Query;
+using Cayent.Core.Common;
+using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
 using Data.App.Models.FileUploads;
 using Data.Common;

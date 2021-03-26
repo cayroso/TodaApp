@@ -3,6 +3,8 @@ using App.CQRS.Trips.Common.Commands.Command.Driver;
 using App.CQRS.Trips.Common.Commands.Command.Rider;
 using App.Hubs;
 using App.Services;
+using Cayent.Core.CQRS.Commands;
+using Cayent.Core.CQRS.Services;
 using Data.App.DbContext;
 using Data.App.Models.Notifications;
 using Data.App.Models.Trips;

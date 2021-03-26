@@ -1,5 +1,9 @@
 ﻿using App.CQRS;
+using App.Hubs;
 using App.Services;
+using Cayent.Core.CQRS.Commands;
+using Cayent.Core.CQRS.Queries;
+using Cayent.Core.CQRS.Services;
 using Data.App.Models.Trips;
 using Data.Providers;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,7 +50,7 @@ namespace Web
 
         static void AddCommandQueryHandlers(this IServiceCollection services, Type handlerInterface)
         {
-            var handlers = typeof(App.CQRS.IContainer).Assembly.GetTypes()
+            var handlers = typeof(IChatClient).Assembly.GetTypes()
                 .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerInterface)
             );
 

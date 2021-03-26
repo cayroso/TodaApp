@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cayent.Core.CQRS.Commands;
 
 namespace App.CQRS.Trips.Common.Commands.Command.Driver
 {

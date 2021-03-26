@@ -1,6 +1,8 @@
 ﻿using Common.Extensions;
 using Data.Common;
 using System;
+using Cayent.Core.CQRS.Queries;
+using Cayent.Core.Common;
 
 namespace App.CQRS.Navbar.Common.Queries.Query
 {

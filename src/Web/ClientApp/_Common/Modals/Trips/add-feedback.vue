@@ -81,7 +81,7 @@
             },
             open(tripId, driverId, riderId, feedback) {
                 const vm = this;
-
+                
                 vm.reset();
               
                 if (feedback != null) {

@@ -5,6 +5,8 @@ using App.CQRS.Trips.Common.Commands.Command.Rider;
 using App.CQRS.Trips.Common.Queries.Query;
 using App.Hubs;
 using App.Services;
+using Cayent.Core.CQRS.Commands;
+using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
 using Data.App.Models.Chats;
 using Data.App.Models.Trips;
@@ -214,8 +216,8 @@ namespace Web.Controllers
 
             data.ThrowIfNull();
 
-            data.DriverRating = info.Rating;
-            data.DriverComment = info.Comment;
+            data.RiderRating = info.Rating;
+            data.RiderComment = info.Comment;
 
             var user = await _appDbContext.Drivers.FirstOrDefaultAsync(e => e.DriverId == data.DriverId);
 
@@ -246,8 +248,8 @@ namespace Web.Controllers
 
             data.ThrowIfNull();
 
-            data.RiderRating = info.Rating;
-            data.RiderComment = info.Comment;
+            data.DriverRating = info.Rating;
+            data.DriverComment = info.Comment;
 
             var user = await _appDbContext.Riders.FirstOrDefaultAsync(e => e.RiderId == data.RiderId);
 

@@ -1,4 +1,6 @@
 ﻿using App.CQRS.Navbar.Common.Queries.Query;
+using Cayent.Core.Common;
+using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
 using Data.Common;
 using Data.Identity.DbContext;

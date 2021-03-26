@@ -26,7 +26,8 @@ export default {
                 }
             },
 
-            messageIds: []
+            messageIds: [],
+            bottomNavHeightStyle: null
         };
     },
     async created() {
@@ -47,6 +48,8 @@ export default {
     async mounted() {
         const vm = this;
 
+        vm.getBottomNavHeight();
+
         if (vm.uid) {
             //await vm.connectNotificationHub();
 
@@ -61,6 +64,21 @@ export default {
         }
     },
     methods: {
+        getBottomNavHeight() {
+            const vm = this;
+            const bottomNav = vm.$refs.bottomNav;
+
+            if (!bottomNav) {
+                vm.bottomNavHeightStyle = '';
+            }
+            else {
+                let bottomNavHeight = bottomNav.$el.clientHeight;
+
+                if (bottomNavHeight > 0) {
+                    vm.bottomNavHeightStyle = `padding-bottom:${bottomNavHeight + 10}px;`;
+                }
+            }
+        },
         scrollIntoView() {
             const topElem = document.getElementById('top');
             if (topElem) {

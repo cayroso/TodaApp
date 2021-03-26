@@ -1,4 +1,5 @@
 ﻿using App.CQRS;
+using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
 using Data.Constants;
 using Microsoft.AspNetCore.Authorization;

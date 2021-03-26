@@ -1,4 +1,5 @@
 ﻿
+using Cayent.Core.Data.Identity.Models;
 using Data.App.Models.Calendars;
 using Data.App.Models.Chats;
 using Data.App.Models.Drivers;
@@ -7,8 +8,6 @@ using Data.App.Models.Notifications;
 using Data.App.Models.Riders;
 using Data.App.Models.Trips;
 using Data.App.Models.Users;
-using Data.Identity.Models;
-using Data.Identity.Models.Users;
 using Data.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

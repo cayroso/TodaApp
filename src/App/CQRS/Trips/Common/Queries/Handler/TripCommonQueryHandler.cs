@@ -1,4 +1,6 @@
 ﻿using App.CQRS.Trips.Common.Queries.Query;
+using Cayent.Core.Common;
+using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
 using Data.Common;
 using Microsoft.EntityFrameworkCore;
@@ -110,6 +112,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
         {
             var sql = from t in _appDbContext.Trips.AsNoTracking()
 
+                      where query.Status == Data.Enums.EnumTripStatus.Unknown || t.Status == query.Status
                       where string.IsNullOrWhiteSpace(query.UserId) || t.DriverId == query.UserId || t.RiderId == query.UserId
 
                       select new SearchTripQuery.Trip

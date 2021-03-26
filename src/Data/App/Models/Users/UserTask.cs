@@ -1,6 +1,5 @@
 ﻿using Common.Extensions;
 using Data.Enums;
-using Data.Identity.Models.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;

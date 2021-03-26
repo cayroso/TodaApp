@@ -1,9 +1,8 @@
-﻿using Data.App.DbContext;
+﻿using Cayent.Core.Data.Identity.Models;
+using Data.App.DbContext;
 using Data.App.Models.Calendars;
 using Data.App.Models.Users;
 using Data.Constants;
-using Data.Identity.Models;
-using Data.Identity.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;

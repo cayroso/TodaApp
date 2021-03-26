@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Data.Identity.Models.Users;
+using Cayent.Core.Data.Identity.Models.Users;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {

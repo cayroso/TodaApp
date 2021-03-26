@@ -1,4 +1,4 @@
-﻿using Data.Identity.Models.Users;
+﻿using Cayent.Core.Data.Identity.Models.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;

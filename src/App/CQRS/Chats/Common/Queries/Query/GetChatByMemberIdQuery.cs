@@ -1,4 +1,6 @@
-﻿namespace App.CQRS.Chats.Common.Queries.Query
+﻿using Cayent.Core.CQRS.Queries;
+
+namespace App.CQRS.Chats.Common.Queries.Query
 {
     public sealed class GetChatByMemberIdQuery: AbstractQuery<GetChatByMemberIdQuery.Chat>
     {
