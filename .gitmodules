@@ -1,0 +1,3 @@
+[submodule "src/Cayent"]
+	path = src/Cayent
+	url = https://github.com/cayroso/cayent-core.git
