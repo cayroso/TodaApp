@@ -1,16 +1,8 @@
-﻿using App.CQRS;
-using Cayent.Core.CQRS.Queries;
+﻿using Cayent.Core.CQRS.Queries;
 using Data.App.DbContext;
-using Data.Common;
-using Data.Identity.DbContext;
-using Data.Providers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 

@@ -1,7 +1,8 @@
 ﻿
 
-using Data.App.Models.FileUploads;
+using Cayent.Core.Data.Users;
 using Data.App.Models.Trips;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,51 +12,27 @@ using System.Threading.Tasks;
 
 namespace Data.App.Models.Users
 {
-    public class User
+    public class User : UserBase
     {
-        public string UserId { get; set; }
-        public string ImageId { get; set; }
-        public virtual FileUpload Image { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
-        public string LastName { get; set; }
-        [NotMapped]
-        public string FirstLastName => $"{FirstName} {LastName}";
-        [NotMapped]
-        public string Initials => $"{FirstName[0]}{LastName[0]}".ToUpper();
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-
-
-        public string ConcurrencyToken { get; set; } = Guid.NewGuid().ToString();
-
-        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
         public virtual ICollection<UserTask> UserTasks { get; set; } = new List<UserTask>();
-
-        //public virtual ICollection<DocumentAccessHistory> DocumentAccessHistories { get; set; } = new List<DocumentAccessHistory>();
-
     }
 
-    public static class UserExtension
+    public class UserConfiguration : UserConfiguration<User>
     {
-
-        public static void ThrowIfNull(this User me)
+        public override void Configure(EntityTypeBuilder<User> builder)
         {
-            if (me == null)
-                throw new ApplicationException("User not found.");
+            base.Configure(builder);
+            this.ConfigureEntity(builder);
         }
 
-        public static void ThrowIfNullOrAlreadyUpdated(this User me, string currentToken, string newToken)
+        private void ConfigureEntity(EntityTypeBuilder<User> builder)
         {
-            me.ThrowIfNull();
-
-            if (string.IsNullOrWhiteSpace(newToken))
-                throw new ApplicationException("Anti-forgery token not found.");
-
-            if (me.ConcurrencyToken != currentToken)
-                throw new ApplicationException("User already updated by another user.");
-
-            me.ConcurrencyToken = newToken;
+            //Registration of extension properties
+            //builder.Property(t => t.FirstName).HasColumnName("FirstName");
+            //builder.Property(t => t.LastName).HasColumnName("LastName");
+            //builder.Property(t => t.Phone).HasColumnName("Phone");
+            //builder.Property(t => t.Mobile).HasColumnName("Mobile");
         }
     }
+
 }

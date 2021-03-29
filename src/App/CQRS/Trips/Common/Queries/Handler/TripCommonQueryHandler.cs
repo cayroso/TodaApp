@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Cayent.Core.Common.Extensions;
 
 namespace App.CQRS.Trips.Common.Queries.Handler
 {
@@ -22,7 +24,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        async Task<GetTripByIdQuery.Trip> IQueryHandler<GetTripByIdQuery, GetTripByIdQuery.Trip>.HandleAsync(GetTripByIdQuery query)
+        async Task<GetTripByIdQuery.Trip> IQueryHandler<GetTripByIdQuery, GetTripByIdQuery.Trip>.HandleAsync(GetTripByIdQuery query, CancellationToken cancellationToken)
         {
             var sql = from t in _appDbContext.Trips.AsNoTracking()
 
@@ -108,7 +110,7 @@ namespace App.CQRS.Trips.Common.Queries.Handler
             return dto;
         }
 
-        async Task<Paged<SearchTripQuery.Trip>> IQueryHandler<SearchTripQuery, Paged<SearchTripQuery.Trip>>.HandleAsync(SearchTripQuery query)
+        async Task<Paged<SearchTripQuery.Trip>> IQueryHandler<SearchTripQuery, Paged<SearchTripQuery.Trip>>.HandleAsync(SearchTripQuery query, CancellationToken cancellationToken)
         {
             var sql = from t in _appDbContext.Trips.AsNoTracking()
 

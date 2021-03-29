@@ -1,9 +1,11 @@
 ﻿
+using Cayent.Core.CQRS.Services;
+using Cayent.Core.Data.Chats;
+using Cayent.Core.Data.Fileuploads;
 using Cayent.Core.Data.Identity.Models;
+using Cayent.Core.Data.Users;
 using Data.App.Models.Calendars;
-using Data.App.Models.Chats;
 using Data.App.Models.Drivers;
-using Data.App.Models.FileUploads;
 using Data.App.Models.Notifications;
 using Data.App.Models.Riders;
 using Data.App.Models.Trips;
@@ -46,7 +48,7 @@ namespace Data.App.DbContext
         }
     }
 
-    public class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class AppDbContext : AppBaseDbContext// Microsoft.EntityFrameworkCore.DbContext, 
     {
         #region configuration
 
@@ -68,9 +70,9 @@ namespace Data.App.DbContext
 
         public DbSet<Calendar> Calendars { get; set; }
 
-        public DbSet<Chat> Chats { get; set; }
-        public DbSet<ChatMessage> ChatMessages { get; set; }
-        public DbSet<ChatReceiver> ChatReceivers { get; set; }
+        public new DbSet<Chat> Chats { get; set; }
+        public new DbSet<ChatMessage> ChatMessages { get; set; }
+        public new DbSet<ChatReceiver> ChatReceivers { get; set; }
 
         public DbSet<Driver> Drivers { get; set; }
 
@@ -83,9 +85,9 @@ namespace Data.App.DbContext
 
         public DbSet<Trip> Trips { get; set; }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        public new DbSet<User> Users { get; set; }
+        //public DbSet<Role> Roles { get; set; }
+        //public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<UserTaskItem> UserTaskItems { get; set; }
 
@@ -406,56 +408,59 @@ namespace Data.App.DbContext
 
         static void CreateUser(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserRoleConfiguration());
 
-            builder.Entity<Role>(b =>
-            {
-                b.ToTable("Role");
-                b.HasKey(e => e.RoleId);
+            //builder.Entity<Role>(b =>
+            //{
+            //    b.ToTable("Role");
+            //    b.HasKey(e => e.RoleId);
 
-                b.Property(e => e.RoleId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.Name).HasMaxLength(NameMaxLength).IsRequired();
+            //    b.Property(e => e.RoleId).HasMaxLength(KeyMaxLength).IsRequired();
+            //    b.Property(e => e.Name).HasMaxLength(NameMaxLength).IsRequired();
 
-                //b.HasMany(e => e.UserRoles)
-                //    .WithOne(d => d.Role)
-                //    .HasForeignKey(d => d.RoleId);
-            });
-            builder.Entity<User>(b =>
-            {
-                b.ToTable("User");
-                b.HasKey(e => e.UserId);
+            //    //b.HasMany(e => e.UserRoles)
+            //    //    .WithOne(d => d.Role)
+            //    //    .HasForeignKey(d => d.RoleId);
+            //});
+            //builder.Entity<Models.Users.User>(b =>
+            //{
+            //    b.ToTable("User");
+            //    b.HasKey(e => e.UserId);
 
-                b.Property(e => e.UserId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.FirstName).HasMaxLength(NameMaxLength).IsRequired();
-                b.Property(e => e.LastName).HasMaxLength(NameMaxLength).IsRequired();
-                b.Property(e => e.Email).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.PhoneNumber).HasMaxLength(KeyMaxLength).IsRequired();
+            //    b.Property(e => e.UserId).HasMaxLength(KeyMaxLength).IsRequired();
+            //    b.Property(e => e.FirstName).HasMaxLength(NameMaxLength).IsRequired();
+            //    b.Property(e => e.LastName).HasMaxLength(NameMaxLength).IsRequired();
+            //    b.Property(e => e.Email).HasMaxLength(KeyMaxLength).IsRequired();
+            //    b.Property(e => e.PhoneNumber).HasMaxLength(KeyMaxLength).IsRequired();
 
-                b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
+            //    b.Property(e => e.ConcurrencyToken).HasMaxLength(KeyMaxLength).IsRequired();
 
-                b.HasMany(e => e.UserTasks)
-                    .WithOne(d => d.User)
-                    .HasForeignKey(d => d.UserId);
+            //    b.HasMany(e => e.UserTasks)
+            //        .WithOne(d => d.User)
+            //        .HasForeignKey(d => d.UserId);
 
-                //b.HasMany(a => a.GivenFeedbacks)
-                //    .WithOne(j => j.GivenBy)
-                //    .HasForeignKey(j => j.GivenById)
-                //    //.OnDelete(DeleteBehavior.Restrict)
-                //    ;
+            //    //b.HasMany(a => a.GivenFeedbacks)
+            //    //    .WithOne(j => j.GivenBy)
+            //    //    .HasForeignKey(j => j.GivenById)
+            //    //    //.OnDelete(DeleteBehavior.Restrict)
+            //    //    ;
 
-                //b.HasMany(a => a.ReceivedFeedbacks)
-                //    .WithOne(j => j.ReceivedBy)
-                //    .HasForeignKey(j => j.ReceivedById)
-                //    //.OnDelete(DeleteBehavior.Restrict)
-                //    ;
-            });
-            builder.Entity<UserRole>(b =>
-            {
-                b.ToTable("UserRole");
-                b.HasKey(e => new { e.UserId, e.RoleId });
+            //    //b.HasMany(a => a.ReceivedFeedbacks)
+            //    //    .WithOne(j => j.ReceivedBy)
+            //    //    .HasForeignKey(j => j.ReceivedById)
+            //    //    //.OnDelete(DeleteBehavior.Restrict)
+            //    //    ;
+            //});
+            //builder.Entity<UserRole>(b =>
+            //{
+            //    b.ToTable("UserRole");
+            //    b.HasKey(e => new { e.UserId, e.RoleId });
 
-                b.Property(e => e.UserId).HasMaxLength(KeyMaxLength).IsRequired();
-                b.Property(e => e.RoleId).HasMaxLength(KeyMaxLength).IsRequired();
-            });
+            //    b.Property(e => e.UserId).HasMaxLength(KeyMaxLength).IsRequired();
+            //    b.Property(e => e.RoleId).HasMaxLength(KeyMaxLength).IsRequired();
+            //});
             builder.Entity<UserTask>(b =>
             {
                 b.ToTable("UserTask");

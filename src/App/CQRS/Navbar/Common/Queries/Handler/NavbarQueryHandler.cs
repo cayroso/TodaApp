@@ -7,7 +7,9 @@ using Data.Identity.DbContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Cayent.Core.Common.Extensions;
 
 namespace App.CQRS.Navbar.Common.Queries.Handler
 {
@@ -21,7 +23,7 @@ namespace App.CQRS.Navbar.Common.Queries.Handler
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        async Task<Paged<GetUnreadChatsQuery.ChatMessage>> IQueryHandler<GetUnreadChatsQuery, Paged<GetUnreadChatsQuery.ChatMessage>>.HandleAsync(GetUnreadChatsQuery query)
+        async Task<Paged<GetUnreadChatsQuery.ChatMessage>> IQueryHandler<GetUnreadChatsQuery, Paged<GetUnreadChatsQuery.ChatMessage>>.HandleAsync(GetUnreadChatsQuery query, CancellationToken cancellationToken)
         {
             var sql = from cr in _dbContext.ChatReceivers
                       join c in _dbContext.Chats on cr.ChatId equals c.ChatId
@@ -54,7 +56,7 @@ namespace App.CQRS.Navbar.Common.Queries.Handler
             return dto;
         }
 
-        async Task<Paged<GetUnreadNotificationsQuery.Notification>> IQueryHandler<GetUnreadNotificationsQuery, Paged<GetUnreadNotificationsQuery.Notification>>.HandleAsync(GetUnreadNotificationsQuery query)
+        async Task<Paged<GetUnreadNotificationsQuery.Notification>> IQueryHandler<GetUnreadNotificationsQuery, Paged<GetUnreadNotificationsQuery.Notification>>.HandleAsync(GetUnreadNotificationsQuery query, CancellationToken cancellationToken)
         {
             //var sql = from nr in _dbContext.NotificationReceivers
             //          join n in _dbContext.Notifications on nr.NotificationId equals n.NotificationId

@@ -1,7 +1,7 @@
 ﻿using App.Hubs;
 using Cayent.Core.Common;
+using Cayent.Core.Data.Chats;
 using Data.App.DbContext;
-using Data.App.Models.Chats;
 using Data.Common;
 using Data.Identity.DbContext;
 using Microsoft.AspNetCore.SignalR;
@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViewModel.Chats;
+using Cayent.Core.Common.Extensions;
 
 namespace App.Services
 {

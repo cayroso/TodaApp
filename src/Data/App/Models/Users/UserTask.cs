@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Cayent.Core.Data.Users;
+using Common.Extensions;
 using Data.Enums;
 using System;
 using System.Collections.Generic;

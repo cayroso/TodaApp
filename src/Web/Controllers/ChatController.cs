@@ -1,17 +1,14 @@
-﻿using App.CQRS;
-using App.CQRS.Chats.Common.Commands.Command;
-using App.CQRS.Chats.Common.Queries.Query;
-using App.Services;
+﻿using App.Services;
 using Cayent.Core.Common;
 using Cayent.Core.CQRS.Commands;
+using Cayent.Core.CQRS.Common.Chats.Commands.Command;
+using Cayent.Core.CQRS.Common.Chats.Queries.Query;
 using Cayent.Core.CQRS.Queries;
-using Data.App.Models.Chats;
-using Data.Common;
+using Cayent.Core.Data.Chats;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -30,10 +27,10 @@ namespace Web.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> SearchChat(string c, int p, int s, string sf, int so)
+        public async Task<IActionResult> SearchChat(CancellationToken cancellationToken, string c, int p, int s, string sf, int so)
         {
             var query = new SearchChatQuery("", TenantId, UserId, "You", c, p, s, sf, so);
-            var dto = await _queryHandlerDispatcher.HandleAsync<SearchChatQuery, Paged<SearchChatQuery.Chat>>(query);
+            var dto = await _queryHandlerDispatcher.HandleAsync<SearchChatQuery, Paged<SearchChatQuery.Chat>>(query, cancellationToken);
 
             return Ok(dto);
         }
@@ -47,10 +44,10 @@ namespace Web.Controllers
         }
 
         [HttpGet("{chatId}")]
-        public async Task<IActionResult> GetChat([FromServices] ChatService chatService, string chatId)
+        public async Task<IActionResult> GetChat(CancellationToken cancellationToken, string chatId)
         {
             var query = new GetChatHeaderByIdQuery("", TenantId, chatId, UserId, "You");
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetChatHeaderByIdQuery, GetChatHeaderByIdQuery.ChatHeader>(query);
+            var dto = await _queryHandlerDispatcher.HandleAsync<GetChatHeaderByIdQuery, GetChatHeaderByIdQuery.ChatHeader>(query, cancellationToken);
 
             if (dto == null)
                 return NotFound();
@@ -59,10 +56,10 @@ namespace Web.Controllers
         }
 
         [HttpGet("{chatId}/messages")]
-        public async Task<IActionResult> SearchChatMessages(string chatId, string criteria, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> SearchChatMessages(CancellationToken cancellationToken, string chatId, string criteria, int pageIndex = 1, int pageSize = 10)
         {
             var query = new SearchChatMessagesQuery("", TenantId, UserId, chatId, criteria, pageIndex, pageSize);
-            var dto = await _queryHandlerDispatcher.HandleAsync<SearchChatMessagesQuery, Paged<SearchChatMessagesQuery.ChatMessage>>(query);
+            var dto = await _queryHandlerDispatcher.HandleAsync<SearchChatMessagesQuery, Paged<SearchChatMessagesQuery.ChatMessage>>(query, cancellationToken);
 
             return Ok(dto);
         }
@@ -78,17 +75,17 @@ namespace Web.Controllers
         }
 
         [HttpPost("add/{memberId}")]
-        public async Task<IActionResult> CreateChat([FromServices] ICommandHandlerDispatcher commandHandlerDispatcher, string memberId)
+        public async Task<IActionResult> CreateChat(CancellationToken cancellationToken, [FromServices] ICommandHandlerDispatcher commandHandlerDispatcher, string memberId)
         {
             var query = new GetChatByMemberIdQuery("", TenantId, UserId, UserId, memberId);
-            var dto = await _queryHandlerDispatcher.HandleAsync<GetChatByMemberIdQuery, GetChatByMemberIdQuery.Chat>(query);
+            var dto = await _queryHandlerDispatcher.HandleAsync<GetChatByMemberIdQuery, GetChatByMemberIdQuery.Chat>(query, cancellationToken);
 
             if (dto != null)
                 return Ok(dto.ChatId);
 
             var chatId = GuidStr();
             var command = new AddChatCommand("", TenantId, UserId, chatId, UserId, memberId);
-            await commandHandlerDispatcher.HandleAsync(command);
+            await commandHandlerDispatcher.HandleAsync(command, cancellationToken);
 
             return Ok(chatId);
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Data.App.Models.Chats;
+using Cayent.Core.Data.Users;
 using Data.App.Models.Drivers;
 using Data.App.Models.Riders;
 using Data.App.Models.Users;
@@ -67,9 +67,10 @@ namespace Data.App.DbContext
 
                 appUser.UserRoles = userRoles.Select(e => new UserRole
                 {
+
                     UserId = e.UserId,
                     RoleId = e.RoleId
-                }).ToList();
+                }).ToList<UserRoleBase>();
 
                 appUsers.Add(appUser);
 

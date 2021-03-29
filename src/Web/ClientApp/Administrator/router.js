@@ -32,9 +32,9 @@ const routes = [
 
     //{ path: '/contacts', name: "contacts", component: contactsIndex },
 
-    { path: '/teams', name: "teams", component: teamsIndex },
-    { path: '/teams/add', name: "teamsAdd", component: teamsAdd },
-    { path: '/teams/view/:id', name: "teamsView", component: teamsView, props: true },
+    //{ path: '/teams', name: "teams", component: teamsIndex },
+    //{ path: '/teams/add', name: "teamsAdd", component: teamsAdd },
+    //{ path: '/teams/view/:id', name: "teamsView", component: teamsView, props: true },
 
     { path: '/users', name: "users", component: usersIndex },
     { path: '/users/add', name: "usersAdd", component: usersAdd },

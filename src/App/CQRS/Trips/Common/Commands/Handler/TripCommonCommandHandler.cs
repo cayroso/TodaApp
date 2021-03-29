@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace App.CQRS.Trips.Common.Commands.Handler
@@ -50,7 +51,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
         #region Driver
 
-        async Task ICommandHandler<DriverAcceptRiderTripRequestCommand>.HandleAsync(DriverAcceptRiderTripRequestCommand command)
+        async Task ICommandHandler<DriverAcceptRiderTripRequestCommand>.HandleAsync(DriverAcceptRiderTripRequestCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
@@ -85,7 +86,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             });
         }
 
-        async Task ICommandHandler<DriverOfferFareToRiderTripRequestCommand>.HandleAsync(DriverOfferFareToRiderTripRequestCommand command)
+        async Task ICommandHandler<DriverOfferFareToRiderTripRequestCommand>.HandleAsync(DriverOfferFareToRiderTripRequestCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
@@ -122,7 +123,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             });
         }
 
-        async Task ICommandHandler<DriverRejectRiderTripRequestCommand>.HandleAsync(DriverRejectRiderTripRequestCommand command)
+        async Task ICommandHandler<DriverRejectRiderTripRequestCommand>.HandleAsync(DriverRejectRiderTripRequestCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
@@ -169,7 +170,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
         #region Rider
 
-        async Task ICommandHandler<RiderAcceptDriverOfferCommand>.HandleAsync(RiderAcceptDriverOfferCommand command)
+        async Task ICommandHandler<RiderAcceptDriverOfferCommand>.HandleAsync(RiderAcceptDriverOfferCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
@@ -204,7 +205,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             });
         }
 
-        async Task ICommandHandler<RiderCancelTripCommand>.HandleAsync(RiderCancelTripCommand command)
+        async Task ICommandHandler<RiderCancelTripCommand>.HandleAsync(RiderCancelTripCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
@@ -243,7 +244,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             });
         }
 
-        async Task ICommandHandler<RiderCreateTripCommand>.HandleAsync(RiderCreateTripCommand command)
+        async Task ICommandHandler<RiderCreateTripCommand>.HandleAsync(RiderCreateTripCommand command, CancellationToken cancellationToken)
         {
             var existingTrip = await _appDbContext.Trips.Where(e => e.RiderId == command.UserId
                         && !(e.Status == EnumTripStatus.Complete || e.Status == EnumTripStatus.Cancelled)).AnyAsync();
@@ -278,7 +279,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<RiderRejectDriverOfferCommand>.HandleAsync(RiderRejectDriverOfferCommand command)
+        async Task ICommandHandler<RiderRejectDriverOfferCommand>.HandleAsync(RiderRejectDriverOfferCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
@@ -324,7 +325,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
 
         }
 
-        async Task ICommandHandler<RiderRequestTripCommand>.HandleAsync(RiderRequestTripCommand command)
+        async Task ICommandHandler<RiderRequestTripCommand>.HandleAsync(RiderRequestTripCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 //.Include(e => e.Driver).ThenInclude(e => e.User)
@@ -347,7 +348,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             await _appDbContext.SaveChangesAsync();
         }
 
-        async Task ICommandHandler<SetTripToCompleteCommand>.HandleAsync(SetTripToCompleteCommand command)
+        async Task ICommandHandler<SetTripToCompleteCommand>.HandleAsync(SetTripToCompleteCommand command, CancellationToken cancellationToken)
         {
 
             var data = await _appDbContext.Trips
@@ -398,7 +399,7 @@ namespace App.CQRS.Trips.Common.Commands.Handler
             }
         }
 
-        async Task ICommandHandler<SetTripToInProgressCommand>.HandleAsync(SetTripToInProgressCommand command)
+        async Task ICommandHandler<SetTripToInProgressCommand>.HandleAsync(SetTripToInProgressCommand command, CancellationToken cancellationToken)
         {
             var data = await _appDbContext.Trips
                 .Include(e => e.Driver).ThenInclude(e => e.User)
