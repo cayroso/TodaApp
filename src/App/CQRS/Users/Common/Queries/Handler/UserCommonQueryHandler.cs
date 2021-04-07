@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Cayent.Core.Common.Extensions;
 
 namespace App.CQRS.Users.Common.Queries.Handler
 {
@@ -50,7 +51,21 @@ namespace App.CQRS.Users.Common.Queries.Handler
 
         async Task<Paged<SearchUserQuery.User>> IQueryHandler<SearchUserQuery, Paged<SearchUserQuery.User>>.HandleAsync(SearchUserQuery query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var sql = from u in _dbContext.Users
+
+                      select new SearchUserQuery.User
+                      {
+                          UserId = u.UserId,
+                          FirstName = u.FirstName,
+                          MiddleName = u.MiddleName,
+                          LastName = u.LastName,
+                          Email = u.Email,
+                          PhoneNumber = u.PhoneNumber,
+                      };
+
+            var dto = await sql.ToPagedItemsAsync(query.PageIndex, query.PageSize);
+
+            return dto;
         }
     }
 }

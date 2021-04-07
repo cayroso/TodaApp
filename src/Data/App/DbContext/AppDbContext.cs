@@ -3,10 +3,10 @@ using Cayent.Core.CQRS.Services;
 using Cayent.Core.Data.Chats;
 using Cayent.Core.Data.Fileuploads;
 using Cayent.Core.Data.Identity.Models;
+using Cayent.Core.Data.Notifications;
 using Cayent.Core.Data.Users;
 using Data.App.Models.Calendars;
 using Data.App.Models.Drivers;
-using Data.App.Models.Notifications;
 using Data.App.Models.Riders;
 using Data.App.Models.Trips;
 using Data.App.Models.Users;
@@ -76,10 +76,10 @@ namespace Data.App.DbContext
 
         public DbSet<Driver> Drivers { get; set; }
 
-        public DbSet<FileUpload> FileUploads { get; set; }
+        //public DbSet<FileUpload> FileUploads { get; set; }
 
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationReceiver> NotificationReceivers { get; set; }
+        //public DbSet<Notification> Notifications { get; set; }
+        //public DbSet<NotificationReceiver> NotificationReceivers { get; set; }
 
         public DbSet<Rider> Riders { get; set; }
 

@@ -1,7 +1,8 @@
 ﻿using App.Hubs;
 using App.Services;
+using Cayent.Core.CQRS.Services;
+using Cayent.Core.Data.Notifications;
 using Data.App.DbContext;
-using Data.App.Models.Notifications;
 using Data.App.Models.Trips;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;

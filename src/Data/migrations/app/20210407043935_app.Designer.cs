@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.migrations.app
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210327110602_app")]
+    [Migration("20210407043935_app")]
     partial class app
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.4");
 
             modelBuilder.Entity("Cayent.Core.Data.Chats.Chat", b =>
                 {
@@ -218,6 +218,7 @@ namespace Data.migrations.app
             modelBuilder.Entity("Cayent.Core.Data.Users.UserRoleBase", b =>
                 {
                     b.Property<string>("UserRoleId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Discriminator")

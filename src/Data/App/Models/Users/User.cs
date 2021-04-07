@@ -27,6 +27,7 @@ namespace Data.App.Models.Users
 
         private void ConfigureEntity(EntityTypeBuilder<User> builder)
         {
+            //builder.HasKey(e => e.UserId);
             //Registration of extension properties
             //builder.Property(t => t.FirstName).HasColumnName("FirstName");
             //builder.Property(t => t.LastName).HasColumnName("LastName");

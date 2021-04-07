@@ -4,6 +4,7 @@ using Cayent.Core.CQRS.Commands;
 using Cayent.Core.CQRS.Common.Chats.Commands.Command;
 using Cayent.Core.CQRS.Common.Chats.Queries.Query;
 using Cayent.Core.CQRS.Queries;
+using Cayent.Core.CQRS.Services;
 using Cayent.Core.Data.Chats;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

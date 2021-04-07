@@ -1,4 +1,5 @@
 ﻿using App.Services;
+using Cayent.Core.CQRS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

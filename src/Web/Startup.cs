@@ -1,4 +1,5 @@
 using App.Hubs;
+using Cayent.Core.CQRS.Services;
 using Data.App.DbContext;
 using Data.Constants;
 using Microsoft.AspNetCore.Builder;
@@ -114,11 +115,14 @@ namespace Web
 #if !DEBUG
             services.AddProgressiveWebApp();
 #endif
-            services.AddScoped<App.Services.ChatService>();
-            services.AddScoped<App.Services.NotificationService>();
+            services.AddScoped<ChatService>();
+            services.AddScoped<NotificationService>();
 
             services.AddTransient<ChatHub>();
             services.AddTransient<TripHub>();
+
+            services.AddScoped<AppBaseDbContext, AppDbContext>();
+
 
             StartupExtension.RegisterCQRS(services);
         }
