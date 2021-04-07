@@ -1,5 +1,6 @@
-﻿using App.CQRS.Navbar.Common.Queries.Query;
+﻿
 using Cayent.Core.Common;
+using Cayent.Core.CQRS.Common.Navbar.Queries.Query;
 using Cayent.Core.CQRS.Queries;
 using Cayent.Core.Data.Fileuploads;
 using Data.App.DbContext;

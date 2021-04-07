@@ -70,9 +70,9 @@ namespace Data.App.DbContext
 
         public DbSet<Calendar> Calendars { get; set; }
 
-        public new DbSet<Chat> Chats { get; set; }
-        public new DbSet<ChatMessage> ChatMessages { get; set; }
-        public new DbSet<ChatReceiver> ChatReceivers { get; set; }
+        //public new DbSet<Chat> Chats { get; set; }
+        //public new DbSet<ChatMessage> ChatMessages { get; set; }
+        //public new DbSet<ChatReceiver> ChatReceivers { get; set; }
 
         public DbSet<Driver> Drivers { get; set; }
 
